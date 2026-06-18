@@ -2,6 +2,7 @@ from datetime import datetime
 import pytz
 import feedparser
 import requests
+import xml.etree.ElementTree as ET
 
 def fetch_rss_news():
     rss_sources = {
@@ -13,34 +14,46 @@ def fetch_rss_news():
     for source_name, url in rss_sources.items():
         try:
             feed = feedparser.parse(url)
-            for item in feed.entries[:2]: # Lấy 2 tin từ mỗi nguồn
-                news_list.append(item.title)
+            for item in feed.entries[:2]: # Lấy 2 tin đầu từ mỗi nguồn
+                news_list.append(f"[{source_name}] {item.title}")
         except:
             pass
     return news_list if news_list else ["Không thể tải tin tức hôm nay."]
 
 def fetch_financial_data():
     # 1. Lấy giá Bitcoin từ Binance API
-    btc_price, btc_change = "$63,500", "-1.2%"
+    btc_price, btc_change, btc_up = "$63,500", "-1.2%", False
     try:
         res = requests.get("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT", timeout=5).json()
         price = float(res['lastPrice'])
         change = float(res['priceChangePercent'])
         btc_price = f"${price:,.0f}"
         btc_change = f"+{change:.1f}%" if change >= 0 else f"{change:.1f}%"
-    except:
-        pass
+        btc_up = change >= 0
+    except Exception as e:
+        print(f"Lỗi lấy giá BTC: {e}")
 
-    # 2. Giá Vàng SJC (Dữ liệu giả lập mô phỏng hệ thống gốc - sau này cấu hình API riêng)
-    gold_price, gold_change = "151.5 triệu", "+0.8%"
+    # 2. Lấy giá Vàng SJC thật qua API XML của DOJI/SJC đổi sang JSON
+    gold_price, gold_change, gold_up = "85.0 triệu", "+0.0%", True
+    try:
+        # Cào dữ liệu tỷ giá vàng hôm nay từ nguồn công khai bọc try-except
+        response = requests.get("https://sjc.com.vn/xml/tygiagold.xml", timeout=5)
+        root = ET.fromstring(response.content)
+        # Lấy loại vàng SJC TP.HCM đầu tiên
+        item = root.find(".//item")
+        buy = float(item.get('buy'))
+        # Đổi đơn vị thành triệu đồng (ví dụ 85.00 -> 85 triệu)
+        gold_price = f"{buy/1000:.1f} triệu"
+    except Exception as e:
+        print(f"Lỗi lấy giá Vàng: {e}")
     
-    # 3. Chỉ số VNINDEX (Dữ liệu mô phỏng thị trường - sau này cấu hình API riêng)
-    vnindex, vnindex_change = "1,835", "+0.5%"
+    # 3. Chỉ số VNINDEX (Tạm thời neo dữ liệu mock ổn định chờ kết nối API Chứng khoán chuyên sâu ở bước sau)
+    vnindex, vnindex_change, vnindex_up = "1,280", "+0.4%", True
 
     return {
-        "gold": {"price": gold_price, "change": gold_change, "is_up": True},
-        "btc": {"price": btc_price, "change": btc_change, "is_up": "-" not in btc_change},
-        "vnindex": {"price": vnindex, "change": vnindex_change, "is_up": True}
+        "gold": {"price": gold_price, "change": gold_change, "is_up": gold_up},
+        "btc": {"price": btc_price, "change": btc_change, "is_up": btc_up},
+        "vnindex": {"price": vnindex, "change": vnindex_change, "is_up": vnindex_up}
     }
 
 def generate_html():
@@ -50,8 +63,7 @@ def generate_html():
     news = fetch_rss_news()
     finance = fetch_financial_data()
     
-    # Render danh sách tin tức dạng list
-    news_li_html = "".join([f"<li>{title}.</li>" for title in news])
+    news_li_html = "".join([f"<li>{title}</li>" for title in news])
 
     html_content = f"""<!DOCTYPE html>
 <html lang="vi">
@@ -67,7 +79,7 @@ def generate_html():
         
         .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto 30px auto; }}
         .card {{ background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eef2f5; }}
-        .card-title {{ font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }}
+        .card-title {{ font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; }}
         .card-price {{ font-size: 2rem; font-weight: bold; margin-bottom: 5px; }}
         
         .change {{ font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 4px; }}
@@ -75,7 +87,7 @@ def generate_html():
         .down {{ color: #dc3545; }}
         
         .news-section {{ background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 1200px; margin: 0 auto; border: 1px solid #eef2f5; }}
-        .news-section h2 {{ font-size: 1.5rem; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }}
+        .news-section h2 {{ font-size: 1.5rem; margin-top: 0; margin-bottom: 20px; }}
         .news-section ul {{ padding-left: 20px; margin: 0; }}
         .news-section li {{ margin-bottom: 12px; font-size: 1.05rem; line-height: 1.6; color: #212529; }}
     </style>
@@ -89,7 +101,7 @@ def generate_html():
 
     <div class="grid">
         <div class="card">
-            <div class="card-title">🥇 Vàng SJC</div>
+            <div class="card-title">🥇 Vàng SJC (Mua vào)</div>
             <div class="card-price">{finance['gold']['price']}</div>
             <div class="change {'up' if finance['gold']['is_up'] else 'down'}">
                 {'▲' if finance['gold']['is_up'] else '▼'} {finance['gold']['change']}
@@ -97,7 +109,7 @@ def generate_html():
         </div>
 
         <div class="card">
-            <div class="card-title">₿ Bitcoin</div>
+            <div class="card-title">₿ Bitcoin (USDT)</div>
             <div class="card-price">{finance['btc']['price']}</div>
             <div class="change {'up' if finance['btc']['is_up'] else 'down'}">
                 {'▲' if finance['btc']['is_up'] else '▼'} {finance['btc']['change']}
@@ -125,7 +137,7 @@ def generate_html():
 """
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print(f"Đã cập nhật giao diện Dashboard thành công.")
+    print("Đã cập nhật giao diện Dashboard thành công.")
 
 if __name__ == "__main__":
     generate_html()
