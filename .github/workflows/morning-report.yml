@@ -3,7 +3,6 @@ name: Morning Report
 on:
   workflow_dispatch:
 
-# Cấp quyền tối cao cho phép Workflow build và deploy thẳng lên GitHub Pages
 permissions:
   contents: write
   pages: write
@@ -17,7 +16,6 @@ jobs:
   build-and-deploy:
     environment:
       name: github-pages
-      url: ${{ steps:deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +35,9 @@ jobs:
       - name: Run script to generate HTML
         run: python generate_dashboard.py
 
-      # Tự động hóa bước đóng gói và đẩy trực tiếp lên hạ tầng Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
