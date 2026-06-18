@@ -1,8 +1,10 @@
 from datetime import datetime
+import random
 
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+rand = random.randint(1000, 9999)
 
-html = """
+html = f"""
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,13 +12,16 @@ html = """
 <title>Morning Dashboard</title>
 </head>
 <body>
+
 <h1>Morning Dashboard</h1>
-<p>Cập nhật lúc: TIME_HERE</p>
+
+<p>Cập nhật lúc: {now}</p>
+
+<p>Run ID: {rand}</p>
+
 </body>
 </html>
 """
-
-html = html.replace("TIME_HERE", now)
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
