@@ -3,9 +3,36 @@ name: Morning Report
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
 jobs:
-  test:
+  generate-dashboard:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "Morning Agent is running"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run dashboard generator
+        run: python generate_dashboard.py
+
+      - name: Commit updated dashboard
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+          git add index.html
+
+          git diff --staged --quiet || git commit -m "Auto update dashboard"
+
+          git push
