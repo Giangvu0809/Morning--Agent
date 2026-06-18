@@ -2,36 +2,23 @@ from datetime import datetime
 
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-html = f"""
-
+html = """
 <!DOCTYPE html>
-
-<html lang="vi">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Morning Dashboard</title>
+<meta charset="UTF-8">
+<title>Morning Dashboard</title>
 </head>
-
 <body>
-
-```
-<h1>📊 Morning Intelligence Dashboard</h1>
-
-<h2>Hệ thống hoạt động bình thường</h2>
-
-<p>
-    Cập nhật lúc:
-    <strong>{now}</strong>
-</p>
-```
-
+<h1>Morning Dashboard</h1>
+<p>Cập nhật lúc: TIME_HERE</p>
 </body>
-
 </html>
 """
 
+html = html.replace("TIME_HERE", now)
+
 with open("index.html", "w", encoding="utf-8") as f:
-f.write(html)
+    f.write(html)
 
 print("Dashboard generated successfully")
