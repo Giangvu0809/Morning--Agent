@@ -1,39 +1,33 @@
-name: Morning Report
+from datetime import datetime
 
-on:
-workflow_dispatch:
+now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-schedule:
-- cron: '0 0 * * *'
+html = f"""
+<!DOCTYPE html>
+<html lang="vi">
 
-permissions:
-contents: write
+<head>
+    <meta charset="UTF-8">
+    <title>Morning Dashboard</title>
+</head>
 
-jobs:
-generate-dashboard:
-runs-on: ubuntu-latest
+<body>
 
-```
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+    <h1>📊 Morning Intelligence Dashboard</h1>
 
-  - name: Setup Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: "3.11"
+    <h2>Hệ thống hoạt động bình thường</h2>
 
-  - name: Generate Dashboard
-    run: python generate_dashboard.py
+    <p>
+        Cập nhật lúc:
+        <strong>{now}</strong>
+    </p>
 
-  - name: Commit changes
-    run: |
-      git config --global user.name "github-actions"
-      git config --global user.email "actions@github.com"
+</body>
 
-      git add index.html
+</html>
+"""
 
-      git diff --staged --quiet || git commit -m "Auto update dashboard"
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html)
 
-      git push
-```
+print("Dashboard generated successfully")
