@@ -1,4 +1,6 @@
 import requests
+import yfinance as yf
+import pandas as pd
 
 
 def safe_request_json(url, params=None, timeout=15):
@@ -70,13 +72,52 @@ def get_gold_price():
         "buy": "Đang kết nối",
         "sell": "Đang kết nối",
         "change": "Đang cập nhật",
-        "note": "Chart bên dưới đang dùng dữ liệu vàng quốc tế Gold Futures."
+        "note": "Chart đang dùng dữ liệu vàng quốc tế Gold Futures: GC=F."
     }
 
 
 def get_vnindex():
-    return {
-        "value": "Đang kết nối",
-        "change": "Đang cập nhật",
-        "note": "Sẽ nối nguồn dữ liệu VNINDEX ở bước kế tiếp."
-    }
+    try:
+        data = yf.download(
+            "^VNINDEX.VN",
+            period="7d",
+            interval="1d",
+            progress=False,
+            auto_adjust=False
+        )
+
+        if data.empty:
+            return {
+                "value": "N/A",
+                "change": "N/A",
+                "note": "Không lấy được dữ liệu VNINDEX từ Yahoo Finance."
+            }
+
+        if isinstance(data.columns, pd.MultiIndex):
+            data.columns = data.columns.get_level_values(0)
+
+        data = data.dropna()
+        latest = data.iloc[-1]
+
+        close = float(latest["Close"])
+        open_price = float(latest["Open"])
+
+        change_value = close - open_price
+        change_percent = (change_value / open_price) * 100 if open_price else 0
+
+        sign = "+" if change_value >= 0 else ""
+
+        return {
+            "value": f"{close:,.2f}",
+            "change": f"{sign}{change_value:,.2f} điểm / {sign}{change_percent:.2f}%",
+            "note": "Dữ liệu VNINDEX lấy từ Yahoo Finance ticker ^VNINDEX.VN."
+        }
+
+    except Exception as e:
+        print(f"ERROR loading VNINDEX: {e}")
+
+        return {
+            "value": "N/A",
+            "change": "N/A",
+            "note": "Lỗi khi lấy dữ liệu VNINDEX."
+        }
