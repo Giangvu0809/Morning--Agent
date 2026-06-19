@@ -1,11 +1,16 @@
 import html
 import re
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 from modules.news import get_all_news
 from modules.market import get_bitcoin_price, get_gold_price, get_vnindex
 from modules.charts import get_history_with_rsi, build_candlestick_svg
 from modules.ai_summary import get_ai_summary
+
+try:
+    from zoneinfo import ZoneInfo
+except Exception:
+    ZoneInfo = None
 
 try:
     from modules.crypto_alpha import build_crypto_alpha
@@ -32,6 +37,12 @@ NEWS_KEYWORDS = [
 ]
 
 
+def vn_now():
+    if ZoneInfo:
+        return datetime.now(ZoneInfo("Asia/Ho_Chi_Minh"))
+    return datetime.now(timezone.utc) + timedelta(hours=7)
+
+
 def safe_text(value, default="N/A"):
     if value is None:
         return default
@@ -48,8 +59,7 @@ def parse_percent(value):
     if value is None:
         return None
 
-    text = str(value)
-    match = re.search(r"[-+]?\d+(\.\d+)?", text)
+    match = re.search(r"[-+]?\d+(\.\d+)?", str(value))
 
     if not match:
         return None
@@ -119,6 +129,10 @@ def filter_crypto_items(items, limit=8):
             break
 
     return filtered
+
+
+def render_list(items):
+    return "".join([f"<li>{safe_text(item)}</li>" for item in items])
 
 
 def get_market_mood(bitcoin, gold, vnindex, crypto_alpha):
@@ -224,7 +238,7 @@ def get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha, care
     return warnings
 
 
-def get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha, career_data):
+def get_action_items(bitcoin, gold, vnindex, crypto_alpha, career_data):
     items = []
 
     fear_greed = ((crypto_alpha or {}).get("fear_greed") or {}).get("value")
@@ -272,10 +286,6 @@ def get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha, career_data):
     items.append("Không dùng dashboard như khuyến nghị mua bán; chỉ dùng để phát hiện tín hiệu cần nghiên cứu thêm.")
 
     return items[:6]
-
-
-def render_list(items):
-    return "".join([f"<li>{safe_text(item)}</li>" for item in items])
 
 
 def render_news_column(source_name, items):
@@ -494,23 +504,14 @@ def render_crypto_alpha_section(crypto_alpha):
     """
 
 
-def render_career_opportunities_section(career_data):
+def render_career_section(career_data):
     if not career_data:
         return """
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <span class="eyebrow">Career Opportunities</span>
-                    <h2>Cơ hội nghề nghiệp</h2>
-                </div>
-            </div>
-            <p class="muted">Chưa có dữ liệu nghề nghiệp. Hãy kiểm tra module career_opportunities.py.</p>
-        </section>
+        <p class="muted">Chưa có dữ liệu nghề nghiệp. Hãy kiểm tra module career_opportunities.py.</p>
         """
 
     remote_jobs = career_data.get("remote_jobs", [])[:10]
     fulltime = career_data.get("fulltime_jobs", {}) or {}
-    client_ops = career_data.get("client_opportunities", [])[:5]
 
     remote_html = ""
 
@@ -544,9 +545,43 @@ def render_career_opportunities_section(career_data):
         </article>
         """
 
-    fulltime_roles = fulltime.get("suggested_roles", [])
-    fulltime_steps = fulltime.get("next_steps", [])
+    return f"""
+    <div class="career-layout">
+        <section>
+            <div class="section-title-row">
+                <h3>Remote Jobs phù hợp</h3>
+                <span class="tag">{len(remote_jobs)} job</span>
+            </div>
+            <div class="jobs-grid">
+                {remote_html if remote_html else '<p class="muted">Chưa tìm thấy remote job phù hợp.</p>'}
+            </div>
+        </section>
 
+        <section>
+            <div class="section-title-row">
+                <h3>Full-time Jobs theo CV</h3>
+                <span class="tag">Chờ CV</span>
+            </div>
+
+            <div class="fulltime-box">
+                <p>{safe_text(fulltime.get("message"))}</p>
+
+                <h4>Nhóm vị trí có thể phù hợp</h4>
+                <ul>{render_list(fulltime.get("suggested_roles", []))}</ul>
+
+                <h4>Cách kích hoạt</h4>
+                <ul>{render_list(fulltime.get("next_steps", []))}</ul>
+            </div>
+        </section>
+    </div>
+    """
+
+
+def render_business_section(career_data):
+    if not career_data:
+        return '<p class="muted">Chưa có dữ liệu Business Opportunities.</p>'
+
+    client_ops = career_data.get("client_opportunities", [])[:5]
     client_html = ""
 
     for lead in client_ops:
@@ -564,54 +599,13 @@ def render_career_opportunities_section(career_data):
         """
 
     return f"""
-    <section class="panel">
-        <div class="panel-header">
-            <div>
-                <span class="eyebrow">Career Opportunities</span>
-                <h2>Cơ hội nghề nghiệp</h2>
-            </div>
-            <div class="updated-pill">Updated: {safe_text(career_data.get("updated_at"))}</div>
-        </div>
-
-        <div class="career-layout">
-            <section>
-                <div class="section-title-row">
-                    <h3>Remote Jobs phù hợp</h3>
-                    <span class="tag">{len(remote_jobs)} job</span>
-                </div>
-                <div class="jobs-grid">
-                    {remote_html if remote_html else '<p class="muted">Chưa tìm thấy remote job phù hợp.</p>'}
-                </div>
-            </section>
-
-            <section>
-                <div class="section-title-row">
-                    <h3>Full-time Jobs theo CV</h3>
-                    <span class="tag">Chờ CV</span>
-                </div>
-
-                <div class="fulltime-box">
-                    <p>{safe_text(fulltime.get("message"))}</p>
-
-                    <h4>Nhóm vị trí có thể phù hợp</h4>
-                    <ul>{render_list(fulltime_roles)}</ul>
-
-                    <h4>Cách kích hoạt</h4>
-                    <ul>{render_list(fulltime_steps)}</ul>
-                </div>
-            </section>
-
-            <section>
-                <div class="section-title-row">
-                    <h3>Đối tượng dễ chốt dịch vụ Google Ads</h3>
-                    <span class="tag">{len(client_ops)} nhóm</span>
-                </div>
-                <div class="client-grid">
-                    {client_html}
-                </div>
-            </section>
-        </div>
-    </section>
+    <div class="section-title-row">
+        <h3>Đối tượng dễ chốt dịch vụ Google Ads</h3>
+        <span class="tag">{len(client_ops)} nhóm</span>
+    </div>
+    <div class="client-grid">
+        {client_html}
+    </div>
     """
 
 
@@ -640,8 +634,9 @@ def build_charts():
 
 
 def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_alpha, career_data):
-    now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    today = datetime.now().strftime("%d/%m/%Y")
+    current_time = vn_now()
+    now = current_time.strftime("%d/%m/%Y %H:%M:%S")
+    today = current_time.strftime("%d/%m/%Y")
 
     curated_news = filter_curated_news(news_items, max_items=15)
     grouped_news = group_news_by_source(curated_news)
@@ -651,23 +646,18 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
     mood = get_market_mood(bitcoin, gold, vnindex, crypto_alpha)
     data_warnings = get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha, career_data)
-    action_items = get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha, career_data)
-
-    crypto_alpha_html = render_crypto_alpha_section(crypto_alpha)
-    career_html = render_career_opportunities_section(career_data)
+    action_items = get_action_items(bitcoin, gold, vnindex, crypto_alpha, career_data)
 
     return f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Financial Intelligence</title>
+    <title>Morning Agent</title>
 
     <style>
         :root {{
             --bg: #070b14;
-            --panel: rgba(16, 24, 40, 0.86);
-            --panel-soft: rgba(255, 255, 255, 0.045);
             --border: rgba(255, 255, 255, 0.09);
             --text: #e8eefc;
             --muted: #8b9ab4;
@@ -675,7 +665,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             --negative: #ff5c7a;
             --accent: #56a3ff;
             --gold: #ffd166;
-            --purple: #b68cff;
         }}
 
         * {{
@@ -688,7 +677,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             background:
                 radial-gradient(circle at top left, rgba(86, 163, 255, 0.18), transparent 32%),
                 radial-gradient(circle at top right, rgba(255, 209, 102, 0.12), transparent 28%),
-                radial-gradient(circle at 50% 22%, rgba(182, 140, 255, 0.08), transparent 36%),
                 var(--bg);
             color: var(--text);
         }}
@@ -696,10 +684,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         a {{
             color: inherit;
             text-decoration: none;
-        }}
-
-        code {{
-            color: var(--gold);
         }}
 
         .page {{
@@ -711,8 +695,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         .hero {{
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
             gap: 24px;
+            align-items: flex-start;
             margin-bottom: 24px;
         }}
 
@@ -725,7 +709,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
         .hero p {{
             color: var(--muted);
-            max-width: 850px;
+            max-width: 880px;
             font-size: 16px;
             line-height: 1.7;
         }}
@@ -743,6 +727,57 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             font-size: 13px;
         }}
 
+        .dashboard-section {{
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.025));
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.23);
+            overflow: hidden;
+        }}
+
+        .dashboard-section > summary {{
+            cursor: pointer;
+            list-style: none;
+            padding: 22px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+        }}
+
+        .dashboard-section > summary::-webkit-details-marker {{
+            display: none;
+        }}
+
+        .summary-title {{
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }}
+
+        .summary-title span {{
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 11px;
+            font-weight: 800;
+        }}
+
+        .summary-title strong {{
+            font-size: 26px;
+            letter-spacing: -0.03em;
+        }}
+
+        .summary-meta {{
+            color: var(--muted);
+            font-size: 13px;
+        }}
+
+        .section-body {{
+            padding: 0 24px 24px;
+        }}
+
         .kpi-grid {{
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -753,34 +788,33 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         .kpi-card,
         .panel,
         .chart-card,
-        .news-column {{
-            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.025));
+        .news-column,
+        .insight-card,
+        .fulltime-box,
+        .job-card,
+        .client-card {{
+            background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.23);
-            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 18px;
         }}
 
-        .kpi-card {{
-            padding: 20px;
-            min-height: 130px;
-        }}
-
-        .kpi-card span {{
-            display: block;
+        .kpi-card span,
+        .market-item span {{
             color: var(--muted);
             font-size: 13px;
-            margin-bottom: 8px;
         }}
 
-        .kpi-card strong {{
+        .kpi-card strong,
+        .market-item strong {{
             display: block;
             font-size: 24px;
-            letter-spacing: -0.03em;
+            margin-top: 8px;
             word-break: break-word;
         }}
 
-        .kpi-card em {{
+        .kpi-card em,
+        .market-item em {{
             display: block;
             margin-top: 8px;
             font-style: normal;
@@ -789,13 +823,14 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         }}
 
         .panel {{
-            padding: 24px;
             margin-bottom: 18px;
         }}
 
         .panel-header,
         .chart-card-header,
-        .section-title-row {{
+        .section-title-row,
+        .job-top,
+        .coin-line {{
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -831,20 +866,15 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             font-size: 15px;
         }}
 
-        .executive-grid {{
+        .executive-grid,
+        .market-grid {{
             display: grid;
-            grid-template-columns: 1.1fr 1fr 1fr;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
         }}
 
-        .insight-card,
-        .fulltime-box,
-        .job-card,
-        .client-card {{
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 18px;
+        .market-grid {{
+            grid-template-columns: repeat(4, minmax(0, 1fr));
         }}
 
         .insight-card p,
@@ -855,69 +885,14 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             margin-bottom: 0;
         }}
 
-        .insight-card ul,
-        .fulltime-box ul,
-        .job-card ul {{
-            margin: 12px 0 0;
-            padding-left: 20px;
+        ul {{
             color: var(--muted);
             line-height: 1.65;
-        }}
-
-        .mood-badge {{
-            display: inline-flex;
-            gap: 8px;
-            align-items: center;
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: rgba(86,163,255,0.14);
-            color: var(--accent);
-            font-weight: 800;
-            margin-top: 12px;
         }}
 
         .brief {{
             color: #d7e2f7;
             line-height: 1.75;
-        }}
-
-        .brief p:first-child {{
-            margin-top: 0;
-        }}
-
-        .brief p:last-child {{
-            margin-bottom: 0;
-        }}
-
-        .market-grid {{
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 14px;
-        }}
-
-        .market-item {{
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 16px;
-        }}
-
-        .market-item span {{
-            color: var(--muted);
-            font-size: 13px;
-        }}
-
-        .market-item strong {{
-            display: block;
-            font-size: 22px;
-            margin: 8px 0;
-            word-break: break-word;
-        }}
-
-        .market-item em {{
-            font-style: normal;
-            font-size: 13px;
-            line-height: 1.5;
         }}
 
         .positive {{
@@ -928,26 +903,17 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             color: var(--negative) !important;
         }}
 
-        .neutral {{
-            color: var(--muted) !important;
-        }}
-
+        .neutral,
         .muted {{
-            color: var(--muted);
+            color: var(--muted) !important;
         }}
 
         .crypto-overview {{
             display: flex;
-            align-items: center;
             gap: 18px;
-            margin-bottom: 18px;
+            align-items: center;
             flex-wrap: wrap;
-        }}
-
-        .crypto-overview p {{
-            max-width: 760px;
-            line-height: 1.65;
-            margin: 0;
+            margin-bottom: 18px;
         }}
 
         .sentiment-card {{
@@ -972,29 +938,23 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
         .sentiment-card em {{
             font-style: normal;
-            color: var(--text);
         }}
 
-        .alpha-grid {{
+        .alpha-grid,
+        .jobs-grid,
+        .client-grid,
+        .news-grid {{
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
         }}
 
-        .alpha-card {{
-            padding: 16px;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
+        .alpha-grid {{
+            grid-template-columns: repeat(4, minmax(0, 1fr));
         }}
 
-        .coin-line,
-        .job-top {{
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: flex-start;
-            margin-bottom: 14px;
+        .client-grid {{
+            grid-template-columns: repeat(5, minmax(0, 1fr));
         }}
 
         .coin-symbol {{
@@ -1026,17 +986,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             margin: 8px 0;
             color: var(--muted);
             font-size: 13px;
-        }}
-
-        .metric-row strong {{
-            color: var(--text);
-        }}
-
-        .alpha-card p {{
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.55;
-            margin-bottom: 0;
         }}
 
         .mini-lists {{
@@ -1072,18 +1021,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             gap: 22px;
         }}
 
-        .jobs-grid {{
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
-        }}
-
-        .client-grid {{
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 14px;
-        }}
-
         .job-meta,
         .tag-row {{
             display: flex;
@@ -1114,17 +1051,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             grid-template-columns: 1fr;
             gap: 16px;
             margin-bottom: 18px;
-        }}
-
-        .chart-card {{
-            padding: 20px;
-            overflow: hidden;
-        }}
-
-        .chart-note {{
-            color: var(--muted);
-            font-size: 13px;
-            margin: 0 0 14px;
         }}
 
         .chart-box {{
@@ -1193,29 +1119,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             font-size: 13px;
         }}
 
-        .chart-meta strong {{
-            color: var(--text);
-        }}
-
-        .chart-empty {{
-            color: var(--muted);
-            min-height: 220px;
-            display: grid;
-            place-items: center;
-            border: 1px dashed var(--border);
-            border-radius: 16px;
-        }}
-
-        .news-grid {{
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
-        }}
-
-        .news-column {{
-            padding: 20px;
-        }}
-
         .news-card {{
             padding: 14px 0;
             border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -1231,10 +1134,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             line-height: 1.45;
         }}
 
-        .news-card a:hover {{
-            color: var(--accent);
-        }}
-
         .news-card p {{
             color: var(--muted);
             font-size: 13px;
@@ -1243,18 +1142,12 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         }}
 
         @media (max-width: 1200px) {{
-            .kpi-grid {{
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }}
-
+            .kpi-grid,
             .market-grid,
             .alpha-grid,
             .news-grid,
             .executive-grid,
-            .jobs-grid {{
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }}
-
+            .jobs-grid,
             .client-grid {{
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }}
@@ -1268,7 +1161,10 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             .hero,
             .panel-header,
             .chart-card-header,
-            .section-title-row {{
+            .section-title-row,
+            .job-top,
+            .coin-line,
+            .dashboard-section > summary {{
                 flex-direction: column;
             }}
 
@@ -1299,205 +1195,236 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
     <main class="page">
         <header class="hero">
             <div>
-                <h1>Morning Financial Intelligence</h1>
+                <h1>Morning Agent</h1>
                 <p>
-                    Bản tin phân tích tài chính và cơ hội thu nhập tự động ngày {today}: thị trường,
-                    crypto alpha, tin tức, remote job, full-time job theo CV và nhóm khách hàng dễ chốt dịch vụ.
+                    Dashboard phân tích tài chính, cơ hội nghề nghiệp, cơ hội kinh doanh
+                    và briefing cá nhân. Thời gian hiển thị theo giờ Việt Nam.
                 </p>
             </div>
 
-            <div class="time-chip">Cập nhật: {now}</div>
+            <div class="time-chip">Cập nhật: {now} GMT+7</div>
         </header>
 
-        <section class="kpi-grid">
-            <article class="kpi-card">
-                <span>Market Mood</span>
-                <strong>{safe_text(mood["mood"])}</strong>
-                <em class="neutral">Risk Level: {safe_text(mood["risk_level"])}</em>
-            </article>
-
-            <article class="kpi-card">
-                <span>Bitcoin</span>
-                <strong>{safe_text(clean_price_prefix(bitcoin.get("price_usd")))}</strong>
-                <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
-                    {safe_text(bitcoin.get("change_24h"))}
-                </em>
-            </article>
-
-            <article class="kpi-card">
-                <span>Gold World</span>
-                <strong>{safe_text(world_gold.get("price"))}</strong>
-                <em class="{safe_text(world_gold.get("change_class", "neutral"))}">
-                    {safe_text(world_gold.get("change_24h"))}
-                </em>
-            </article>
-
-            <article class="kpi-card">
-                <span>Remote Jobs</span>
-                <strong>{len((career_data or {}).get("remote_jobs", []))}</strong>
-                <em class="neutral">Job phù hợp đã lọc</em>
-            </article>
-
-            <article class="kpi-card">
-                <span>Client Leads</span>
-                <strong>{len((career_data or {}).get("client_opportunities", []))}</strong>
-                <em class="neutral">Nhóm dễ chốt Google Ads</em>
-            </article>
-        </section>
-
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <span class="eyebrow">Executive Summary</span>
-                    <h2>Market & Opportunity Brief</h2>
+        <details class="dashboard-section" open>
+            <summary>
+                <div class="summary-title">
+                    <span>Market Intelligence</span>
+                    <strong>Thị trường & phân tích tài chính</strong>
                 </div>
-                <span class="tag">{safe_text(mood["mood"])}</span>
+                <div class="summary-meta">Click để đóng/mở</div>
+            </summary>
+
+            <div class="section-body">
+                <section class="kpi-grid">
+                    <article class="kpi-card">
+                        <span>Market Mood</span>
+                        <strong>{safe_text(mood["mood"])}</strong>
+                        <em class="neutral">Risk Level: {safe_text(mood["risk_level"])}</em>
+                    </article>
+
+                    <article class="kpi-card">
+                        <span>Bitcoin</span>
+                        <strong>{safe_text(clean_price_prefix(bitcoin.get("price_usd")))}</strong>
+                        <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
+                            {safe_text(bitcoin.get("change_24h"))}
+                        </em>
+                    </article>
+
+                    <article class="kpi-card">
+                        <span>Gold World</span>
+                        <strong>{safe_text(world_gold.get("price"))}</strong>
+                        <em class="{safe_text(world_gold.get("change_class", "neutral"))}">
+                            {safe_text(world_gold.get("change_24h"))}
+                        </em>
+                    </article>
+
+                    <article class="kpi-card">
+                        <span>VNINDEX</span>
+                        <strong>{safe_text(vnindex.get("value"))}</strong>
+                        <em class="{safe_text(vnindex.get("change_class", "neutral"))}">
+                            {safe_text(vnindex.get("change_percent"))}
+                        </em>
+                    </article>
+
+                    <article class="kpi-card">
+                        <span>Curated News</span>
+                        <strong>{len(curated_news)}</strong>
+                        <em class="neutral">Tin đã lọc theo chủ đề tài chính</em>
+                    </article>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="eyebrow">Executive Summary</span>
+                            <h2>Market Brief</h2>
+                        </div>
+                    </div>
+
+                    <div class="executive-grid">
+                        <article class="insight-card">
+                            <h3>Tổng quan</h3>
+                            <p>{safe_text(mood["summary"])}</p>
+                        </article>
+
+                        <article class="insight-card">
+                            <h3>Động lực chính</h3>
+                            <ul>{render_list(mood["drivers"])}</ul>
+                        </article>
+
+                        <article class="insight-card">
+                            <h3>Data Quality</h3>
+                            <ul>{render_list(data_warnings)}</ul>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="eyebrow">AI Analysis</span>
+                            <h2>AI Market Brief</h2>
+                        </div>
+                    </div>
+                    <div class="brief">{ai_summary}</div>
+                </section>
+
+                {render_crypto_alpha_section(crypto_alpha)}
+
+                <section class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="eyebrow">Market Data</span>
+                            <h2>Market Overview</h2>
+                        </div>
+                    </div>
+
+                    <div class="market-grid">
+                        <article class="market-item">
+                            <span>Bitcoin USD</span>
+                            <strong>{safe_text(clean_price_prefix(bitcoin.get("price_usd")))}</strong>
+                            <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
+                                {safe_text(bitcoin.get("change_24h"))} — {safe_text(bitcoin.get("note"))}
+                            </em>
+                        </article>
+
+                        <article class="market-item">
+                            <span>Bitcoin VND</span>
+                            <strong>{safe_text(bitcoin.get("price_vnd"))} VND</strong>
+                            <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
+                                {safe_text(bitcoin.get("change_24h"))}
+                            </em>
+                        </article>
+
+                        <article class="market-item">
+                            <span>Vàng SJC</span>
+                            <strong>{safe_text(domestic_gold.get("sell"))}</strong>
+                            <em class="{safe_text(domestic_gold.get("change_class", "neutral"))}">
+                                Mua: {safe_text(domestic_gold.get("buy"))}<br>
+                                24h: {safe_text(domestic_gold.get("change_24h"))}
+                            </em>
+                        </article>
+
+                        <article class="market-item">
+                            <span>VNINDEX</span>
+                            <strong>{safe_text(vnindex.get("value"))}</strong>
+                            <em class="{safe_text(vnindex.get("change_class", "neutral"))}">
+                                {safe_text(vnindex.get("change"))}
+                            </em>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="charts-grid">
+                    {render_chart_card("Bitcoin Technical Chart", charts["bitcoin"]["html"], charts["bitcoin"]["rsi"], charts["bitcoin"]["note"])}
+                    {render_chart_card("Gold Technical Chart", charts["gold"]["html"], charts["gold"]["rsi"], charts["gold"]["note"])}
+                    {render_chart_card("VNINDEX Technical Chart", charts["vnindex"]["html"], charts["vnindex"]["rsi"], charts["vnindex"]["note"])}
+                </section>
+
+                <section class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="eyebrow">Curated News</span>
+                            <h2>Tin tức tài chính đã lọc</h2>
+                        </div>
+                        <span class="tag">{len(curated_news)} tin</span>
+                    </div>
+
+                    <section class="news-grid">
+                        {render_news_column("VnExpress", grouped_news.get("VnExpress", []))}
+                        {render_news_column("Dân Trí", grouped_news.get("Dân Trí", []))}
+                        {render_news_column("BBC", grouped_news.get("BBC", []))}
+                    </section>
+                </section>
             </div>
+        </details>
 
-            <div class="executive-grid">
-                <article class="insight-card">
-                    <h3>Tổng quan</h3>
-                    <div class="mood-badge">{safe_text(mood["mood"])} · Risk {safe_text(mood["risk_level"])}</div>
-                    <p>{safe_text(mood["summary"])}</p>
-                </article>
-
-                <article class="insight-card">
-                    <h3>Động lực chính</h3>
-                    <ul>{render_list(mood["drivers"])}</ul>
-                </article>
-
-                <article class="insight-card">
-                    <h3>Việc nên theo dõi</h3>
-                    <ul>{render_list(action_items)}</ul>
-                </article>
-            </div>
-        </section>
-
-        {career_html}
-
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <span class="eyebrow">AI Analysis</span>
-                    <h2>AI Market Brief</h2>
+        <details class="dashboard-section">
+            <summary>
+                <div class="summary-title">
+                    <span>Career Opportunities</span>
+                    <strong>Cơ hội nghề nghiệp</strong>
                 </div>
+                <div class="summary-meta">{len((career_data or {}).get("remote_jobs", []))} remote jobs</div>
+            </summary>
+
+            <div class="section-body">
+                {render_career_section(career_data)}
             </div>
+        </details>
 
-            <div class="brief">
-                {ai_summary}
-            </div>
-        </section>
-
-        {crypto_alpha_html}
-
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <span class="eyebrow">Risk Monitor</span>
-                    <h2>Data Quality & Risk Checklist</h2>
+        <details class="dashboard-section">
+            <summary>
+                <div class="summary-title">
+                    <span>Business Opportunities</span>
+                    <strong>Cơ hội kinh doanh</strong>
                 </div>
+                <div class="summary-meta">{len((career_data or {}).get("client_opportunities", []))} nhóm khách hàng</div>
+            </summary>
+
+            <div class="section-body">
+                {render_business_section(career_data)}
             </div>
+        </details>
 
-            <div class="executive-grid">
-                <article class="insight-card">
-                    <h3>Data Quality</h3>
-                    <ul>{render_list(data_warnings)}</ul>
-                </article>
-
-                <article class="insight-card">
-                    <h3>Gold Signal</h3>
-                    <p>
-                        Vàng thế giới: <strong>{safe_text(world_gold.get("price"))}</strong>,
-                        biến động <strong class="{safe_text(world_gold.get("change_class", "neutral"))}">
-                        {safe_text(world_gold.get("change_24h"))}</strong>.
-                        Vàng SJC: <strong>{safe_text(domestic_gold.get("sell"))}</strong>.
-                    </p>
-                </article>
-
-                <article class="insight-card">
-                    <h3>VNINDEX Signal</h3>
-                    <p>
-                        VNINDEX hiện ở <strong>{safe_text(vnindex.get("value"))}</strong>,
-                        biến động <strong class="{safe_text(vnindex.get("change_class", "neutral"))}">
-                        {safe_text(vnindex.get("change"))}</strong>.
-                    </p>
-                </article>
-            </div>
-        </section>
-
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <span class="eyebrow">Market Data</span>
-                    <h2>Market Overview</h2>
+        <details class="dashboard-section" open>
+            <summary>
+                <div class="summary-title">
+                    <span>Personal AI Briefing</span>
+                    <strong>Việc nên làm hôm nay</strong>
                 </div>
+                <div class="summary-meta">Daily action list</div>
+            </summary>
+
+            <div class="section-body">
+                <section class="panel">
+                    <div class="executive-grid">
+                        <article class="insight-card">
+                            <h3>Hành động ưu tiên</h3>
+                            <ul>{render_list(action_items)}</ul>
+                        </article>
+
+                        <article class="insight-card">
+                            <h3>Hướng kiếm tiền gần nhất</h3>
+                            <ul>
+                                <li>Apply các remote job phù hợp trong mục Career Opportunities.</li>
+                                <li>Tiếp cận nhóm khách hàng dễ chốt Google Ads trong mục Business Opportunities.</li>
+                                <li>Xây case study nhỏ từ chính Morning Agent để tăng uy tín.</li>
+                            </ul>
+                        </article>
+
+                        <article class="insight-card">
+                            <h3>Gợi ý phát triển tiếp</h3>
+                            <ul>
+                                <li>Upload CV để kích hoạt Full-time Job Matching.</li>
+                                <li>Thêm module tìm lead thật theo khu vực TP.HCM/Hà Nội.</li>
+                                <li>Thêm email/Zalo outreach template cho từng nhóm khách hàng.</li>
+                            </ul>
+                        </article>
+                    </div>
+                </section>
             </div>
-
-            <div class="market-grid">
-                <article class="market-item">
-                    <span>Bitcoin USD</span>
-                    <strong>{safe_text(clean_price_prefix(bitcoin.get("price_usd")))}</strong>
-                    <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
-                        {safe_text(bitcoin.get("change_24h"))} — {safe_text(bitcoin.get("note"))}
-                    </em>
-                </article>
-
-                <article class="market-item">
-                    <span>Bitcoin VND</span>
-                    <strong>{safe_text(bitcoin.get("price_vnd"))} VND</strong>
-                    <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
-                        {safe_text(bitcoin.get("change_24h"))}
-                    </em>
-                </article>
-
-                <article class="market-item">
-                    <span>Vàng SJC</span>
-                    <strong>{safe_text(domestic_gold.get("sell"))}</strong>
-                    <em class="{safe_text(domestic_gold.get("change_class", "neutral"))}">
-                        Mua: {safe_text(domestic_gold.get("buy"))}<br>
-                        24h: {safe_text(domestic_gold.get("change_24h"))}
-                    </em>
-                </article>
-
-                <article class="market-item">
-                    <span>Vàng thế giới</span>
-                    <strong>{safe_text(world_gold.get("price"))}</strong>
-                    <em class="{safe_text(world_gold.get("change_class", "neutral"))}">
-                        {safe_text(world_gold.get("change_24h"))}
-                    </em>
-                </article>
-
-                <article class="market-item">
-                    <span>VNINDEX</span>
-                    <strong>{safe_text(vnindex.get("value"))}</strong>
-                    <em class="{safe_text(vnindex.get("change_class", "neutral"))}">
-                        {safe_text(vnindex.get("change"))}
-                    </em>
-                </article>
-            </div>
-        </section>
-
-        <section class="charts-grid">
-            {render_chart_card("Bitcoin Technical Chart", charts["bitcoin"]["html"], charts["bitcoin"]["rsi"], charts["bitcoin"]["note"])}
-            {render_chart_card("Gold Technical Chart", charts["gold"]["html"], charts["gold"]["rsi"], charts["gold"]["note"])}
-            {render_chart_card("VNINDEX Technical Chart", charts["vnindex"]["html"], charts["vnindex"]["rsi"], charts["vnindex"]["note"])}
-        </section>
-
-        <section class="panel">
-            <div class="panel-header">
-                <div>
-                    <span class="eyebrow">Curated News</span>
-                    <h2>Tin tức tài chính đã lọc</h2>
-                </div>
-                <span class="tag">{len(curated_news)} tin</span>
-            </div>
-
-            <section class="news-grid">
-                {render_news_column("VnExpress", grouped_news.get("VnExpress", []))}
-                {render_news_column("Dân Trí", grouped_news.get("Dân Trí", []))}
-                {render_news_column("BBC", grouped_news.get("BBC", []))}
-            </section>
-        </section>
+        </details>
     </main>
 </body>
 </html>
