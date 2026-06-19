@@ -3,6 +3,8 @@ import feedparser
 import html
 import re
 import requests
+import yfinance as yf
+import pandas as pd
 
 # =========================
 # RSS SOURCES
@@ -126,24 +128,209 @@ def get_bitcoin_price():
 
 
 def get_gold_price():
-    # Giai đoạn này để dạng an toàn.
-    # Bước tiếp theo ta sẽ chọn nguồn giá vàng ổn định rồi nối API thật.
     return {
         "buy": "Đang kết nối",
         "sell": "Đang kết nối",
         "change": "Đang cập nhật",
-        "note": "Sẽ nối nguồn giá vàng SJC/PNJ/DOJI ở bước kế tiếp."
+        "note": "Chart bên dưới đang dùng dữ liệu vàng quốc tế Gold Futures."
     }
 
 
 def get_vnindex():
-    # Giai đoạn này để dạng an toàn.
-    # Bước tiếp theo ta sẽ chọn nguồn VNINDEX ổn định rồi nối API thật.
     return {
         "value": "Đang kết nối",
         "change": "Đang cập nhật",
         "note": "Sẽ nối nguồn dữ liệu VNINDEX ở bước kế tiếp."
     }
+
+
+# =========================
+# CHART DATA + RSI
+# =========================
+
+def calculate_rsi(close_series, period=14):
+    delta = close_series.diff()
+
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+
+    avg_gain = gain.rolling(window=period).mean()
+    avg_loss = loss.rolling(window=period).mean()
+
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+
+    return rsi
+
+
+def get_history_with_rsi(ticker, period="3mo", interval="1d"):
+    try:
+        data = yf.download(
+            ticker,
+            period=period,
+            interval=interval,
+            progress=False,
+            auto_adjust=True
+        )
+
+        if data.empty:
+            print(f"ERROR no historical data for {ticker}")
+            return [], "N/A", "Không có dữ liệu chart."
+
+        if isinstance(data.columns, pd.MultiIndex):
+            data.columns = data.columns.get_level_values(0)
+
+        data = data.reset_index()
+
+        close_column = "Close"
+
+        data["RSI"] = calculate_rsi(data[close_column], period=14)
+
+        chart_rows = []
+
+        for _, row in data.tail(90).iterrows():
+            date_value = row["Date"]
+
+            if hasattr(date_value, "strftime"):
+                date_label = date_value.strftime("%d/%m")
+            else:
+                date_label = str(date_value)
+
+            close_value = row[close_column]
+            rsi_value = row["RSI"]
+
+            if pd.isna(close_value):
+                continue
+
+            chart_rows.append({
+                "date": date_label,
+                "close": round(float(close_value), 2),
+                "rsi": None if pd.isna(rsi_value) else round(float(rsi_value), 2)
+            })
+
+        latest_close = chart_rows[-1]["close"] if chart_rows else "N/A"
+        latest_rsi = chart_rows[-1]["rsi"] if chart_rows else "N/A"
+
+        if latest_rsi == "N/A" or latest_rsi is None:
+            rsi_note = "Chưa đủ dữ liệu RSI."
+        elif latest_rsi >= 70:
+            rsi_note = "RSI cao: vùng mua mạnh/quá mua."
+        elif latest_rsi <= 30:
+            rsi_note = "RSI thấp: vùng bán mạnh/quá bán."
+        else:
+            rsi_note = "RSI trung tính."
+
+        return chart_rows, latest_rsi, rsi_note
+
+    except Exception as e:
+        print(f"ERROR loading history for {ticker}: {e}")
+        return [], "N/A", "Không lấy được dữ liệu chart."
+
+
+def build_chart_svg(chart_data, title, price_label, rsi_label):
+    if not chart_data:
+        return f"""
+        <div class="chart-empty">
+            Không có dữ liệu chart cho {title}.
+        </div>
+        """
+
+    width = 900
+    height = 360
+    padding_left = 55
+    padding_right = 25
+    padding_top = 35
+    price_height = 210
+    rsi_top = 265
+    rsi_height = 70
+
+    prices = [item["close"] for item in chart_data]
+    rsis = [item["rsi"] for item in chart_data if item["rsi"] is not None]
+
+    min_price = min(prices)
+    max_price = max(prices)
+
+    if min_price == max_price:
+        min_price = min_price * 0.98
+        max_price = max_price * 1.02
+
+    chart_width = width - padding_left - padding_right
+
+    points_price = []
+    points_rsi = []
+
+    for index, item in enumerate(chart_data):
+        x = padding_left + (index / max(len(chart_data) - 1, 1)) * chart_width
+
+        y_price = padding_top + (
+            (max_price - item["close"]) / (max_price - min_price)
+        ) * price_height
+
+        points_price.append(f"{x:.2f},{y_price:.2f}")
+
+        if item["rsi"] is not None:
+            y_rsi = rsi_top + ((100 - item["rsi"]) / 100) * rsi_height
+            points_rsi.append(f"{x:.2f},{y_rsi:.2f}")
+
+    first_date = chart_data[0]["date"]
+    last_date = chart_data[-1]["date"]
+
+    latest_close = prices[-1]
+    latest_rsi = chart_data[-1]["rsi"]
+
+    latest_rsi_text = "N/A" if latest_rsi is None else f"{latest_rsi:.2f}"
+
+    min_price_text = f"{min_price:,.2f}"
+    max_price_text = f"{max_price:,.2f}"
+    latest_price_text = f"{latest_close:,.2f}"
+
+    return f"""
+    <div class="chart-wrapper">
+        <div class="chart-title">
+            {title}
+        </div>
+
+        <svg viewBox="0 0 {width} {height}" class="chart-svg" role="img">
+
+            <line x1="{padding_left}" y1="{padding_top}" x2="{width - padding_right}" y2="{padding_top}" class="grid-line" />
+            <line x1="{padding_left}" y1="{padding_top + price_height}" x2="{width - padding_right}" y2="{padding_top + price_height}" class="grid-line" />
+
+            <text x="10" y="{padding_top + 5}" class="axis-text">{max_price_text}</text>
+            <text x="10" y="{padding_top + price_height}" class="axis-text">{min_price_text}</text>
+
+            <polyline
+                fill="none"
+                class="price-line"
+                points="{" ".join(points_price)}"
+            />
+
+            <line x1="{padding_left}" y1="{rsi_top}" x2="{width - padding_right}" y2="{rsi_top}" class="grid-line" />
+            <line x1="{padding_left}" y1="{rsi_top + rsi_height * 0.3}" x2="{width - padding_right}" y2="{rsi_top + rsi_height * 0.3}" class="rsi-high-line" />
+            <line x1="{padding_left}" y1="{rsi_top + rsi_height * 0.7}" x2="{width - padding_right}" y2="{rsi_top + rsi_height * 0.7}" class="rsi-low-line" />
+            <line x1="{padding_left}" y1="{rsi_top + rsi_height}" x2="{width - padding_right}" y2="{rsi_top + rsi_height}" class="grid-line" />
+
+            <text x="10" y="{rsi_top + 5}" class="axis-text">RSI 100</text>
+            <text x="10" y="{rsi_top + rsi_height * 0.3 + 5}" class="axis-text">70</text>
+            <text x="10" y="{rsi_top + rsi_height * 0.7 + 5}" class="axis-text">30</text>
+            <text x="10" y="{rsi_top + rsi_height}" class="axis-text">0</text>
+
+            <polyline
+                fill="none"
+                class="rsi-line"
+                points="{" ".join(points_rsi)}"
+            />
+
+            <text x="{padding_left}" y="{height - 8}" class="axis-text">{first_date}</text>
+            <text x="{width - padding_right - 45}" y="{height - 8}" class="axis-text">{last_date}</text>
+
+        </svg>
+
+        <div class="chart-meta">
+            <span>{price_label}: <strong>{latest_price_text}</strong></span>
+            <span>{rsi_label}: <strong>{latest_rsi_text}</strong></span>
+        </div>
+    </div>
+    """
 
 
 # =========================
@@ -162,6 +349,9 @@ for source_name, rss_url in RSS_FEEDS.items():
 bitcoin = get_bitcoin_price()
 gold = get_gold_price()
 vnindex = get_vnindex()
+
+bitcoin_chart_data, bitcoin_rsi, bitcoin_rsi_note = get_history_with_rsi("BTC-USD")
+gold_chart_data, gold_rsi, gold_rsi_note = get_history_with_rsi("GC=F")
 
 
 # =========================
@@ -197,6 +387,21 @@ else:
     news_html = """
     <li>Không lấy được dữ liệu RSS.</li>
     """
+
+
+bitcoin_chart_html = build_chart_svg(
+    bitcoin_chart_data,
+    "Bitcoin 3 tháng gần nhất",
+    "Giá BTC/USD mới nhất",
+    "RSI 14 ngày"
+)
+
+gold_chart_html = build_chart_svg(
+    gold_chart_data,
+    "Vàng quốc tế 3 tháng gần nhất",
+    "Giá Gold Futures mới nhất",
+    "RSI 14 ngày"
+)
 
 
 # =========================
@@ -297,6 +502,74 @@ ul {{
     line-height: 1.5;
 }}
 
+.chart-wrapper {{
+    margin-top: 18px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    overflow-x: auto;
+}}
+
+.chart-title {{
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #111827;
+}}
+
+.chart-svg {{
+    width: 100%;
+    min-width: 760px;
+    height: auto;
+}}
+
+.grid-line {{
+    stroke: #e5e7eb;
+    stroke-width: 1;
+}}
+
+.price-line {{
+    stroke: #2563eb;
+    stroke-width: 2.5;
+}}
+
+.rsi-line {{
+    stroke: #dc2626;
+    stroke-width: 2;
+}}
+
+.rsi-high-line {{
+    stroke: #f59e0b;
+    stroke-width: 1;
+    stroke-dasharray: 5 5;
+}}
+
+.rsi-low-line {{
+    stroke: #10b981;
+    stroke-width: 1;
+    stroke-dasharray: 5 5;
+}}
+
+.axis-text {{
+    fill: #6b7280;
+    font-size: 12px;
+}}
+
+.chart-meta {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 10px;
+    color: #374151;
+}}
+
+.chart-empty {{
+    color: #6b7280;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 10px;
+}}
+
 .placeholder {{
     color: #6b7280;
 }}
@@ -352,6 +625,8 @@ ul {{
             <p>Mua vào: <strong>{gold['buy']}</strong></p>
             <p>Bán ra: <strong>{gold['sell']}</strong></p>
             <p>Biến động: <strong>{gold['change']}</strong></p>
+            <p>RSI: <strong>{gold_rsi}</strong></p>
+            <p class="market-note">{gold_rsi_note}</p>
             <p class="market-note">{gold['note']}</p>
         </div>
 
@@ -360,6 +635,8 @@ ul {{
             <p class="market-value">${bitcoin['price_usd']}</p>
             <p>Quy đổi: <strong>{bitcoin['price_vnd']} VND</strong></p>
             <p>24h: <strong>{bitcoin['change_24h']}</strong></p>
+            <p>RSI: <strong>{bitcoin_rsi}</strong></p>
+            <p class="market-note">{bitcoin_rsi_note}</p>
             <p class="market-note">{bitcoin['note']}</p>
         </div>
 
@@ -377,10 +654,28 @@ ul {{
 
 <div class="card">
 
+    <h2>📊 Chart Bitcoin</h2>
+
+    {bitcoin_chart_html}
+
+</div>
+
+
+<div class="card">
+
+    <h2>📊 Chart vàng</h2>
+
+    {gold_chart_html}
+
+</div>
+
+
+<div class="card">
+
     <h2>🎯 AI Summary</h2>
 
     <p class="placeholder">
-        Sẽ kết nối OpenAI API sau khi dữ liệu Tin tức, Bitcoin, Vàng và VNINDEX ổn định.
+        Sẽ kết nối OpenAI API sau khi dữ liệu Tin tức, Bitcoin, Vàng, Chart và RSI ổn định.
     </p>
 
 </div>
@@ -401,5 +696,7 @@ with open("index.html", "w", encoding="utf-8") as f:
 print(f"Generated dashboard at {updated_at}")
 print(f"Loaded {len(all_news)} news items from RSS feeds")
 print(f"Bitcoin USD: {bitcoin['price_usd']}")
+print(f"Bitcoin RSI: {bitcoin_rsi}")
+print(f"Gold RSI: {gold_rsi}")
 print(f"Gold status: {gold['note']}")
 print(f"VNINDEX status: {vnindex['note']}")
