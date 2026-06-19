@@ -34,11 +34,33 @@ def format_vnd(value):
         return "N/A"
 
 
+def format_usd_oz(value):
+    try:
+        return f"${float(value):,.2f}/oz"
+    except Exception:
+        return "N/A"
+
+
 def format_percent(value):
     try:
         value = float(value)
         sign = "+" if value >= 0 else ""
         return f"{sign}{value:.2f}%"
+    except Exception:
+        return "N/A"
+
+
+def calc_percent_from_change(current_value, change_value):
+    try:
+        current_value = float(current_value)
+        change_value = float(change_value)
+        previous_value = current_value - change_value
+
+        if previous_value == 0:
+            return "N/A"
+
+        percent = (change_value / previous_value) * 100
+        return format_percent(percent)
     except Exception:
         return "N/A"
 
@@ -83,157 +105,57 @@ def get_bitcoin_price():
     }
 
 
-def extract_gold_price(data):
-    if not data:
+def get_vang_today_price(type_code):
+    url = "https://www.vang.today/api/prices"
+    data = safe_request_json(url, params={"type": type_code})
+
+    if not data or not data.get("success"):
         return None
 
-    possible_lists = []
+    items = data.get("data", [])
 
-    if isinstance(data, list):
-        possible_lists.append(data)
+    if not items:
+        return None
 
-    if isinstance(data, dict):
-        for key in ["data", "prices", "items", "results"]:
-            if isinstance(data.get(key), list):
-                possible_lists.append(data.get(key))
-
-        for value in data.values():
-            if isinstance(value, list):
-                possible_lists.append(value)
-
-    for items in possible_lists:
-        for item in items:
-            if not isinstance(item, dict):
-                continue
-
-            text = " ".join(
-                str(item.get(k, ""))
-                for k in ["code", "name", "type", "brand", "gold_type"]
-            ).lower()
-
-            if (
-                "sjc" in text
-                or "sjl1l10" in text
-                or "vngsjc" in text
-            ):
-                buy = (
-                    item.get("buy")
-                    or item.get("buy_price")
-                    or item.get("buyPrice")
-                    or item.get("bid")
-                )
-
-                sell = (
-                    item.get("sell")
-                    or item.get("sell_price")
-                    or item.get("sellPrice")
-                    or item.get("ask")
-                )
-
-                change_percent = (
-                    item.get("change_percent")
-                    or item.get("changePercent")
-                    or item.get("percent_change")
-                    or item.get("pct_change")
-                    or item.get("change_pct")
-                )
-
-                updated = (
-                    item.get("updated_at")
-                    or item.get("updatedAt")
-                    or item.get("time")
-                    or item.get("date")
-                    or ""
-                )
-
-                if buy and sell:
-                    return {
-                        "buy": buy,
-                        "sell": sell,
-                        "change_percent": change_percent,
-                        "updated": updated
-                    }
-
-    if isinstance(data, dict):
-        buy = (
-            data.get("buy")
-            or data.get("buy_price")
-            or data.get("buyPrice")
-            or data.get("bid")
-        )
-
-        sell = (
-            data.get("sell")
-            or data.get("sell_price")
-            or data.get("sellPrice")
-            or data.get("ask")
-        )
-
-        change_percent = (
-            data.get("change_percent")
-            or data.get("changePercent")
-            or data.get("percent_change")
-            or data.get("pct_change")
-            or data.get("change_pct")
-        )
-
-        updated = (
-            data.get("updated_at")
-            or data.get("updatedAt")
-            or data.get("time")
-            or data.get("date")
-            or ""
-        )
-
-        if buy and sell:
-            return {
-                "buy": buy,
-                "sell": sell,
-                "change_percent": change_percent,
-                "updated": updated
-            }
-
-    return None
+    return items[0]
 
 
 def get_domestic_gold_price():
-    api_urls = [
-        "https://www.vang.today/api/v1/gold/SJL1L10",
-        "https://www.vang.today/api/v1/gold/VNGSJC",
-        "https://giavang.now/api/v1/gold/SJL1L10",
-        "https://giavang.now/api/v1/gold/VNGSJC",
-    ]
+    item = get_vang_today_price("SJL1L10")
 
-    for url in api_urls:
-        data = safe_request_json(url)
-        gold_data = extract_gold_price(data)
+    if not item:
+        return {
+            "buy": "N/A",
+            "sell": "N/A",
+            "change_24h": "N/A",
+            "note": "Chưa lấy được giá vàng trong nước từ vang.today."
+        }
 
-        if gold_data:
-            buy = gold_data.get("buy")
-            sell = gold_data.get("sell")
-            change_percent = gold_data.get("change_percent")
-            updated = gold_data.get("updated", "")
-
-            note = "Giá vàng trong nước SJC, đơn vị VND/lượng."
-            if updated:
-                note += f" Cập nhật: {updated}."
-
-            return {
-                "buy": format_vnd(buy),
-                "sell": format_vnd(sell),
-                "change_24h": format_percent(change_percent),
-                "note": note
-            }
+    buy = item.get("buy")
+    sell = item.get("sell")
+    change_sell = item.get("change_sell")
 
     return {
-        "buy": "N/A",
-        "sell": "N/A",
-        "change_24h": "N/A",
-        "note": "Chưa lấy được giá vàng trong nước."
+        "buy": format_vnd(buy),
+        "sell": format_vnd(sell),
+        "change_24h": calc_percent_from_change(sell, change_sell),
+        "note": "Giá vàng trong nước SJC, nguồn vang.today, đơn vị VND/lượng."
     }
 
 
 def get_world_gold_price():
+    item = get_vang_today_price("XAUUSD")
+
+    if item:
+        price = item.get("sell") or item.get("buy")
+        change = item.get("change_sell") or item.get("change_buy")
+
+        return {
+            "price": format_usd_oz(price),
+            "change_24h": calc_percent_from_change(price, change),
+            "note": "Giá vàng thế giới XAU/USD, nguồn vang.today, đơn vị USD/oz."
+        }
+
     try:
         data = yf.download(
             "GC=F",
@@ -255,22 +177,20 @@ def get_world_gold_price():
 
         data = data.dropna()
 
-        if len(data) < 2:
-            latest_close = float(data.iloc[-1]["Close"])
+        latest_close = float(data.iloc[-1]["Close"])
 
+        if len(data) < 2:
             return {
-                "price": f"${latest_close:,.2f}/oz",
+                "price": format_usd_oz(latest_close),
                 "change_24h": "N/A",
                 "note": "Dữ liệu vàng thế giới từ Yahoo Finance GC=F."
             }
 
-        latest_close = float(data.iloc[-1]["Close"])
         previous_close = float(data.iloc[-2]["Close"])
-
         change_percent = ((latest_close - previous_close) / previous_close) * 100
 
         return {
-            "price": f"${latest_close:,.2f}/oz",
+            "price": format_usd_oz(latest_close),
             "change_24h": format_percent(change_percent),
             "note": "Dữ liệu vàng thế giới từ Yahoo Finance Gold Futures GC=F."
         }
@@ -293,7 +213,6 @@ def get_gold_price():
         "domestic": domestic,
         "world": world,
 
-        # Giữ tương thích với code cũ / AI Summary cũ
         "buy": domestic.get("buy", "N/A"),
         "sell": domestic.get("sell", "N/A"),
         "change": domestic.get("change_24h", "N/A"),
