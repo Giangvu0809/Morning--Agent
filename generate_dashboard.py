@@ -33,51 +33,71 @@ ai_summary = get_ai_summary(
 # =========================
 
 vn_time = datetime.now(timezone(timedelta(hours=7)))
-updated_at = vn_time.strftime("%H:%M:%S ngày %d/%m/%Y")
+report_date = vn_time.strftime("%d/%m/%Y")
+updated_at = vn_time.strftime("%H:%M:%S")
 
 
 # =========================
-# BUILD NEWS HTML
+# BUILD NEWS BY SOURCE
 # =========================
 
-news_html = ""
+def build_source_news(source_name):
+    source_news = [
+        item for item in all_news
+        if item.get("source") == source_name
+    ]
 
-if all_news:
-    for index, item in enumerate(all_news, start=1):
-        news_html += f"""
-        <li class="news-item">
-            <a href="{item['link']}" target="_blank">
-                <strong>
-                    {index}. [{item['source']}] {item['title']}
-                </strong>
-            </a>
+    if not source_news:
+        return "<p class='empty-news'>Chưa có tin.</p>"
 
-            <div class="news-summary">
-                {item['summary']}
+    html = ""
+
+    for index, item in enumerate(source_news, start=1):
+        html += f"""
+        <div class="terminal-news-item">
+            <div class="terminal-news-index">{index:02d}</div>
+
+            <div>
+                <a href="{item['link']}" target="_blank">
+                    {item['title']}
+                </a>
+
+                <p>
+                    {item['summary']}
+                </p>
             </div>
-        </li>
+        </div>
         """
-else:
-    news_html = "<li>Không lấy được dữ liệu RSS.</li>"
 
+    return html
+
+
+vnexpress_news_html = build_source_news("VnExpress")
+dantri_news_html = build_source_news("Dân Trí")
+bbc_news_html = build_source_news("BBC")
+
+
+# =========================
+# BUILD CHARTS
+# =========================
 
 bitcoin_chart_html = build_candlestick_svg(
     bitcoin_chart_data,
-    "Bitcoin 3 tháng gần nhất - Nến ngày",
+    "Bitcoin / Nến ngày / 3 tháng",
     "Giá BTC/USD mới nhất",
     "RSI 14 ngày"
 )
 
 gold_chart_html = build_candlestick_svg(
     gold_chart_data,
-    "Vàng quốc tế 3 tháng gần nhất - Nến ngày",
+    "Vàng quốc tế / Nến ngày / 3 tháng",
     "Giá Gold Futures mới nhất",
     "RSI 14 ngày"
 )
 
 vnindex_chart_html = build_candlestick_svg(
     vnindex_chart_data,
-    "VNINDEX 3 tháng gần nhất - Nến ngày",
+    "VNINDEX / Nến ngày / 3 tháng",
     "Điểm VNINDEX mới nhất",
     "RSI 14 ngày"
 )
@@ -93,99 +113,292 @@ html_content = f"""
 
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Morning Financial Agent</title>
+<title>Bảng tổng hợp tin tức ngày {report_date}</title>
 
 <style>
 
+* {{
+    box-sizing: border-box;
+}}
+
 body {{
+    margin: 0;
     font-family: Arial, sans-serif;
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #f5f7fb;
-    color: #222;
+    background: #020617;
+    color: #e5e7eb;
 }}
 
-.card {{
-    background: white;
-    padding: 24px;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.page {{
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 26px 18px 50px;
 }}
 
-h1 {{
-    color: #0f766e;
+.terminal-header {{
+    background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.95), rgba(30, 64, 175, 0.95)),
+        #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 18px;
+    padding: 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
 }}
 
-h2 {{
-    color: #dc2626;
+.header-row {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
 }}
 
-.time {{
-    font-size: 18px;
-    font-weight: bold;
-    color: #2563eb;
+.header-title h1 {{
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
 }}
 
-ul {{
-    list-style: none;
-    padding-left: 0;
-}}
-
-.news-item {{
-    margin-bottom: 28px;
-    line-height: 1.6;
-}}
-
-.news-item a {{
-    color: #111827;
-    text-decoration: none;
-    font-size: 17px;
-}}
-
-.news-item a:hover {{
-    text-decoration: underline;
-}}
-
-.news-summary {{
+.subtitle {{
     margin-top: 8px;
-    color: #555;
-    line-height: 1.7;
-    font-size: 15px;
+    color: #cbd5e1;
+    font-size: 14px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
 }}
 
-.market-grid {{
+.updated {{
+    background: rgba(15, 23, 42, 0.48);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f8fafc;
+    padding: 11px 15px;
+    border-radius: 999px;
+    font-size: 14px;
+    white-space: nowrap;
+}}
+
+.kpi-grid {{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
 }}
 
-.market-box {{
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+.kpi-card {{
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
     padding: 18px;
-    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
 }}
 
-.market-value {{
-    font-size: 24px;
+.kpi-label {{
+    color: #94a3b8;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+}}
+
+.kpi-value {{
+    font-size: 26px;
     font-weight: bold;
-    color: #111827;
-    margin: 8px 0;
+    color: #f8fafc;
+    margin-bottom: 8px;
 }}
 
-.market-note {{
-    color: #6b7280;
+.kpi-note {{
+    color: #94a3b8;
+    font-size: 14px;
     line-height: 1.5;
 }}
 
-.chart-wrapper {{
+.kpi-news {{
+    border-top: 4px solid #38bdf8;
+}}
+
+.kpi-bitcoin {{
+    border-top: 4px solid #f97316;
+}}
+
+.kpi-gold {{
+    border-top: 4px solid #f59e0b;
+}}
+
+.kpi-vnindex {{
+    border-top: 4px solid #22c55e;
+}}
+
+.terminal-grid {{
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}}
+
+.panel {{
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+}}
+
+.panel-title {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #1e293b;
+}}
+
+.panel-title h2 {{
+    margin: 0;
+    font-size: 21px;
+    color: #f8fafc;
+}}
+
+.panel-badge {{
+    font-size: 12px;
+    color: #93c5fd;
+    background: rgba(37, 99, 235, 0.18);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    padding: 6px 9px;
+    border-radius: 999px;
+}}
+
+.ai-summary {{
+    line-height: 1.75;
+    color: #dbeafe;
+    font-size: 15px;
+}}
+
+.ai-summary p {{
+    margin-top: 0;
+}}
+
+.ai-summary ul {{
+    padding-left: 22px;
+}}
+
+.ai-summary li {{
+    margin-bottom: 8px;
+}}
+
+.snapshot-list {{
+    display: grid;
+    gap: 12px;
+}}
+
+.snapshot-item {{
+    background: #111827;
+    border: 1px solid #243244;
+    border-radius: 14px;
+    padding: 14px;
+}}
+
+.snapshot-name {{
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 6px;
+}}
+
+.snapshot-value {{
+    color: #f8fafc;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}}
+
+.snapshot-detail {{
+    color: #cbd5e1;
+    line-height: 1.5;
+    font-size: 14px;
+}}
+
+.news-columns {{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}}
+
+.news-column {{
+    background: #111827;
+    border: 1px solid #243244;
+    border-radius: 16px;
+    padding: 16px;
+}}
+
+.news-source {{
+    color: #f8fafc;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 14px;
+}}
+
+.terminal-news-item {{
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #1f2937;
+}}
+
+.terminal-news-item:last-child {{
+    border-bottom: none;
+}}
+
+.terminal-news-index {{
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #7dd3fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: bold;
+}}
+
+.terminal-news-item a {{
+    color: #e5e7eb;
+    text-decoration: none;
+    font-weight: bold;
+    line-height: 1.45;
+}}
+
+.terminal-news-item a:hover {{
+    color: #38bdf8;
+    text-decoration: underline;
+}}
+
+.terminal-news-item p {{
+    color: #94a3b8;
+    line-height: 1.6;
+    font-size: 14px;
+    margin: 7px 0 0;
+}}
+
+.empty-news {{
+    color: #94a3b8;
+}}
+
+.chart-section {{
     margin-top: 18px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+}}
+
+.chart-wrapper {{
+    margin-top: 12px;
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
     padding: 16px;
     overflow-x: auto;
 }}
@@ -193,7 +406,7 @@ ul {{
 .chart-title {{
     font-weight: bold;
     margin-bottom: 10px;
-    color: #111827;
+    color: #e5e7eb;
 }}
 
 .chart-svg {{
@@ -203,22 +416,22 @@ ul {{
 }}
 
 .grid-line {{
-    stroke: #e5e7eb;
+    stroke: #1e293b;
     stroke-width: 1;
 }}
 
 .candle-up {{
-    stroke: #16a34a;
-    fill: #16a34a;
+    stroke: #22c55e;
+    fill: #22c55e;
 }}
 
 .candle-down {{
-    stroke: #dc2626;
-    fill: #dc2626;
+    stroke: #ef4444;
+    fill: #ef4444;
 }}
 
 .rsi-line {{
-    stroke: #2563eb;
+    stroke: #38bdf8;
     stroke-width: 2;
 }}
 
@@ -229,13 +442,13 @@ ul {{
 }}
 
 .rsi-low-line {{
-    stroke: #10b981;
+    stroke: #22c55e;
     stroke-width: 1;
     stroke-dasharray: 5 5;
 }}
 
 .axis-text {{
-    fill: #6b7280;
+    fill: #94a3b8;
     font-size: 12px;
 }}
 
@@ -244,32 +457,46 @@ ul {{
     flex-wrap: wrap;
     gap: 18px;
     margin-top: 10px;
-    color: #374151;
+    color: #cbd5e1;
 }}
 
 .chart-empty {{
-    color: #6b7280;
+    color: #94a3b8;
     padding: 16px;
-    background: #f9fafb;
+    background: #111827;
     border-radius: 10px;
 }}
 
-.placeholder {{
-    color: #6b7280;
+.footer {{
+    color: #64748b;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 24px;
 }}
 
-.ai-summary {{
-    line-height: 1.7;
-    color: #374151;
+@media (max-width: 920px) {{
+    .terminal-grid {{
+        grid-template-columns: 1fr;
+    }}
+
+    .news-columns {{
+        grid-template-columns: 1fr;
+    }}
 }}
 
-.ai-summary ul {{
-    list-style: disc;
-    padding-left: 22px;
-}}
+@media (max-width: 620px) {{
+    .header-title h1 {{
+        font-size: 24px;
+    }}
 
-.ai-summary li {{
-    margin-bottom: 8px;
+    .terminal-header,
+    .panel {{
+        padding: 18px;
+    }}
+
+    .kpi-value {{
+        font-size: 22px;
+    }}
 }}
 
 </style>
@@ -278,113 +505,165 @@ ul {{
 
 <body>
 
-<div class="card">
+<div class="page">
 
-    <h1>Morning Financial Agent</h1>
+    <header class="terminal-header">
+        <div class="header-row">
+            <div class="header-title">
+                <h1>Bảng tổng hợp tin tức ngày {report_date}</h1>
+                <div class="subtitle">Morning Market Terminal</div>
+            </div>
 
-    <p>
-        Dashboard tài chính tự động bằng
-        Python + GitHub Actions + GitHub Pages
-    </p>
-
-    <p>Cập nhật lần cuối:</p>
-
-    <p class="time">
-        {updated_at}
-    </p>
-
-</div>
+            <div class="updated">
+                Cập nhật lần cuối: {updated_at}
+            </div>
+        </div>
+    </header>
 
 
-<div class="card">
+    <section class="kpi-grid">
 
-    <h2>🔥 Tin nóng hôm nay</h2>
-
-    <p>
-        Nguồn:
-        VnExpress • Dân Trí • BBC
-    </p>
-
-    <ul>
-        {news_html}
-    </ul>
-
-</div>
-
-
-<div class="card">
-
-    <h2>📈 Thị trường</h2>
-
-    <div class="market-grid">
-
-        <div class="market-box">
-            <h3>📈 Giá vàng</h3>
-            <p>Mua vào: <strong>{gold['buy']}</strong></p>
-            <p>Bán ra: <strong>{gold['sell']}</strong></p>
-            <p>Biến động: <strong>{gold['change']}</strong></p>
-            <p>RSI: <strong>{gold_rsi}</strong></p>
-            <p class="market-note">{gold_rsi_note}</p>
-            <p class="market-note">{gold['note']}</p>
+        <div class="kpi-card kpi-news">
+            <div class="kpi-label">Tin nóng</div>
+            <div class="kpi-value">{len(all_news)} tin</div>
+            <div class="kpi-note">VnExpress • Dân Trí • BBC</div>
         </div>
 
-        <div class="market-box">
-            <h3>₿ Bitcoin</h3>
-            <p class="market-value">${bitcoin['price_usd']}</p>
-            <p>Quy đổi: <strong>{bitcoin['price_vnd']} VND</strong></p>
-            <p>24h: <strong>{bitcoin['change_24h']}</strong></p>
-            <p>RSI: <strong>{bitcoin_rsi}</strong></p>
-            <p class="market-note">{bitcoin_rsi_note}</p>
-            <p class="market-note">{bitcoin['note']}</p>
+        <div class="kpi-card kpi-bitcoin">
+            <div class="kpi-label">Bitcoin</div>
+            <div class="kpi-value">${bitcoin['price_usd']}</div>
+            <div class="kpi-note">24h: {bitcoin['change_24h']} • RSI: {bitcoin_rsi}</div>
         </div>
 
-        <div class="market-box">
-            <h3>📊 VNINDEX</h3>
-            <p class="market-value">{vnindex['value']}</p>
-            <p>Biến động: <strong>{vnindex['change']}</strong></p>
-            <p>RSI: <strong>{vnindex_rsi}</strong></p>
-            <p class="market-note">{vnindex_rsi_note}</p>
-            <p class="market-note">{vnindex['note']}</p>
+        <div class="kpi-card kpi-gold">
+            <div class="kpi-label">Vàng quốc tế</div>
+            <div class="kpi-value">GC=F</div>
+            <div class="kpi-note">RSI: {gold_rsi} • {gold_rsi_note}</div>
         </div>
 
-    </div>
+        <div class="kpi-card kpi-vnindex">
+            <div class="kpi-label">VNINDEX</div>
+            <div class="kpi-value">{vnindex['value']}</div>
+            <div class="kpi-note">{vnindex['change']} • RSI: {vnindex_rsi}</div>
+        </div>
 
-</div>
-
-
-<div class="card">
-
-    <h2>📊 Chart Bitcoin</h2>
-
-    {bitcoin_chart_html}
-
-</div>
+    </section>
 
 
-<div class="card">
+    <section class="terminal-grid">
 
-    <h2>📊 Chart vàng</h2>
+        <div class="panel">
+            <div class="panel-title">
+                <h2>🎯 AI Market Brief</h2>
+                <div class="panel-badge">AUTO SUMMARY</div>
+            </div>
 
-    {gold_chart_html}
+            <div class="ai-summary">
+                {ai_summary}
+            </div>
+        </div>
 
-</div>
+        <div class="panel">
+            <div class="panel-title">
+                <h2>📈 Market Snapshot</h2>
+                <div class="panel-badge">LIVE DATA</div>
+            </div>
+
+            <div class="snapshot-list">
+
+                <div class="snapshot-item">
+                    <div class="snapshot-name">₿ Bitcoin</div>
+                    <div class="snapshot-value">${bitcoin['price_usd']}</div>
+                    <div class="snapshot-detail">
+                        Quy đổi: {bitcoin['price_vnd']} VND<br>
+                        24h: {bitcoin['change_24h']}<br>
+                        RSI: {bitcoin_rsi} — {bitcoin_rsi_note}
+                    </div>
+                </div>
+
+                <div class="snapshot-item">
+                    <div class="snapshot-name">🟡 Gold Futures</div>
+                    <div class="snapshot-value">RSI {gold_rsi}</div>
+                    <div class="snapshot-detail">
+                        {gold_rsi_note}<br>
+                        {gold['note']}
+                    </div>
+                </div>
+
+                <div class="snapshot-item">
+                    <div class="snapshot-name">📊 VNINDEX</div>
+                    <div class="snapshot-value">{vnindex['value']}</div>
+                    <div class="snapshot-detail">
+                        {vnindex['change']}<br>
+                        RSI: {vnindex_rsi} — {vnindex_rsi_note}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
 
 
-<div class="card">
+    <section class="panel">
+        <div class="panel-title">
+            <h2>🔥 Tin nóng hôm nay</h2>
+            <div class="panel-badge">RSS FEEDS</div>
+        </div>
 
-    <h2>📊 Chart VNINDEX</h2>
+        <div class="news-columns">
 
-    {vnindex_chart_html}
+            <div class="news-column">
+                <div class="news-source">VnExpress</div>
+                {vnexpress_news_html}
+            </div>
 
-</div>
+            <div class="news-column">
+                <div class="news-source">Dân Trí</div>
+                {dantri_news_html}
+            </div>
+
+            <div class="news-column">
+                <div class="news-source">BBC</div>
+                {bbc_news_html}
+            </div>
+
+        </div>
+    </section>
 
 
-<div class="card">
+    <section class="panel chart-section">
+        <div class="panel-title">
+            <h2>📊 Bitcoin / Nến ngày / 3 tháng</h2>
+            <div class="panel-badge">BTC-USD</div>
+        </div>
 
-    <h2>🎯 AI Summary</h2>
+        {bitcoin_chart_html}
+    </section>
 
-    <div class="ai-summary">
-        {ai_summary}
+
+    <section class="panel chart-section">
+        <div class="panel-title">
+            <h2>🟡 Vàng / Nến ngày / 3 tháng</h2>
+            <div class="panel-badge">GC=F</div>
+        </div>
+
+        {gold_chart_html}
+    </section>
+
+
+    <section class="panel chart-section">
+        <div class="panel-title">
+            <h2>📊 VNINDEX / Nến ngày / 3 tháng</h2>
+            <div class="panel-badge">^VNINDEX.VN</div>
+        </div>
+
+        {vnindex_chart_html}
+    </section>
+
+
+    <div class="footer">
+        Dữ liệu được tổng hợp tự động từ RSS, Yahoo Finance, CoinGecko và OpenAI API.
     </div>
 
 </div>
@@ -402,7 +681,7 @@ with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
 
-print(f"Generated dashboard at {updated_at}")
+print(f"Generated dashboard at {updated_at} - {report_date}")
 print(f"Loaded {len(all_news)} news items from RSS feeds")
 print(f"Bitcoin USD: {bitcoin['price_usd']}")
 print(f"Bitcoin RSI: {bitcoin_rsi}")
