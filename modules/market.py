@@ -34,6 +34,15 @@ def format_vnd(value):
         return "N/A"
 
 
+def format_percent(value):
+    try:
+        value = float(value)
+        sign = "+" if value >= 0 else ""
+        return f"{sign}{value:.2f}%"
+    except Exception:
+        return "N/A"
+
+
 def get_bitcoin_price():
     url = "https://api.coingecko.com/api/v3/simple/price"
 
@@ -63,7 +72,7 @@ def get_bitcoin_price():
         change_24h = "N/A"
         trend = "Chưa có dữ liệu biến động 24h."
     else:
-        change_24h = f"{float(change_24h_raw):.2f}%"
+        change_24h = format_percent(change_24h_raw)
         trend = "Tăng trong 24h" if float(change_24h_raw) > 0 else "Giảm trong 24h"
 
     return {
@@ -121,6 +130,14 @@ def extract_gold_price(data):
                     or item.get("ask")
                 )
 
+                change_percent = (
+                    item.get("change_percent")
+                    or item.get("changePercent")
+                    or item.get("percent_change")
+                    or item.get("pct_change")
+                    or item.get("change_pct")
+                )
+
                 updated = (
                     item.get("updated_at")
                     or item.get("updatedAt")
@@ -133,6 +150,7 @@ def extract_gold_price(data):
                     return {
                         "buy": buy,
                         "sell": sell,
+                        "change_percent": change_percent,
                         "updated": updated
                     }
 
@@ -151,6 +169,14 @@ def extract_gold_price(data):
             or data.get("ask")
         )
 
+        change_percent = (
+            data.get("change_percent")
+            or data.get("changePercent")
+            or data.get("percent_change")
+            or data.get("pct_change")
+            or data.get("change_pct")
+        )
+
         updated = (
             data.get("updated_at")
             or data.get("updatedAt")
@@ -163,13 +189,14 @@ def extract_gold_price(data):
             return {
                 "buy": buy,
                 "sell": sell,
+                "change_percent": change_percent,
                 "updated": updated
             }
 
     return None
 
 
-def get_gold_price():
+def get_domestic_gold_price():
     api_urls = [
         "https://www.vang.today/api/v1/gold/SJL1L10",
         "https://www.vang.today/api/v1/gold/VNGSJC",
@@ -179,12 +206,12 @@ def get_gold_price():
 
     for url in api_urls:
         data = safe_request_json(url)
-
         gold_data = extract_gold_price(data)
 
         if gold_data:
             buy = gold_data.get("buy")
             sell = gold_data.get("sell")
+            change_percent = gold_data.get("change_percent")
             updated = gold_data.get("updated", "")
 
             note = "Giá vàng trong nước SJC, đơn vị VND/lượng."
@@ -194,15 +221,83 @@ def get_gold_price():
             return {
                 "buy": format_vnd(buy),
                 "sell": format_vnd(sell),
-                "change": "Đang cập nhật",
+                "change_24h": format_percent(change_percent),
                 "note": note
             }
 
     return {
         "buy": "N/A",
         "sell": "N/A",
-        "change": "N/A",
-        "note": "Chưa lấy được giá vàng trong nước. Chart bên dưới vẫn dùng dữ liệu vàng quốc tế Gold Futures: GC=F."
+        "change_24h": "N/A",
+        "note": "Chưa lấy được giá vàng trong nước."
+    }
+
+
+def get_world_gold_price():
+    try:
+        data = yf.download(
+            "GC=F",
+            period="7d",
+            interval="1d",
+            progress=False,
+            auto_adjust=False
+        )
+
+        if data.empty:
+            return {
+                "price": "N/A",
+                "change_24h": "N/A",
+                "note": "Không lấy được dữ liệu vàng thế giới."
+            }
+
+        if isinstance(data.columns, pd.MultiIndex):
+            data.columns = data.columns.get_level_values(0)
+
+        data = data.dropna()
+
+        if len(data) < 2:
+            latest_close = float(data.iloc[-1]["Close"])
+
+            return {
+                "price": f"${latest_close:,.2f}/oz",
+                "change_24h": "N/A",
+                "note": "Dữ liệu vàng thế giới từ Yahoo Finance GC=F."
+            }
+
+        latest_close = float(data.iloc[-1]["Close"])
+        previous_close = float(data.iloc[-2]["Close"])
+
+        change_percent = ((latest_close - previous_close) / previous_close) * 100
+
+        return {
+            "price": f"${latest_close:,.2f}/oz",
+            "change_24h": format_percent(change_percent),
+            "note": "Dữ liệu vàng thế giới từ Yahoo Finance Gold Futures GC=F."
+        }
+
+    except Exception as e:
+        print(f"ERROR loading world gold: {e}")
+
+        return {
+            "price": "N/A",
+            "change_24h": "N/A",
+            "note": "Lỗi khi lấy dữ liệu vàng thế giới."
+        }
+
+
+def get_gold_price():
+    domestic = get_domestic_gold_price()
+    world = get_world_gold_price()
+
+    return {
+        "domestic": domestic,
+        "world": world,
+
+        # Giữ tương thích với code cũ / AI Summary cũ
+        "buy": domestic.get("buy", "N/A"),
+        "sell": domestic.get("sell", "N/A"),
+        "change": domestic.get("change_24h", "N/A"),
+        "note": f"{domestic.get('note', '')} {world.get('note', '')}"
     }
 
 
