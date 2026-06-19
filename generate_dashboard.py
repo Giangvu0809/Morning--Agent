@@ -1,4 +1,5 @@
 import html
+import os
 import re
 from datetime import datetime, timezone, timedelta
 
@@ -13,6 +14,11 @@ except Exception:
     ZoneInfo = None
 
 try:
+    from modules.cache import get_or_set_cache
+except Exception:
+    get_or_set_cache = None
+
+try:
     from modules.crypto_alpha import build_crypto_alpha
 except Exception:
     build_crypto_alpha = None
@@ -22,6 +28,8 @@ try:
 except Exception:
     build_career_opportunities = None
 
+
+FAST_MODE = os.getenv("FAST_MODE", "true").lower() == "true"
 
 STABLECOINS = {
     "USDT", "USDC", "DAI", "FDUSD", "TUSD", "PYUSD", "USDE", "USDD",
@@ -35,6 +43,12 @@ NEWS_KEYWORDS = [
     "doanh nghiệp", "xuất khẩu", "nhập khẩu", "fed", "oil", "gold",
     "stock", "market", "finance", "economy", "inflation", "rate"
 ]
+
+
+def cached(name, builder, max_age_minutes=60):
+    if get_or_set_cache:
+        return get_or_set_cache(name, builder, max_age_minutes=max_age_minutes)
+    return builder()
 
 
 def vn_now():
@@ -231,6 +245,9 @@ def get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha, care
 
     if not career_data:
         warnings.append("Career Opportunities chưa lấy được dữ liệu remote job.")
+
+    if FAST_MODE:
+        warnings.append("FAST_MODE đang bật: chart và AI brief chi tiết có thể được rút gọn để tăng tốc build.")
 
     if not warnings:
         warnings.append("Dữ liệu chính đang hoạt động bình thường.")
@@ -607,6 +624,26 @@ def render_business_section(career_data):
         {client_html}
     </div>
     """
+
+
+def build_fast_charts():
+    return {
+        "bitcoin": {
+            "html": "<div class='chart-empty'>FAST_MODE: Chart sẽ được cập nhật ở bản full build.</div>",
+            "rsi": "N/A",
+            "note": "Chart đang tạm ẩn để tăng tốc build.",
+        },
+        "gold": {
+            "html": "<div class='chart-empty'>FAST_MODE: Chart sẽ được cập nhật ở bản full build.</div>",
+            "rsi": "N/A",
+            "note": "Chart đang tạm ẩn để tăng tốc build.",
+        },
+        "vnindex": {
+            "html": "<div class='chart-empty'>FAST_MODE: Chart sẽ được cập nhật ở bản full build.</div>",
+            "rsi": "N/A",
+            "note": "Chart đang tạm ẩn để tăng tốc build.",
+        },
+    }
 
 
 def build_charts():
@@ -1073,6 +1110,15 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             border-radius: 18px;
         }}
 
+        .chart-empty {{
+            color: var(--muted);
+            min-height: 220px;
+            display: grid;
+            place-items: center;
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+        }}
+
         .grid-line {{
             stroke: rgba(255,255,255,0.12);
             stroke-width: 1;
@@ -1202,7 +1248,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
                 </p>
             </div>
 
-            <div class="time-chip">Cập nhật: {now} GMT+7</div>
+            <div class="time-chip">Cập nhật: {now} GMT+7 · FAST_MODE: {str(FAST_MODE)}</div>
         </header>
 
         <details class="dashboard-section" open>
@@ -1432,23 +1478,36 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
 
 def main():
+    print(f"FAST_MODE: {FAST_MODE}")
+
     print("Loading news...")
-    news_items = get_all_news(limit_per_source=8)
+    news_items = cached(
+        "news",
+        lambda: get_all_news(limit_per_source=8),
+        max_age_minutes=60,
+    )
 
     print("Loading market data...")
-    bitcoin = get_bitcoin_price()
-    gold = get_gold_price()
-    vnindex = get_vnindex()
+    bitcoin = cached("bitcoin", get_bitcoin_price, max_age_minutes=30)
+    gold = cached("gold", get_gold_price, max_age_minutes=60)
+    vnindex = cached("vnindex", get_vnindex, max_age_minutes=60)
 
     print("Loading charts...")
-    charts = build_charts()
+    if FAST_MODE:
+        charts = build_fast_charts()
+    else:
+        charts = cached("charts", build_charts, max_age_minutes=720)
 
     print("Loading Crypto Alpha...")
     crypto_alpha = None
 
     if build_crypto_alpha:
         try:
-            crypto_alpha = build_crypto_alpha()
+            crypto_alpha = cached(
+                "crypto_alpha",
+                build_crypto_alpha,
+                max_age_minutes=60 if FAST_MODE else 30,
+            )
         except Exception as exc:
             print(f"ERROR loading Crypto Alpha: {exc}")
     else:
@@ -1459,26 +1518,36 @@ def main():
 
     if build_career_opportunities:
         try:
-            career_data = build_career_opportunities()
+            career_data = cached(
+                "career_opportunities",
+                build_career_opportunities,
+                max_age_minutes=720 if FAST_MODE else 180,
+            )
         except Exception as exc:
             print(f"ERROR loading Career Opportunities: {exc}")
     else:
         print("Career Opportunities module not available.")
 
     print("Generating AI summary...")
-    try:
-        ai_summary = get_ai_summary(
-            news_items=filter_curated_news(news_items, max_items=10),
-            bitcoin=bitcoin,
-            gold=gold,
-            vnindex=vnindex,
-        )
-    except Exception as exc:
-        print(f"ERROR generating AI summary: {exc}")
+    if FAST_MODE:
         ai_summary = """
-        <p><strong>AI Market Brief chưa tạo được.</strong></p>
-        <p>Dashboard vẫn chạy bình thường. Vui lòng kiểm tra OPENAI_API_KEY hoặc module ai_summary.py.</p>
+        <p><strong>FAST_MODE đang bật.</strong></p>
+        <p>AI Market Brief chi tiết sẽ được cập nhật trong bản full build. Dashboard hiện ưu tiên tốc độ, dữ liệu thị trường, crypto alpha và cơ hội nghề nghiệp.</p>
         """
+    else:
+        try:
+            ai_summary = get_ai_summary(
+                news_items=filter_curated_news(news_items, max_items=10),
+                bitcoin=bitcoin,
+                gold=gold,
+                vnindex=vnindex,
+            )
+        except Exception as exc:
+            print(f"ERROR generating AI summary: {exc}")
+            ai_summary = """
+            <p><strong>AI Market Brief chưa tạo được.</strong></p>
+            <p>Dashboard vẫn chạy bình thường. Vui lòng kiểm tra OPENAI_API_KEY hoặc module ai_summary.py.</p>
+            """
 
     print("Rendering dashboard...")
     html_content = build_html(
