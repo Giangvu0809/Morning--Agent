@@ -24,8 +24,10 @@ jobs:
           pip install feedparser requests yfinance pandas openai
 
       - name: Generate dashboard
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python generate_dashboard.py
-
+        
       - name: Commit and push index.html
         run: |
           git config user.name "github-actions"
