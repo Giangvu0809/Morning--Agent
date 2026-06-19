@@ -15,6 +15,7 @@ body {
     margin: 40px auto;
     padding: 20px;
     background: #f5f7fb;
+    color: #222;
 }
 
 .card {
@@ -44,18 +45,26 @@ ul {
     padding-left: 0;
 }
 
-li {
-    margin: 12px 0;
+.news-item {
+    margin-bottom: 28px;
     line-height: 1.6;
 }
 
-a {
+.news-item a {
     color: #111827;
     text-decoration: none;
+    font-size: 17px;
 }
 
-a:hover {
+.news-item a:hover {
     text-decoration: underline;
+}
+
+.news-summary {
+    margin-top: 8px;
+    color: #555;
+    line-height: 1.7;
+    font-size: 15px;
 }
 
 .placeholder {
@@ -80,7 +89,7 @@ a:hover {
     <p>Cập nhật lần cuối:</p>
 
     <p class="time">
-        09:02:39 ngày 19/06/2026
+        09:10:25 ngày 19/06/2026
     </p>
 
 </div>
@@ -97,94 +106,184 @@ a:hover {
 
     <ul>
         
-        <li>
+        <li class="news-item">
             <a href="https://vnexpress.net/gia-vang-the-gioi-quay-dau-giam-5087485.html" target="_blank">
-                1. [VnExpress] Giá vàng thế giới quay đầu giảm
+                <strong>
+                    1. [VnExpress] Giá vàng thế giới quay đầu giảm
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Mỗi ounce vàng hiện về dưới 4.200 USD, do khả năng Cục Dự trữ liên bang Mỹ (Fed) tăng lãi suất cuối năm nay.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://vnexpress.net/gia-vai-khong-hat-trung-quoc-giam-mot-nua-5086646.html" target="_blank">
-                2. [VnExpress] Giá vải không hạt Trung Quốc giảm một nửa
+                <strong>
+                    2. [VnExpress] Giá vải không hạt Trung Quốc giảm một nửa
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Vải không hạt nhập từ Trung Quốc được bán giá 350.000-480.000 đồng một kg, giảm 40-50% so với cùng kỳ năm ngoái nhờ nguồn cung dồi dào.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://vnexpress.net/deutsche-bank-chat-luong-doanh-nghiep-moi-la-dieu-thu-hut-von-ngoai-5087426.html" target="_blank">
-                3. [VnExpress] Deutsche Bank: Chất lượng doanh nghiệp mới là điều thu hút vốn ngoại
+                <strong>
+                    3. [VnExpress] Deutsche Bank: Chất lượng doanh nghiệp mới là điều thu hút vốn ngoại
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Theo ngân hàng lớn nhất Đức, vốn ngoại đầu tư không chỉ nhờ thể chế, quan trọng hơn là sức hấp dẫn của các doanh nghiệp trên sàn chứng khoán.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://vnexpress.net/dac-san-van-loay-hoay-tim-duong-vao-sieu-thi-5087263.html" target="_blank">
-                4. [VnExpress] Đặc sản vẫn loay hoay &#x27;tìm đường&#x27; vào siêu thị
+                <strong>
+                    4. [VnExpress] Đặc sản vẫn loay hoay &#x27;tìm đường&#x27; vào siêu thị
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Mặc dù đã xuất khẩu sang Mỹ, châu Âu, nhiều đặc sản hiện nay vẫn loay hoay tìm chỗ đứng trong hệ thống bán lẻ hiện đại tại Việt Nam.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://vnexpress.net/vec-hop-tac-chien-luoc-voi-loat-doi-tac-trien-lam-hang-dau-the-gioi-5087404.html" target="_blank">
-                5. [VnExpress] VEC hợp tác chiến lược với loạt đối tác triển lãm hàng đầu thế giới
+                <strong>
+                    5. [VnExpress] VEC hợp tác chiến lược với loạt đối tác triển lãm hàng đầu thế giới
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Trung tâm Triển lãm Việt Nam (VEC) ký kết hợp tác chiến lược với các nhà tổ chức sự kiện hàng đầu thế giới nhằm đưa chuỗi triển lãm quy mô toàn cầu về Việt Nam, ngày 18/6.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://dantri.com.vn/kinh-doanh/chan-gan-1-tan-thuc-pham-lau-nhieu-lo-hang-da-boc-mui-hoi-thoi-20260618224956994.htm" target="_blank">
-                6. [Dân Trí] Chặn gần 1 tấn thực phẩm lậu, nhiều lô hàng đã bốc mùi hôi thối
+                <strong>
+                    6. [Dân Trí] Chặn gần 1 tấn thực phẩm lậu, nhiều lô hàng đã bốc mùi hôi thối
+                </strong>
             </a>
+
+            <div class="news-summary">
+                (Dân trí) - Lực lượng hải quan tại nhiều địa phương đã liên tiếp phát hiện, thu giữ gần 1 tấn thực phẩm nhập lậu gồm chân gà, xúc xích, lạp xưởng và các mặt hàng đông lạnh không rõ nguồn gốc.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank">
-                7. [Dân Trí] Giá vàng trong nước, thế giới đồng loạt quay đầu giảm
+                <strong>
+                    7. [Dân Trí] Giá vàng trong nước, thế giới đồng loạt quay đầu giảm
+                </strong>
             </a>
+
+            <div class="news-summary">
+                (Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://dantri.com.vn/kinh-doanh/nhom-co-phieu-ho-vingroup-dong-loat-tang-tran-keo-thi-truong-but-pha-20260618155317346.htm" target="_blank">
-                8. [Dân Trí] Nhóm cổ phiếu &quot;họ&quot; Vingroup đồng loạt tăng trần kéo thị trường bứt phá
+                <strong>
+                    8. [Dân Trí] Nhóm cổ phiếu &quot;họ&quot; Vingroup đồng loạt tăng trần kéo thị trường bứt phá
+                </strong>
             </a>
+
+            <div class="news-summary">
+                (Dân trí) - Nhóm cổ phiếu Vingroup đồng loạt tăng trần trong phiên 18/6, với VIC, VHM và VRE dẫn đầu đà tăng của thị trường. Cùng với PC1 tăng hết biên độ, các mã này đã góp công lớn đưa VN-Index bứt phá.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://dantri.com.vn/kinh-doanh/viet-nam-muon-co-10-doanh-nghiep-cong-nghe-chien-luoc-ty-usd-20260618152658446.htm" target="_blank">
-                9. [Dân Trí] Việt Nam muốn có 10 doanh nghiệp công nghệ chiến lược tỷ USD
+                <strong>
+                    9. [Dân Trí] Việt Nam muốn có 10 doanh nghiệp công nghệ chiến lược tỷ USD
+                </strong>
             </a>
+
+            <div class="news-summary">
+                (Dân trí) - Chính phủ đặt mục tiêu năm 2030 Việt Nam hình thành tối tiểu 10 doanh nghiệp công nghệ chiến lược, có tổng doanh thu 1 tỷ USD/năm trở lên.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://dantri.com.vn/kinh-doanh/chu-dau-tu-san-bay-long-thanh-vi-pham-cua-mot-so-lanh-dao-rat-tinh-vi-20260618131551781.htm" target="_blank">
-                10. [Dân Trí] Chủ đầu tư Sân bay Long Thành: Vi phạm của một số lãnh đạo rất tinh vi
+                <strong>
+                    10. [Dân Trí] Chủ đầu tư Sân bay Long Thành: Vi phạm của một số lãnh đạo rất tinh vi
+                </strong>
             </a>
+
+            <div class="news-summary">
+                (Dân trí) - Chủ tịch là ông Vũ Thế Phiệt cùng nhiều lãnh đạo đã bị bắt giam, ACV cho biết hành vi vi phạm được thực hiện một cách tinh vi, vượt ngoài khả năng kiểm soát của HĐQT.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://www.bbc.com/vietnamese/articles/cn59yzy04d0o?at_medium=RSS&at_campaign=rss" target="_blank">
-                11. [BBC] Cơ thể các cầu thủ bóng đá hàng đầu thay đổi thế nào trong 50 năm qua
+                <strong>
+                    11. [BBC] Cơ thể các cầu thủ bóng đá hàng đầu thay đổi thế nào trong 50 năm qua
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Các chuyên gia cho biết cường độ thi đấu cao hơn cùng với những tiến bộ trong y học và khoa học thể thao đã làm thay đổi sinh lý của các cầu thủ hàng đầu.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://www.bbc.com/vietnamese/articles/cm203nmz2l2o?at_medium=RSS&at_campaign=rss" target="_blank">
-                12. [BBC] Thấy gì từ việc công dân Việt Nam chết trong trung tâm giam giữ di trú Mỹ
+                <strong>
+                    12. [BBC] Thấy gì từ việc công dân Việt Nam chết trong trung tâm giam giữ di trú Mỹ
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Một bài phân tích mới đây của hãng thông tấn Reuters cho thấy tỷ lệ tử vong tại các trung tâm giam giữ người nhập cư của Mỹ tăng gấp đôi dưới thời Tổng thống Donald Trump.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://www.bbc.com/vietnamese/articles/cyv0ejd8330o?at_medium=RSS&at_campaign=rss" target="_blank">
-                13. [BBC] Siêu dự án Trục đại lộ cảnh quan sông Hồng: Những thành phố khác đã làm gì với các dòng sông của họ?
+                <strong>
+                    13. [BBC] Siêu dự án Trục đại lộ cảnh quan sông Hồng: Những thành phố khác đã làm gì với các dòng sông của họ?
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Theo các chuyên gia, việc Hà Nội hướng mặt ra sông cần dựa trên bối cảnh đặc thù của địa phương và có định hướng cũng như cách làm phù hợp, khoa học chứ không phải là câu chuyện đơn giản là xây rừng cao ốc bám theo xa lộ ven sông.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://www.bbc.com/vietnamese/articles/ceqdrq5nnpro?at_medium=RSS&at_campaign=rss" target="_blank">
-                14. [BBC] &#x27;Bàn tay của Chúa&#x27; là biểu tượng, nhưng còn bàn thắng tuyệt vời thứ hai của Maradona thì sao?
+                <strong>
+                    14. [BBC] &#x27;Bàn tay của Chúa&#x27; là biểu tượng, nhưng còn bàn thắng tuyệt vời thứ hai của Maradona thì sao?
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Lần đầu tiên tôi đi xem bóng đá trực tiếp lại đúng vào một trong những trận đấu gây tranh cãi nhất lịch sử thể thao.
+            </div>
         </li>
         
-        <li>
+        <li class="news-item">
             <a href="https://www.bbc.com/vietnamese/articles/c4gy2glgpgyo?at_medium=RSS&at_campaign=rss" target="_blank">
-                15. [BBC] Thỏa thuận Mỹ - Iran: Yếu tố nào đáng chú ý?
+                <strong>
+                    15. [BBC] Thỏa thuận Mỹ - Iran: Yếu tố nào đáng chú ý?
+                </strong>
             </a>
+
+            <div class="news-summary">
+                Bản ghi nhớ gồm 14 điểm này bao gồm việc chấm dứt giao tranh, thỏa thuận rằng Iran sẽ không bao giờ sở hữu vũ khí hạt nhân và một gói tái phát triển trị giá 300 tỷ USD dành cho Iran.
+            </div>
         </li>
         
     </ul>
