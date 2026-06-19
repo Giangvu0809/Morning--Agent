@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install feedparser
+          pip install feedparser requests
 
       - name: Generate dashboard
         run: python generate_dashboard.py
