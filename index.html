@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Agent Finance</title>
+    <title>Morning Financial Intelligence</title>
 
     <style>
         :root {
             --bg: #070b14;
-            --panel: #101828;
+            --panel: rgba(16, 24, 40, 0.86);
             --panel-soft: rgba(255, 255, 255, 0.045);
             --border: rgba(255, 255, 255, 0.09);
             --text: #e8eefc;
@@ -29,8 +29,8 @@
             font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background:
                 radial-gradient(circle at top left, rgba(86, 163, 255, 0.18), transparent 32%),
-                radial-gradient(circle at top right, rgba(255, 209, 102, 0.13), transparent 28%),
-                radial-gradient(circle at 50% 30%, rgba(182, 140, 255, 0.08), transparent 36%),
+                radial-gradient(circle at top right, rgba(255, 209, 102, 0.12), transparent 28%),
+                radial-gradient(circle at 50% 22%, rgba(182, 140, 255, 0.08), transparent 36%),
                 var(--bg);
             color: var(--text);
         }
@@ -53,28 +53,29 @@
         .hero {
             display: flex;
             justify-content: space-between;
-            gap: 24px;
             align-items: flex-start;
+            gap: 24px;
             margin-bottom: 24px;
         }
 
         .hero h1 {
             margin: 0;
-            font-size: clamp(34px, 5vw, 58px);
+            font-size: clamp(34px, 5vw, 60px);
             line-height: 1;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.055em;
         }
 
         .hero p {
             color: var(--muted);
-            max-width: 780px;
+            max-width: 820px;
             font-size: 16px;
             line-height: 1.7;
         }
 
         .time-chip,
         .updated-pill,
-        .rsi-pill {
+        .rsi-pill,
+        .tag {
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.05);
             padding: 10px 14px;
@@ -86,7 +87,7 @@
 
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 16px;
             margin-bottom: 18px;
         }
@@ -99,11 +100,12 @@
             border: 1px solid var(--border);
             border-radius: 24px;
             box-shadow: 0 22px 60px rgba(0, 0, 0, 0.23);
+            backdrop-filter: blur(14px);
         }
 
         .kpi-card {
             padding: 20px;
-            min-height: 136px;
+            min-height: 130px;
         }
 
         .kpi-card span {
@@ -115,7 +117,7 @@
 
         .kpi-card strong {
             display: block;
-            font-size: 26px;
+            font-size: 24px;
             letter-spacing: -0.03em;
             word-break: break-word;
         }
@@ -161,6 +163,44 @@
 
         h3 {
             font-size: 18px;
+        }
+
+        .executive-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .insight-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .insight-card p {
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 0;
+        }
+
+        .insight-card ul {
+            margin: 12px 0 0;
+            padding-left: 20px;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .mood-badge {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(86,163,255,0.14);
+            color: var(--accent);
+            font-weight: 800;
+            margin-top: 12px;
         }
 
         .brief {
@@ -374,7 +414,7 @@
         .chart-note {
             color: var(--muted);
             font-size: 13px;
-            margin-bottom: 14px;
+            margin: 0 0 14px;
         }
 
         .chart-box {
@@ -492,11 +532,15 @@
             margin: 8px 0 0;
         }
 
-        @media (max-width: 1100px) {
-            .kpi-grid,
+        @media (max-width: 1200px) {
+            .kpi-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
             .market-grid,
             .alpha-grid,
-            .news-grid {
+            .news-grid,
+            .executive-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
@@ -515,7 +559,8 @@
             .kpi-grid,
             .market-grid,
             .alpha-grid,
-            .news-grid {
+            .news-grid,
+            .executive-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -536,37 +581,36 @@
     <main class="page">
         <header class="hero">
             <div>
-                <h1>Bảng tổng hợp tin tức ngày 19/06/2026</h1>
+                <h1>Morning Financial Intelligence</h1>
                 <p>
-                    Morning Agent Finance theo dõi tin tức, Bitcoin, vàng, VNINDEX,
-                    RSI kỹ thuật và tín hiệu Crypto Alpha để hỗ trợ bạn phát hiện
-                    cơ hội, rủi ro và xu hướng đáng chú ý mỗi ngày.
+                    Bản tin phân tích tài chính tự động ngày 19/06/2026: tổng hợp thị trường,
+                    rủi ro, cơ hội crypto, vàng, VNINDEX, tin tức và tín hiệu kỹ thuật.
                 </p>
             </div>
 
-            <div class="time-chip">Cập nhật lần cuối: 19/06/2026 08:49:46</div>
+            <div class="time-chip">Cập nhật: 19/06/2026 09:07:02</div>
         </header>
 
         <section class="kpi-grid">
             <article class="kpi-card">
-                <span>Tổng tin nóng</span>
-                <strong>15</strong>
-                <em class="neutral">VnExpress / Dân Trí / BBC</em>
+                <span>Market Mood</span>
+                <strong>Risk-off</strong>
+                <em class="neutral">Risk Level: Cao</em>
             </article>
 
             <article class="kpi-card">
                 <span>Bitcoin</span>
-                <strong>$62,589.00</strong>
+                <strong>$62,507.00</strong>
                 <em class="negative">
-                    -2.89%
+                    -2.81%
                 </em>
             </article>
 
             <article class="kpi-card">
-                <span>Vàng thế giới</span>
-                <strong>$4,187.80/oz</strong>
+                <span>Gold World</span>
+                <strong>$4,186.30/oz</strong>
                 <em class="negative">
-                    -0.86%
+                    -0.89%
                 </em>
             </article>
 
@@ -577,12 +621,46 @@
                     N/A
                 </em>
             </article>
+
+            <article class="kpi-card">
+                <span>Curated News</span>
+                <strong>13</strong>
+                <em class="neutral">Tin đã lọc theo chủ đề tài chính</em>
+            </article>
         </section>
 
         <section class="panel">
             <div class="panel-header">
                 <div>
-                    <span class="eyebrow">AI Brief</span>
+                    <span class="eyebrow">Executive Summary</span>
+                    <h2>Market Intelligence Brief</h2>
+                </div>
+                <span class="tag">Risk-off</span>
+            </div>
+
+            <div class="executive-grid">
+                <article class="insight-card">
+                    <h3>Tổng quan</h3>
+                    <div class="mood-badge">Risk-off · Risk Cao</div>
+                    <p>Thị trường nghiêng về thận trọng, ưu tiên quản trị rủi ro và chờ tín hiệu xác nhận.</p>
+                </article>
+
+                <article class="insight-card">
+                    <h3>Động lực chính</h3>
+                    <ul><li>Bitcoin suy yếu</li><li>Vàng giảm, khẩu vị rủi ro có thể cải thiện</li><li>Crypto Fear &amp; Greed ở vùng sợ hãi</li></ul>
+                </article>
+
+                <article class="insight-card">
+                    <h3>Việc nên theo dõi</h3>
+                    <ul><li>Theo dõi Bitcoin có giữ được vùng hỗ trợ gần nhất hay không.</li><li>Crypto đang ở vùng sợ hãi, ưu tiên quan sát thay vì FOMO.</li><li>Theo dõi vàng thế giới để xác nhận xu hướng giảm hay chỉ là điều chỉnh ngắn hạn.</li><li>Không dùng dashboard như khuyến nghị mua bán; chỉ dùng để phát hiện tín hiệu cần nghiên cứu thêm.</li></ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">AI Analysis</span>
                     <h2>AI Market Brief</h2>
                 </div>
             </div>
@@ -592,9 +670,9 @@
     <p><strong>AI Market Brief đang dùng chế độ fallback.</strong></p>
     <p>
         Thị trường đang được cập nhật tự động. Bitcoin hiện biến động 
-        <strong>-2.89%</strong>, vàng SJC biến động 
+        <strong>-2.81%</strong>, vàng SJC biến động 
         <strong>N/A</strong>, 
-        vàng thế giới biến động <strong>-0.86%</strong>, 
+        vàng thế giới biến động <strong>-0.89%</strong>, 
         còn VNINDEX ghi nhận <strong>N/A</strong>.
     </p>
     <ul>
@@ -604,9 +682,6 @@
     </ul>
     <p><strong>Lưu ý:</strong> Đây không phải lời khuyên đầu tư.</p>
     
-            <p><strong>Crypto Alpha:</strong></p>
-            <p>Crypto Alpha Signals<br><br>Fear &amp; Greed: 14 - Extreme Fear<br><br>Top cơ hội theo Alpha Score:<br>- SYN | Score: 80 | 24h: 35.01% | Volume 24h rất cao so với market cap; Giá tăng mạnh trong 24h<br>- JTO | Score: 70 | 24h: 6.9% | Volume 24h rất cao so với market cap; Động lượng giá tích cực trong 24h<br>- WLD | Score: 55 | 24h: 1.24% | Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực<br>- QUQ | Score: 55 | 24h: 0.01% | Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực<br>- UNI | Score: 55 | 24h: -2.83% | Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
-            
             </div>
         </section>
 
@@ -614,24 +689,22 @@
     <section class="panel">
         <div class="panel-header">
             <div>
-                <span class="eyebrow">Crypto Alpha</span>
-                <h2>Crypto Alpha Agent</h2>
+                <span class="eyebrow">Opportunity Radar</span>
+                <h2>Crypto Alpha Signals</h2>
             </div>
-            <div class="updated-pill">
-                Updated: 2026-06-19 08:49:28
-            </div>
+            <div class="updated-pill">Updated: 2026-06-19 09:06:44</div>
         </div>
 
         <div class="crypto-overview">
             <div class="sentiment-card">
-                <span>Fear & Greed Index</span>
+                <span>Fear & Greed</span>
                 <strong>14</strong>
                 <em>Extreme Fear</em>
             </div>
 
             <p class="muted">
-                Agent theo dõi CoinGecko, Binance Futures, funding rate và tâm lý thị trường
-                để phát hiện token có tín hiệu volume, momentum hoặc funding bất thường.
+                Bộ lọc đã loại stablecoin khỏi danh sách tín hiệu. Alpha Score ưu tiên volume,
+                động lượng giá, thanh khoản futures và funding rate bất thường.
             </p>
         </div>
 
@@ -645,22 +718,18 @@
                 </div>
                 <div class="score-badge">80</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+35.01%</strong>
+                <strong class="positive">+28.00%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$94,072,944</strong>
+                <strong>$92,591,622</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Giá tăng mạnh trong 24h</p>
         </article>
         
@@ -672,22 +741,18 @@
                 </div>
                 <div class="score-badge">70</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+6.90%</strong>
+                <strong class="positive">+6.94%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$103,571,858</strong>
+                <strong>$89,603,647</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Động lượng giá tích cực trong 24h</p>
         </article>
         
@@ -699,22 +764,18 @@
                 </div>
                 <div class="score-badge">55</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+1.24%</strong>
+                <strong class="positive">+1.28%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$778,821,694</strong>
+                <strong>$732,200,383</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
         </article>
         
@@ -726,22 +787,18 @@
                 </div>
                 <div class="score-badge">55</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+0.01%</strong>
+                <strong class="negative">-0.18%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$408,533,745</strong>
+                <strong>$409,387,698</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
         </article>
         
@@ -753,22 +810,18 @@
                 </div>
                 <div class="score-badge">55</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-2.83%</strong>
+                <strong class="negative">-2.44%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$359,808,805</strong>
+                <strong>$358,393,567</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
         </article>
         
@@ -780,76 +833,64 @@
                 </div>
                 <div class="score-badge">55</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-14.52%</strong>
+                <strong class="negative">-14.48%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$166,471,177</strong>
+                <strong>$165,469,980</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Giảm mạnh, có thể xuất hiện cơ hội bắt đáy rủi ro cao</p>
         </article>
         
         <article class="alpha-card">
             <div class="coin-line">
                 <div>
-                    <div class="coin-symbol">XLM</div>
-                    <div class="coin-name">Stellar</div>
+                    <div class="coin-symbol">USD1</div>
+                    <div class="coin-name">USD1</div>
                 </div>
-                <div class="score-badge">45</div>
+                <div class="score-badge">40</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-8.27%</strong>
+                <strong class="negative">-0.01%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$616,223,809</strong>
+                <strong>$1,202,939,949</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
-            <p>Volume 24h tăng đáng chú ý; Xu hướng 7 ngày tích cực</p>
+            <p>Volume 24h rất cao so với market cap; Thị trường đang sợ hãi, có thể có cơ hội tích lũy</p>
         </article>
         
         <article class="alpha-card">
             <div class="coin-line">
                 <div>
-                    <div class="coin-symbol">USDT</div>
-                    <div class="coin-name">Tether</div>
+                    <div class="coin-symbol">NIGHT</div>
+                    <div class="coin-name">Midnight</div>
                 </div>
                 <div class="score-badge">40</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+0.01%</strong>
+                <strong class="positive">+2.19%</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$50,116,705,346</strong>
+                <strong>$298,645,889</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
-
             <p>Volume 24h rất cao so với market cap; Thị trường đang sợ hãi, có thể có cơ hội tích lũy</p>
         </article>
         
@@ -861,69 +902,62 @@
                 <ul>
             <li>
                 <span>SYN</span>
-                <strong class="positive">+35.01%</strong>
+                <strong class="positive">+28.00%</strong>
             </li>
             
             <li>
                 <span>JTO</span>
-                <strong class="positive">+6.90%</strong>
+                <strong class="positive">+6.94%</strong>
             </li>
             
             <li>
                 <span>NIGHT</span>
-                <strong class="positive">+4.10%</strong>
+                <strong class="positive">+2.19%</strong>
             </li>
             
             <li>
                 <span>WLD</span>
-                <strong class="positive">+1.24%</strong>
+                <strong class="positive">+1.28%</strong>
             </li>
             
             <li>
-                <span>PYUSD</span>
-                <strong class="positive">+0.02%</strong>
+                <span>MPRA</span>
+                <strong class="positive">+0.19%</strong>
             </li>
             </ul>
             </div>
-
             <div>
                 <h3>Top Losers 24h</h3>
                 <ul>
             <li>
                 <span>RE</span>
-                <strong class="negative">-32.61%</strong>
+                <strong class="negative">-18.39%</strong>
             </li>
             
             <li>
                 <span>XPL</span>
-                <strong class="negative">-14.52%</strong>
+                <strong class="negative">-14.48%</strong>
             </li>
             
             <li>
                 <span>AVAX</span>
-                <strong class="negative">-9.69%</strong>
-            </li>
-            
-            <li>
-                <span>ASTER</span>
-                <strong class="negative">-8.58%</strong>
+                <strong class="negative">-9.17%</strong>
             </li>
             
             <li>
                 <span>XLM</span>
-                <strong class="negative">-8.27%</strong>
+                <strong class="negative">-8.43%</strong>
+            </li>
+            
+            <li>
+                <span>ASTER</span>
+                <strong class="negative">-8.14%</strong>
             </li>
             </ul>
             </div>
-
             <div>
                 <h3>Top Volume 24h</h3>
                 <ul>
-            <li>
-                <span>USDT</span>
-                <strong>$50,116,705,346</strong>
-            </li>
-            
             <li>
                 <span>RSPCX</span>
                 <strong>$35,005,902,497</strong>
@@ -931,7 +965,7 @@
             
             <li>
                 <span>BTC</span>
-                <strong>$29,072,806,310</strong>
+                <strong>$29,027,560,009</strong>
             </li>
             
             <li>
@@ -940,8 +974,13 @@
             </li>
             
             <li>
-                <span>USDC</span>
-                <strong>$12,083,588,371</strong>
+                <span>ETH</span>
+                <strong>$11,841,515,437</strong>
+            </li>
+            
+            <li>
+                <span>SOL</span>
+                <strong>$2,587,353,193</strong>
             </li>
             </ul>
             </div>
@@ -952,43 +991,77 @@
         <section class="panel">
             <div class="panel-header">
                 <div>
+                    <span class="eyebrow">Risk Monitor</span>
+                    <h2>Data Quality & Risk Checklist</h2>
+                </div>
+            </div>
+
+            <div class="executive-grid">
+                <article class="insight-card">
+                    <h3>Data Quality</h3>
+                    <ul><li>Vàng SJC trong nước chưa có dữ liệu khả dụng.</li><li>RSI VNINDEX chưa đủ dữ liệu hoặc Yahoo Finance trả dữ liệu không đầy đủ.</li></ul>
+                </article>
+
+                <article class="insight-card">
+                    <h3>Gold Signal</h3>
+                    <p>
+                        Vàng thế giới: <strong>$4,186.30/oz</strong>,
+                        biến động <strong class="negative">
+                        -0.89%</strong>.
+                        Vàng SJC: <strong>N/A</strong>.
+                    </p>
+                </article>
+
+                <article class="insight-card">
+                    <h3>VNINDEX Signal</h3>
+                    <p>
+                        VNINDEX hiện ở <strong>1,824.53</strong>,
+                        biến động <strong class="neutral">
+                        N/A</strong>.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
                     <span class="eyebrow">Market Data</span>
-                    <h2>Market Snapshot</h2>
+                    <h2>Market Overview</h2>
                 </div>
             </div>
 
             <div class="market-grid">
                 <article class="market-item">
                     <span>Bitcoin USD</span>
-                    <strong>$62,589.00</strong>
+                    <strong>$62,507.00</strong>
                     <em class="negative">
-                        -2.89% — Giảm trong 24h
+                        -2.81% — Giảm trong 24h
                     </em>
                 </article>
 
                 <article class="market-item">
                     <span>Bitcoin VND</span>
-                    <strong>1,647,956,839 VND</strong>
+                    <strong>1,645,787,431 VND</strong>
                     <em class="negative">
-                        -2.89%
+                        -2.81%
                     </em>
                 </article>
 
                 <article class="market-item">
-                    <span>Vàng SJC trong nước</span>
+                    <span>Vàng SJC</span>
                     <strong>N/A</strong>
                     <em class="neutral">
                         Mua: N/A<br>
-                        Bán: N/A<br>
                         24h: N/A
                     </em>
                 </article>
 
                 <article class="market-item">
                     <span>Vàng thế giới</span>
-                    <strong>$4,187.80/oz</strong>
+                    <strong>$4,186.30/oz</strong>
                     <em class="negative">
-                        -0.86%
+                        -0.89%
                     </em>
                 </article>
 
@@ -1007,14 +1080,13 @@
     <section class="chart-card">
         <div class="chart-card-header">
             <div>
-                <span class="eyebrow">Technical Chart</span>
-                <h3>Bitcoin Chart</h3>
+                <span class="eyebrow">Technical Analysis</span>
+                <h3>Bitcoin Technical Chart</h3>
             </div>
-            <div class="rsi-pill">RSI: 46.11</div>
+            <div class="rsi-pill">RSI: 45.75</div>
         </div>
-        <div class="chart-note">RSI trung tính.</div>
+        <p class="chart-note">RSI trung tính.</p>
         <div class="chart-box">
-            
     <div class="chart-wrapper">
         <div class="chart-title">Bitcoin / USD</div>
 
@@ -2463,7 +2535,7 @@
                 x="882.85"
                 y="228.35"
                 width="5.07"
-                height="2.92"
+                height="4.12"
                 class="candle-down"
             />
         
@@ -2478,7 +2550,7 @@
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="166.06,331.39 175.28,333.45 184.50,334.81 193.72,330.69 202.94,325.09 212.17,332.89 221.39,324.43 230.61,327.90 239.83,320.18 249.06,309.48 258.28,309.31 267.50,316.33 276.72,312.57 285.94,315.21 295.17,314.00 304.39,310.00 313.61,308.32 322.83,312.54 332.06,318.94 341.28,316.33 350.50,319.44 359.72,315.28 368.94,315.92 378.17,319.35 387.39,319.24 396.61,312.10 405.83,320.92 415.06,322.79 424.28,325.38 433.50,325.02 442.72,325.22 451.94,320.73 461.17,315.14 470.39,316.40 479.61,315.32 488.83,317.84 498.06,322.87 507.28,319.82 516.50,319.15 525.72,318.32 534.94,315.10 544.17,316.01 553.39,318.25 562.61,316.11 571.83,325.39 581.06,328.71 590.28,329.95 599.50,334.23 608.72,337.95 617.94,337.28 627.17,334.27 636.39,338.62 645.61,336.48 654.83,340.14 664.06,338.49 673.28,338.82 682.50,339.25 691.72,346.77 700.94,344.55 710.17,341.31 719.39,340.30 728.61,343.34 737.83,347.94 747.06,351.84 756.28,352.19 765.50,352.53 774.72,356.39 783.94,350.00 793.17,350.91 802.39,350.91 811.61,350.27 820.83,343.95 830.06,343.83 839.28,342.63 848.50,339.58 857.72,335.88 866.94,329.80 876.17,329.83 885.39,330.03" />
+            <polyline fill="none" class="rsi-line" points="166.06,331.39 175.28,333.45 184.50,334.81 193.72,330.69 202.94,325.09 212.17,332.89 221.39,324.43 230.61,327.90 239.83,320.18 249.06,309.48 258.28,309.31 267.50,316.33 276.72,312.57 285.94,315.21 295.17,314.00 304.39,310.00 313.61,308.32 322.83,312.54 332.06,318.94 341.28,316.33 350.50,319.44 359.72,315.28 368.94,315.92 378.17,319.35 387.39,319.24 396.61,312.10 405.83,320.92 415.06,322.79 424.28,325.38 433.50,325.02 442.72,325.22 451.94,320.73 461.17,315.14 470.39,316.40 479.61,315.32 488.83,317.84 498.06,322.87 507.28,319.82 516.50,319.15 525.72,318.32 534.94,315.10 544.17,316.01 553.39,318.25 562.61,316.11 571.83,325.39 581.06,328.71 590.28,329.95 599.50,334.23 608.72,337.95 617.94,337.28 627.17,334.27 636.39,338.62 645.61,336.48 654.83,340.14 664.06,338.49 673.28,338.82 682.50,339.25 691.72,346.77 700.94,344.55 710.17,341.31 719.39,340.30 728.61,343.34 737.83,347.94 747.06,351.84 756.28,352.19 765.50,352.53 774.72,356.39 783.94,350.00 793.17,350.91 802.39,350.91 811.61,350.27 820.83,343.95 830.06,343.83 839.28,342.63 848.50,339.58 857.72,335.88 866.94,329.80 876.17,329.83 885.39,330.26" />
 
             <text x="60" y="382" class="axis-text">21/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -2486,26 +2558,24 @@
         </svg>
 
         <div class="chart-meta">
-            <span>BTC Close: <strong>62,581.95</strong></span>
-            <span>RSI 14: <strong>46.11</strong></span>
+            <span>BTC Close: <strong>62,458.90</strong></span>
+            <span>RSI 14: <strong>45.75</strong></span>
         </div>
     </div>
-    
-        </div>
+    </div>
     </section>
     
             
     <section class="chart-card">
         <div class="chart-card-header">
             <div>
-                <span class="eyebrow">Technical Chart</span>
-                <h3>Vàng thế giới Chart</h3>
+                <span class="eyebrow">Technical Analysis</span>
+                <h3>Gold Technical Chart</h3>
             </div>
-            <div class="rsi-pill">RSI: 34.56</div>
+            <div class="rsi-pill">RSI: 34.5</div>
         </div>
-        <div class="chart-note">RSI trung tính.</div>
+        <p class="chart-note">RSI trung tính.</p>
         <div class="chart-box">
-            
     <div class="chart-wrapper">
         <div class="chart-title">Gold Futures / USD</div>
 
@@ -3554,7 +3624,7 @@
                 x="880.10"
                 y="210.75"
                 width="7.02"
-                height="11.76"
+                height="12.17"
                 class="candle-down"
             />
         
@@ -3569,7 +3639,7 @@
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,337.54" />
+            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,337.57" />
 
             <text x="60" y="382" class="axis-text">19/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -3577,26 +3647,24 @@
         </svg>
 
         <div class="chart-meta">
-            <span>Gold Close: <strong>4,187.80</strong></span>
-            <span>RSI 14: <strong>34.56</strong></span>
+            <span>Gold Close: <strong>4,186.30</strong></span>
+            <span>RSI 14: <strong>34.50</strong></span>
         </div>
     </div>
-    
-        </div>
+    </div>
     </section>
     
             
     <section class="chart-card">
         <div class="chart-card-header">
             <div>
-                <span class="eyebrow">Technical Chart</span>
-                <h3>VNINDEX Chart</h3>
+                <span class="eyebrow">Technical Analysis</span>
+                <h3>VNINDEX Technical Chart</h3>
             </div>
             <div class="rsi-pill">RSI: N/A</div>
         </div>
-        <div class="chart-note">Chưa đủ dữ liệu RSI.</div>
+        <p class="chart-note">Chưa đủ dữ liệu RSI.</p>
         <div class="chart-box">
-            
     <div class="chart-wrapper">
         <div class="chart-title">VNINDEX</div>
 
@@ -3648,136 +3716,95 @@
             <span>RSI 14: <strong>N/A</strong></span>
         </div>
     </div>
-    
-        </div>
+    </div>
     </section>
     
         </section>
 
-        <section class="news-grid">
-            
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">Curated News</span>
+                    <h2>Tin tức tài chính đã lọc</h2>
+                </div>
+                <span class="tag">13 tin</span>
+            </div>
+
+            <section class="news-grid">
+                
     <section class="news-column">
         <h3>VnExpress</h3>
         
         <article class="news-card">
-            <a href="https://vnexpress.net/50-nguoi-mua-bitcoin-duoi-62-358-usd-co-the-loi-gap-doi-sau-mot-nam-5087535.html" target="_blank" rel="noopener noreferrer">
-                50% người mua Bitcoin dưới 62.358 USD có thể lời gấp đôi sau một năm
-            </a>
+            <a href="https://vnexpress.net/50-nguoi-mua-bitcoin-duoi-62-358-usd-co-the-loi-gap-doi-sau-mot-nam-5087535.html" target="_blank" rel="noopener noreferrer">50% người mua Bitcoin dưới 62.358 USD có thể lời gấp đôi sau một năm</a>
             <p>Nghiên cứu chỉ ra một nửa nhà đầu tư mua Bitcoin dưới đường SMA 200 tuần có lợi nhuận hơn 113% sau một năm, mốc hiện tại là 62.358 USD.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://vnexpress.net/acv-co-chu-tich-moi-5087592.html" target="_blank" rel="noopener noreferrer">
-                ACV có chủ tịch mới
-            </a>
-            <p>Phó tổng giám đốc ACV Nguyễn Cao Cường, 50 tuổi, được bổ nhiệm làm Chủ tịch HĐQT trong phiên họp cổ đông thường niên sáng 19/6.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://vnexpress.net/gia-vang-giam-ve-gan-147-trieu-dong-5087558.html" target="_blank" rel="noopener noreferrer">
-                Giá vàng giảm về gần 147 triệu đồng
-            </a>
+            <a href="https://vnexpress.net/gia-vang-giam-ve-gan-147-trieu-dong-5087558.html" target="_blank" rel="noopener noreferrer">Giá vàng giảm về gần 147 triệu đồng</a>
             <p>Mỗi lượng vàng giảm hơn 4 triệu đồng về sát 147 triệu đồng, chênh lệch với thế giới sáng nay gần 15 triệu một lượng.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://vnexpress.net/nguoi-dan-chi-it-hon-cho-mam-cung-tet-doan-ngo-5087483.html" target="_blank" rel="noopener noreferrer">
-                Người dân chi ít hơn cho mâm cúng Tết Đoan Ngọ
-            </a>
-            <p>Thay vì chi cả triệu đồng cho mâm cúng cầu kỳ, nhiều gia đình chuyển sang các set giá vài trăm nghìn đồng.</p>
+            <a href="https://vnexpress.net/gia-vang-the-gioi-quay-dau-giam-5087485.html" target="_blank" rel="noopener noreferrer">Giá vàng thế giới quay đầu giảm</a>
+            <p>Mỗi ounce vàng hiện về dưới 4.200 USD, do khả năng Cục Dự trữ liên bang Mỹ (Fed) tăng lãi suất cuối năm nay.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://vnexpress.net/gia-vang-the-gioi-quay-dau-giam-5087485.html" target="_blank" rel="noopener noreferrer">
-                Giá vàng thế giới quay đầu giảm
-            </a>
-            <p>Mỗi ounce vàng hiện về dưới 4.200 USD, do khả năng Cục Dự trữ liên bang Mỹ (Fed) tăng lãi suất cuối năm nay.</p>
+            <a href="https://vnexpress.net/deutsche-bank-chat-luong-doanh-nghiep-moi-la-dieu-thu-hut-von-ngoai-5087426.html" target="_blank" rel="noopener noreferrer">Deutsche Bank: Chất lượng doanh nghiệp mới là điều thu hút vốn ngoại</a>
+            <p>Theo ngân hàng lớn nhất Đức, vốn ngoại đầu tư không chỉ nhờ thể chế, quan trọng hơn là sức hấp dẫn của các doanh nghiệp trên sàn chứng khoán.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://vnexpress.net/dac-san-van-loay-hoay-tim-duong-vao-sieu-thi-5087263.html" target="_blank" rel="noopener noreferrer">Đặc sản vẫn loay hoay &#x27;tìm đường&#x27; vào siêu thị</a>
+            <p>Mặc dù đã xuất khẩu sang Mỹ, châu Âu, nhiều đặc sản hiện nay vẫn loay hoay tìm chỗ đứng trong hệ thống bán lẻ hiện đại tại Việt Nam.</p>
         </article>
         
     </section>
     
-            
+                
     <section class="news-column">
         <h3>Dân Trí</h3>
         
         <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/dieu-gi-khien-gia-xang-dau-giam-manh-lien-tuc-20260619100450528.htm" target="_blank" rel="noopener noreferrer">
-                Điều gì khiến giá xăng dầu giảm mạnh liên tục?
-            </a>
+            <a href="https://dantri.com.vn/kinh-doanh/dieu-gi-khien-gia-xang-dau-giam-manh-lien-tuc-20260619100450528.htm" target="_blank" rel="noopener noreferrer">Điều gì khiến giá xăng dầu giảm mạnh liên tục?</a>
             <p>(Dân trí) - Giá xăng dầu tiếp tục giảm mạnh từ 15h ngày 18/6, đánh dấu kỳ giảm thứ 4 liên tiếp nhờ những tín hiệu hạ nhiệt từ thị trường thế giới. Sau điều chỉnh, xăng E10 RON 95-III còn 20.750 đồng/lít.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-mieng-giam-ve-sat-147-trieu-dongluong-20260619084656384.htm" target="_blank" rel="noopener noreferrer">
-                Giá vàng miếng giảm về sát 147 triệu đồng/lượng
-            </a>
+            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-mieng-giam-ve-sat-147-trieu-dongluong-20260619084656384.htm" target="_blank" rel="noopener noreferrer">Giá vàng miếng giảm về sát 147 triệu đồng/lượng</a>
             <p>(Dân trí) - Giá vàng trong nước sáng 19/6 giảm về sát 147 triệu đồng/lượng trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank" rel="noopener noreferrer">
-                Elon Musk giàu đến mức nào so với những người Mỹ giàu nhất lịch sử?
-            </a>
+            <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank" rel="noopener noreferrer">Elon Musk giàu đến mức nào so với những người Mỹ giàu nhất lịch sử?</a>
             <p>(Dân trí) - Sở hữu khối tài sản chạm mốc 1.400 tỷ USD vào năm 2026, tỷ phú Elon Musk không chỉ đứng đầu thế giới hiện tại mà còn tạo ra khoảng cách không tưởng với các đại tư bản trong lịch sử nước Mỹ.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/chan-gan-1-tan-thuc-pham-lau-nhieu-lo-hang-da-boc-mui-hoi-thoi-20260618224956994.htm" target="_blank" rel="noopener noreferrer">
-                Chặn gần 1 tấn thực phẩm lậu, nhiều lô hàng đã bốc mùi hôi thối
-            </a>
-            <p>(Dân trí) - Lực lượng hải quan tại nhiều địa phương đã liên tiếp phát hiện, thu giữ gần 1 tấn thực phẩm nhập lậu gồm chân gà, xúc xích, lạp xưởng và các mặt hàng đông lạnh không rõ nguồn gốc.</p>
+            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank" rel="noopener noreferrer">Giá vàng trong nước, thế giới đồng loạt quay đầu giảm</a>
+            <p>(Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank" rel="noopener noreferrer">
-                Giá vàng trong nước, thế giới đồng loạt quay đầu giảm
-            </a>
-            <p>(Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.</p>
+            <a href="https://dantri.com.vn/kinh-doanh/nhom-co-phieu-ho-vingroup-dong-loat-tang-tran-keo-thi-truong-but-pha-20260618155317346.htm" target="_blank" rel="noopener noreferrer">Nhóm cổ phiếu &quot;họ&quot; Vingroup đồng loạt tăng trần kéo thị trường bứt phá</a>
+            <p>(Dân trí) - Nhóm cổ phiếu Vingroup đồng loạt tăng trần trong phiên 18/6, với VIC, VHM và VRE dẫn đầu đà tăng của thị trường. Cùng với PC1 tăng hết biên độ, các mã này đã góp công lớn đưa VN-Index bứt phá.</p>
         </article>
         
     </section>
     
-            
+                
     <section class="news-column">
         <h3>BBC</h3>
         
         <article class="news-card">
-            <a href="https://www.bbc.com/vietnamese/articles/c8x2gdkrqzvo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
-                Iran và Mỹ được gì từ thỏa thuận và vì sao hai bên khó giữ cam kết?
-            </a>
-            <p>Thỏa thuận đã chính thức chấm dứt giao tranh, nhưng những cuộc đàm phán khó khăn hơn mới chỉ bắt đầu.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://www.bbc.com/vietnamese/articles/cy8wd4jdjlxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
-                &#x27;Ngoài 20 tuổi, chúng tôi mới phát hiện mình là chị em từ người cha hiến tinh trùng&#x27;
-            </a>
-            <p>Natasha, Gemma và Helen nói rằng việc tìm thấy nhau giống như một &quot;câu chuyện cổ tích&quot;.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://www.bbc.com/vietnamese/articles/cn59yzy04d0o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
-                Cơ thể các cầu thủ bóng đá hàng đầu thay đổi thế nào trong 50 năm qua
-            </a>
-            <p>Các chuyên gia cho biết cường độ thi đấu cao hơn cùng với những tiến bộ trong y học và khoa học thể thao đã làm thay đổi sinh lý của các cầu thủ hàng đầu.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://www.bbc.com/vietnamese/articles/cm203nmz2l2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
-                Thấy gì từ việc công dân Việt Nam chết trong trung tâm giam giữ di trú Mỹ
-            </a>
-            <p>Một bài phân tích mới đây của hãng thông tấn Reuters cho thấy tỷ lệ tử vong tại các trung tâm giam giữ người nhập cư của Mỹ tăng gấp đôi dưới thời Tổng thống Donald Trump.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://www.bbc.com/vietnamese/articles/cyv0ejd8330o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
-                Siêu dự án Trục đại lộ cảnh quan sông Hồng: Những thành phố khác đã làm gì với các dòng sông của họ?
-            </a>
-            <p>Theo các chuyên gia, việc Hà Nội hướng mặt ra sông cần dựa trên bối cảnh đặc thù của địa phương và có định hướng cũng như cách làm phù hợp, khoa học chứ không phải là câu chuyện đơn giản là xây rừng cao ốc bám theo xa lộ ven sông.</p>
+            <a href="https://www.bbc.com/vietnamese/articles/c4gy2glgpgyo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">Thỏa thuận Mỹ - Iran: Yếu tố nào đáng chú ý?</a>
+            <p>Bản ghi nhớ gồm 14 điểm này bao gồm việc chấm dứt giao tranh, thỏa thuận rằng Iran sẽ không bao giờ sở hữu vũ khí hạt nhân và một gói tái phát triển trị giá 300 tỷ USD dành cho Iran.</p>
         </article>
         
     </section>
     
+            </section>
         </section>
     </main>
 </body>
