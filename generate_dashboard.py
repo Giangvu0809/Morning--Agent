@@ -12,6 +12,11 @@ try:
 except Exception:
     build_crypto_alpha = None
 
+try:
+    from modules.career_opportunities import build_career_opportunities
+except Exception:
+    build_career_opportunities = None
+
 
 STABLECOINS = {
     "USDT", "USDC", "DAI", "FDUSD", "TUSD", "PYUSD", "USDE", "USDD",
@@ -55,21 +60,6 @@ def parse_percent(value):
         return None
 
 
-def change_class(value):
-    pct = parse_percent(value)
-
-    if pct is None:
-        return "neutral"
-
-    if pct > 0:
-        return "positive"
-
-    if pct < 0:
-        return "negative"
-
-    return "neutral"
-
-
 def clean_price_prefix(value, prefix="$"):
     if is_na(value):
         return "N/A"
@@ -102,7 +92,7 @@ def is_financial_news(item):
     return any(keyword.lower() in text for keyword in NEWS_KEYWORDS)
 
 
-def filter_curated_news(news_items, max_items=12):
+def filter_curated_news(news_items, max_items=15):
     curated = [item for item in news_items if is_financial_news(item)]
 
     if len(curated) < 6:
@@ -201,7 +191,7 @@ def get_market_mood(bitcoin, gold, vnindex, crypto_alpha):
     }
 
 
-def get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha):
+def get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha, career_data):
     warnings = []
 
     domestic_gold = gold.get("domestic", {}) or {}
@@ -225,13 +215,16 @@ def get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha):
     if not crypto_alpha:
         warnings.append("Crypto Alpha chưa lấy được dữ liệu.")
 
+    if not career_data:
+        warnings.append("Career Opportunities chưa lấy được dữ liệu remote job.")
+
     if not warnings:
         warnings.append("Dữ liệu chính đang hoạt động bình thường.")
 
     return warnings
 
 
-def get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha):
+def get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha, career_data):
     items = []
 
     fear_greed = ((crypto_alpha or {}).get("fear_greed") or {}).get("value")
@@ -266,9 +259,19 @@ def get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha):
         elif vn_change < 0:
             items.append("Theo dõi thanh khoản VNINDEX để đánh giá áp lực bán.")
 
+    if career_data:
+        remote_jobs = career_data.get("remote_jobs", [])
+        client_ops = career_data.get("client_opportunities", [])
+
+        if remote_jobs:
+            items.append(f"Xem {len(remote_jobs)} remote job phù hợp trong mục Cơ hội nghề nghiệp.")
+
+        if client_ops:
+            items.append("Ưu tiên tiếp cận nhóm khách hàng dễ chốt: học lái xe, sửa máy lạnh, trung tâm đào tạo.")
+
     items.append("Không dùng dashboard như khuyến nghị mua bán; chỉ dùng để phát hiện tín hiệu cần nghiên cứu thêm.")
 
-    return items[:5]
+    return items[:6]
 
 
 def render_list(items):
@@ -491,6 +494,127 @@ def render_crypto_alpha_section(crypto_alpha):
     """
 
 
+def render_career_opportunities_section(career_data):
+    if not career_data:
+        return """
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">Career Opportunities</span>
+                    <h2>Cơ hội nghề nghiệp</h2>
+                </div>
+            </div>
+            <p class="muted">Chưa có dữ liệu nghề nghiệp. Hãy kiểm tra module career_opportunities.py.</p>
+        </section>
+        """
+
+    remote_jobs = career_data.get("remote_jobs", [])[:10]
+    fulltime = career_data.get("fulltime_jobs", {}) or {}
+    client_ops = career_data.get("client_opportunities", [])[:5]
+
+    remote_html = ""
+
+    for job in remote_jobs:
+        reasons = job.get("reasons") or []
+        tags = job.get("tags") or []
+        tags_html = "".join([f"<span>{safe_text(tag)}</span>" for tag in tags[:4]])
+
+        remote_html += f"""
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>{safe_text(job.get("title"))}</h3>
+                    <p>{safe_text(job.get("company"))} · {safe_text(job.get("location"))}</p>
+                </div>
+                <div class="match-score">{safe_text(job.get("match_score"))}%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>{safe_text(job.get("salary"))}</span>
+                <span>{safe_text(job.get("source"))}</span>
+            </div>
+
+            <ul>{render_list(reasons)}</ul>
+
+            <div class="tag-row">{tags_html}</div>
+
+            <a class="apply-link" href="{safe_text(job.get("url", "#"))}" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        """
+
+    fulltime_roles = fulltime.get("suggested_roles", [])
+    fulltime_steps = fulltime.get("next_steps", [])
+
+    client_html = ""
+
+    for lead in client_ops:
+        client_html += f"""
+        <article class="client-card">
+            <div class="job-top">
+                <div>
+                    <h3>{safe_text(lead.get("segment"))}</h3>
+                    <p>{safe_text(lead.get("why"))}</p>
+                </div>
+                <div class="match-score">{safe_text(lead.get("lead_score"))}</div>
+            </div>
+            <p><strong>Gợi ý chào bán:</strong> {safe_text(lead.get("offer"))}</p>
+        </article>
+        """
+
+    return f"""
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">Career Opportunities</span>
+                <h2>Cơ hội nghề nghiệp</h2>
+            </div>
+            <div class="updated-pill">Updated: {safe_text(career_data.get("updated_at"))}</div>
+        </div>
+
+        <div class="career-layout">
+            <section>
+                <div class="section-title-row">
+                    <h3>Remote Jobs phù hợp</h3>
+                    <span class="tag">{len(remote_jobs)} job</span>
+                </div>
+                <div class="jobs-grid">
+                    {remote_html if remote_html else '<p class="muted">Chưa tìm thấy remote job phù hợp.</p>'}
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title-row">
+                    <h3>Full-time Jobs theo CV</h3>
+                    <span class="tag">Chờ CV</span>
+                </div>
+
+                <div class="fulltime-box">
+                    <p>{safe_text(fulltime.get("message"))}</p>
+
+                    <h4>Nhóm vị trí có thể phù hợp</h4>
+                    <ul>{render_list(fulltime_roles)}</ul>
+
+                    <h4>Cách kích hoạt</h4>
+                    <ul>{render_list(fulltime_steps)}</ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title-row">
+                    <h3>Đối tượng dễ chốt dịch vụ Google Ads</h3>
+                    <span class="tag">{len(client_ops)} nhóm</span>
+                </div>
+                <div class="client-grid">
+                    {client_html}
+                </div>
+            </section>
+        </div>
+    </section>
+    """
+
+
 def build_charts():
     btc_history, btc_rsi, btc_rsi_note = get_history_with_rsi("BTC-USD")
     gold_history, gold_rsi, gold_rsi_note = get_history_with_rsi("GC=F")
@@ -515,7 +639,7 @@ def build_charts():
     }
 
 
-def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_alpha):
+def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_alpha, career_data):
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     today = datetime.now().strftime("%d/%m/%Y")
 
@@ -526,10 +650,11 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
     world_gold = gold.get("world", {}) or {}
 
     mood = get_market_mood(bitcoin, gold, vnindex, crypto_alpha)
-    data_warnings = get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha)
-    action_items = get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha)
+    data_warnings = get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha, career_data)
+    action_items = get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha, career_data)
 
     crypto_alpha_html = render_crypto_alpha_section(crypto_alpha)
+    career_html = render_career_opportunities_section(career_data)
 
     return f"""<!DOCTYPE html>
 <html lang="vi">
@@ -600,7 +725,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
         .hero p {{
             color: var(--muted);
-            max-width: 820px;
+            max-width: 850px;
             font-size: 16px;
             line-height: 1.7;
         }}
@@ -668,7 +793,9 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             margin-bottom: 18px;
         }}
 
-        .panel-header {{
+        .panel-header,
+        .chart-card-header,
+        .section-title-row {{
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -685,7 +812,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         }}
 
         h2,
-        h3 {{
+        h3,
+        h4 {{
             margin: 0;
             letter-spacing: -0.03em;
         }}
@@ -698,26 +826,38 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             font-size: 18px;
         }}
 
+        h4 {{
+            margin-top: 18px;
+            font-size: 15px;
+        }}
+
         .executive-grid {{
             display: grid;
             grid-template-columns: 1.1fr 1fr 1fr;
             gap: 14px;
         }}
 
-        .insight-card {{
+        .insight-card,
+        .fulltime-box,
+        .job-card,
+        .client-card {{
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
             border-radius: 18px;
             padding: 18px;
         }}
 
-        .insight-card p {{
+        .insight-card p,
+        .fulltime-box p,
+        .client-card p {{
             color: var(--muted);
             line-height: 1.65;
             margin-bottom: 0;
         }}
 
-        .insight-card ul {{
+        .insight-card ul,
+        .fulltime-box ul,
+        .job-card ul {{
             margin: 12px 0 0;
             padding-left: 20px;
             color: var(--muted);
@@ -848,7 +988,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             border: 1px solid var(--border);
         }}
 
-        .coin-line {{
+        .coin-line,
+        .job-top {{
             display: flex;
             justify-content: space-between;
             gap: 12px;
@@ -861,13 +1002,15 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             font-weight: 900;
         }}
 
-        .coin-name {{
+        .coin-name,
+        .job-card p {{
             color: var(--muted);
             font-size: 13px;
         }}
 
-        .score-badge {{
-            min-width: 44px;
+        .score-badge,
+        .match-score {{
+            min-width: 48px;
             text-align: center;
             padding: 8px 10px;
             border-radius: 14px;
@@ -924,6 +1067,48 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }}
 
+        .career-layout {{
+            display: grid;
+            gap: 22px;
+        }}
+
+        .jobs-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }}
+
+        .client-grid {{
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }}
+
+        .job-meta,
+        .tag-row {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }}
+
+        .job-meta span,
+        .tag-row span {{
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.045);
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+        }}
+
+        .apply-link {{
+            display: inline-flex;
+            margin-top: 14px;
+            color: var(--accent);
+            font-weight: 800;
+        }}
+
         .charts-grid {{
             display: grid;
             grid-template-columns: 1fr;
@@ -934,14 +1119,6 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         .chart-card {{
             padding: 20px;
             overflow: hidden;
-        }}
-
-        .chart-card-header {{
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 10px;
         }}
 
         .chart-note {{
@@ -1073,7 +1250,12 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             .market-grid,
             .alpha-grid,
             .news-grid,
-            .executive-grid {{
+            .executive-grid,
+            .jobs-grid {{
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }}
+
+            .client-grid {{
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }}
 
@@ -1085,7 +1267,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         @media (max-width: 720px) {{
             .hero,
             .panel-header,
-            .chart-card-header {{
+            .chart-card-header,
+            .section-title-row {{
                 flex-direction: column;
             }}
 
@@ -1093,7 +1276,9 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             .market-grid,
             .alpha-grid,
             .news-grid,
-            .executive-grid {{
+            .executive-grid,
+            .jobs-grid,
+            .client-grid {{
                 grid-template-columns: 1fr;
             }}
 
@@ -1116,8 +1301,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             <div>
                 <h1>Morning Financial Intelligence</h1>
                 <p>
-                    Bản tin phân tích tài chính tự động ngày {today}: tổng hợp thị trường,
-                    rủi ro, cơ hội crypto, vàng, VNINDEX, tin tức và tín hiệu kỹ thuật.
+                    Bản tin phân tích tài chính và cơ hội thu nhập tự động ngày {today}: thị trường,
+                    crypto alpha, tin tức, remote job, full-time job theo CV và nhóm khách hàng dễ chốt dịch vụ.
                 </p>
             </div>
 
@@ -1148,17 +1333,15 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             </article>
 
             <article class="kpi-card">
-                <span>VNINDEX</span>
-                <strong>{safe_text(vnindex.get("value"))}</strong>
-                <em class="{safe_text(vnindex.get("change_class", "neutral"))}">
-                    {safe_text(vnindex.get("change_percent"))}
-                </em>
+                <span>Remote Jobs</span>
+                <strong>{len((career_data or {}).get("remote_jobs", []))}</strong>
+                <em class="neutral">Job phù hợp đã lọc</em>
             </article>
 
             <article class="kpi-card">
-                <span>Curated News</span>
-                <strong>{len(curated_news)}</strong>
-                <em class="neutral">Tin đã lọc theo chủ đề tài chính</em>
+                <span>Client Leads</span>
+                <strong>{len((career_data or {}).get("client_opportunities", []))}</strong>
+                <em class="neutral">Nhóm dễ chốt Google Ads</em>
             </article>
         </section>
 
@@ -1166,7 +1349,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             <div class="panel-header">
                 <div>
                     <span class="eyebrow">Executive Summary</span>
-                    <h2>Market Intelligence Brief</h2>
+                    <h2>Market & Opportunity Brief</h2>
                 </div>
                 <span class="tag">{safe_text(mood["mood"])}</span>
             </div>
@@ -1189,6 +1372,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
                 </article>
             </div>
         </section>
+
+        {career_html}
 
         <section class="panel">
             <div class="panel-header">
@@ -1342,6 +1527,17 @@ def main():
     else:
         print("Crypto Alpha module not available.")
 
+    print("Loading Career Opportunities...")
+    career_data = None
+
+    if build_career_opportunities:
+        try:
+            career_data = build_career_opportunities()
+        except Exception as exc:
+            print(f"ERROR loading Career Opportunities: {exc}")
+    else:
+        print("Career Opportunities module not available.")
+
     print("Generating AI summary...")
     try:
         ai_summary = get_ai_summary(
@@ -1366,6 +1562,7 @@ def main():
         ai_summary=ai_summary,
         charts=charts,
         crypto_alpha=crypto_alpha,
+        career_data=career_data,
     )
 
     with open("index.html", "w", encoding="utf-8") as file:
