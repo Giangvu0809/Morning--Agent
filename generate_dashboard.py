@@ -7,6 +7,37 @@ from modules.ai_summary import get_ai_summary
 
 
 # =========================
+# HELPERS
+# =========================
+
+def get_signal_from_rsi(rsi):
+    try:
+        value = float(rsi)
+
+        if value >= 60:
+            return "Bullish", "signal-bullish"
+
+        if value <= 40:
+            return "Bearish", "signal-bearish"
+
+        return "Neutral", "signal-neutral"
+    except Exception:
+        return "N/A", "signal-neutral"
+
+
+def safe_get(data, *keys, default="N/A"):
+    try:
+        current = data
+
+        for key in keys:
+            current = current[key]
+
+        return current
+    except Exception:
+        return default
+
+
+# =========================
 # LOAD DATA
 # =========================
 
@@ -19,6 +50,10 @@ vnindex = get_vnindex()
 bitcoin_chart_data, bitcoin_rsi, bitcoin_rsi_note = get_history_with_rsi("BTC-USD")
 gold_chart_data, gold_rsi, gold_rsi_note = get_history_with_rsi("GC=F")
 vnindex_chart_data, vnindex_rsi, vnindex_rsi_note = get_history_with_rsi("^VNINDEX.VN")
+
+bitcoin_signal, bitcoin_signal_class = get_signal_from_rsi(bitcoin_rsi)
+gold_signal, gold_signal_class = get_signal_from_rsi(gold_rsi)
+vnindex_signal, vnindex_signal_class = get_signal_from_rsi(vnindex_rsi)
 
 ai_summary = get_ai_summary(
     news_items=all_news,
@@ -53,17 +88,21 @@ def build_source_news(source_name):
     html = ""
 
     for index, item in enumerate(source_news, start=1):
+        title = item.get("title", "Không có tiêu đề")
+        link = item.get("link", "#")
+        summary = item.get("summary", "")
+
         html += f"""
         <div class="terminal-news-item">
             <div class="terminal-news-index">{index:02d}</div>
 
             <div>
-                <a href="{item['link']}" target="_blank">
-                    {item['title']}
+                <a href="{link}" target="_blank">
+                    {title}
                 </a>
 
                 <p>
-                    {item['summary']}
+                    {summary}
                 </p>
             </div>
         </div>
@@ -115,7 +154,7 @@ html_content = f"""
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bảng tổng hợp tin tức ngày {report_date}</title>
+<title>Morning Agent Finance - {report_date}</title>
 
 <style>
 
@@ -126,12 +165,15 @@ html_content = f"""
 body {{
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #020617;
+    background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 30%),
+        #020617;
     color: #e5e7eb;
 }}
 
 .page {{
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
     padding: 26px 18px 50px;
 }}
@@ -140,11 +182,11 @@ body {{
     background:
         linear-gradient(135deg, rgba(15, 118, 110, 0.95), rgba(30, 64, 175, 0.95)),
         #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 18px;
-    padding: 26px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 22px;
+    padding: 28px;
     margin-bottom: 18px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42);
 }}
 
 .header-row {{
@@ -157,22 +199,22 @@ body {{
 
 .header-title h1 {{
     margin: 0;
-    font-size: 30px;
+    font-size: 32px;
     line-height: 1.25;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.6px;
 }}
 
 .subtitle {{
     margin-top: 8px;
-    color: #cbd5e1;
+    color: #dbeafe;
     font-size: 14px;
     letter-spacing: 1.8px;
     text-transform: uppercase;
 }}
 
 .updated {{
-    background: rgba(15, 23, 42, 0.48);
-    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(15, 23, 42, 0.52);
+    border: 1px solid rgba(255,255,255,0.2);
     color: #f8fafc;
     padding: 11px 15px;
     border-radius: 999px;
@@ -182,17 +224,30 @@ body {{
 
 .kpi-grid {{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 14px;
     margin-bottom: 18px;
 }}
 
 .kpi-card {{
-    background: #0f172a;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #111827, #0f172a);
     border: 1px solid #1e293b;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 18px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+}}
+
+.kpi-card::after {{
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 110px;
+    height: 110px;
+    background: rgba(56, 189, 248, 0.08);
+    border-radius: 999px;
 }}
 
 .kpi-label {{
@@ -204,16 +259,29 @@ body {{
 }}
 
 .kpi-value {{
-    font-size: 26px;
+    font-size: 25px;
     font-weight: bold;
     color: #f8fafc;
     margin-bottom: 8px;
+    word-break: break-word;
 }}
 
 .kpi-note {{
     color: #94a3b8;
     font-size: 14px;
     line-height: 1.5;
+}}
+
+.positive {{
+    color: #22c55e;
+}}
+
+.negative {{
+    color: #ef4444;
+}}
+
+.neutral {{
+    color: #cbd5e1;
 }}
 
 .kpi-news {{
@@ -228,23 +296,27 @@ body {{
     border-top: 4px solid #f59e0b;
 }}
 
+.kpi-world-gold {{
+    border-top: 4px solid #facc15;
+}}
+
 .kpi-vnindex {{
     border-top: 4px solid #22c55e;
 }}
 
 .terminal-grid {{
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    grid-template-columns: minmax(0, 1.28fr) minmax(340px, 0.72fr);
     gap: 18px;
     margin-bottom: 18px;
 }}
 
 .panel {{
-    background: #0f172a;
+    background: rgba(15, 23, 42, 0.96);
     border: 1px solid #1e293b;
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
 }}
 
 .panel-title {{
@@ -270,6 +342,7 @@ body {{
     border: 1px solid rgba(59, 130, 246, 0.35);
     padding: 6px 9px;
     border-radius: 999px;
+    white-space: nowrap;
 }}
 
 .ai-summary {{
@@ -290,6 +363,69 @@ body {{
     margin-bottom: 8px;
 }}
 
+.signal-grid {{
+    display: grid;
+    gap: 12px;
+}}
+
+.signal-card {{
+    background: #111827;
+    border: 1px solid #243244;
+    border-radius: 15px;
+    padding: 15px;
+}}
+
+.signal-top {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+}}
+
+.signal-name {{
+    font-weight: bold;
+    color: #f8fafc;
+}}
+
+.signal-badge {{
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 9px;
+    border-radius: 999px;
+}}
+
+.signal-bullish {{
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.14);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+}}
+
+.signal-bearish {{
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.14);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}}
+
+.signal-neutral {{
+    color: #cbd5e1;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}}
+
+.signal-rsi {{
+    color: #f8fafc;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}}
+
+.signal-note {{
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.5;
+}}
+
 .snapshot-list {{
     display: grid;
     gap: 12px;
@@ -298,7 +434,7 @@ body {{
 .snapshot-item {{
     background: #111827;
     border: 1px solid #243244;
-    border-radius: 14px;
+    border-radius: 15px;
     padding: 14px;
 }}
 
@@ -308,6 +444,14 @@ body {{
 
 .snapshot-item.gold-world {{
     border-left: 4px solid #facc15;
+}}
+
+.snapshot-item.bitcoin {{
+    border-left: 4px solid #f97316;
+}}
+
+.snapshot-item.vnindex {{
+    border-left: 4px solid #22c55e;
 }}
 
 .snapshot-name {{
@@ -482,7 +626,7 @@ body {{
     margin-top: 24px;
 }}
 
-@media (max-width: 920px) {{
+@media (max-width: 980px) {{
     .terminal-grid {{
         grid-template-columns: 1fr;
     }}
@@ -518,8 +662,8 @@ body {{
     <header class="terminal-header">
         <div class="header-row">
             <div class="header-title">
-                <h1>Bảng tổng hợp tin tức ngày {report_date}</h1>
-                <div class="subtitle">Morning Market Terminal</div>
+                <h1>Morning Agent Finance</h1>
+                <div class="subtitle">Bảng tổng hợp tin tức ngày {report_date}</div>
             </div>
 
             <div class="updated">
@@ -539,22 +683,48 @@ body {{
 
         <div class="kpi-card kpi-bitcoin">
             <div class="kpi-label">Bitcoin</div>
-            <div class="kpi-value">${bitcoin['price_usd']}</div>
-            <div class="kpi-note">24h: {bitcoin['change_24h']} • RSI: {bitcoin_rsi}</div>
+            <div class="kpi-value">${bitcoin.get("price_usd", "N/A")}</div>
+            <div class="kpi-note">
+                24h:
+                <strong class="{bitcoin.get("change_class", "neutral")}">
+                    {bitcoin.get("change_24h", "N/A")}
+                </strong>
+                • RSI: {bitcoin_rsi}
+            </div>
         </div>
 
         <div class="kpi-card kpi-gold">
             <div class="kpi-label">Vàng SJC trong nước</div>
-            <div class="kpi-value">{gold['domestic']['sell']}</div>
+            <div class="kpi-value">{safe_get(gold, "domestic", "sell")}</div>
             <div class="kpi-note">
-                Mua vào: {gold['domestic']['buy']} • 24h: {gold['domestic']['change_24h']}
+                24h:
+                <strong class="{safe_get(gold, "domestic", "change_class", default="neutral")}">
+                    {safe_get(gold, "domestic", "change_24h")}
+                </strong>
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-world-gold">
+            <div class="kpi-label">Vàng thế giới</div>
+            <div class="kpi-value">{safe_get(gold, "world", "price")}</div>
+            <div class="kpi-note">
+                24h:
+                <strong class="{safe_get(gold, "world", "change_class", default="neutral")}">
+                    {safe_get(gold, "world", "change_24h")}
+                </strong>
+                • RSI: {gold_rsi}
             </div>
         </div>
 
         <div class="kpi-card kpi-vnindex">
             <div class="kpi-label">VNINDEX</div>
-            <div class="kpi-value">{vnindex['value']}</div>
-            <div class="kpi-note">{vnindex['change']} • RSI: {vnindex_rsi}</div>
+            <div class="kpi-value">{vnindex.get("value", "N/A")}</div>
+            <div class="kpi-note">
+                <strong class="{vnindex.get("change_class", "neutral")}">
+                    {vnindex.get("change_percent", "N/A")}
+                </strong>
+                • RSI: {vnindex_rsi}
+            </div>
         </div>
 
     </section>
@@ -575,50 +745,37 @@ body {{
 
         <div class="panel">
             <div class="panel-title">
-                <h2>📈 Market Snapshot</h2>
-                <div class="panel-badge">LIVE DATA</div>
+                <h2>📡 Technical Signals</h2>
+                <div class="panel-badge">RSI 14D</div>
             </div>
 
-            <div class="snapshot-list">
+            <div class="signal-grid">
 
-                <div class="snapshot-item">
-                    <div class="snapshot-name">₿ Bitcoin</div>
-                    <div class="snapshot-value">${bitcoin['price_usd']}</div>
-                    <div class="snapshot-detail">
-                        Quy đổi: {bitcoin['price_vnd']} VND<br>
-                        24h: {bitcoin['change_24h']}<br>
-                        RSI: {bitcoin_rsi} — {bitcoin_rsi_note}
+                <div class="signal-card">
+                    <div class="signal-top">
+                        <div class="signal-name">₿ Bitcoin</div>
+                        <div class="signal-badge {bitcoin_signal_class}">{bitcoin_signal}</div>
                     </div>
+                    <div class="signal-rsi">{bitcoin_rsi}</div>
+                    <div class="signal-note">{bitcoin_rsi_note}</div>
                 </div>
 
-                <div class="snapshot-item gold-domestic">
-                    <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
-                    <div class="snapshot-value">{gold['domestic']['sell']}</div>
-                    <div class="snapshot-detail">
-                        Mua vào: <strong>{gold['domestic']['buy']}</strong><br>
-                        Bán ra: <strong>{gold['domestic']['sell']}</strong><br>
-                        24h: <strong>{gold['domestic']['change_24h']}</strong><br>
-                        {gold['domestic']['note']}
+                <div class="signal-card">
+                    <div class="signal-top">
+                        <div class="signal-name">🟡 Vàng thế giới</div>
+                        <div class="signal-badge {gold_signal_class}">{gold_signal}</div>
                     </div>
+                    <div class="signal-rsi">{gold_rsi}</div>
+                    <div class="signal-note">{gold_rsi_note}</div>
                 </div>
 
-                <div class="snapshot-item gold-world">
-                    <div class="snapshot-name">🌍 Vàng thế giới</div>
-                    <div class="snapshot-value">{gold['world']['price']}</div>
-                    <div class="snapshot-detail">
-                        24h: <strong>{gold['world']['change_24h']}</strong><br>
-                        RSI kỹ thuật: <strong>{gold_rsi}</strong> — {gold_rsi_note}<br>
-                        {gold['world']['note']}
+                <div class="signal-card">
+                    <div class="signal-top">
+                        <div class="signal-name">📊 VNINDEX</div>
+                        <div class="signal-badge {vnindex_signal_class}">{vnindex_signal}</div>
                     </div>
-                </div>
-
-                <div class="snapshot-item">
-                    <div class="snapshot-name">📊 VNINDEX</div>
-                    <div class="snapshot-value">{vnindex['value']}</div>
-                    <div class="snapshot-detail">
-                        {vnindex['change']}<br>
-                        RSI: {vnindex_rsi} — {vnindex_rsi_note}
-                    </div>
+                    <div class="signal-rsi">{vnindex_rsi}</div>
+                    <div class="signal-note">{vnindex_rsi_note}</div>
                 </div>
 
             </div>
@@ -628,6 +785,70 @@ body {{
 
 
     <section class="panel">
+        <div class="panel-title">
+            <h2>📈 Market Snapshot</h2>
+            <div class="panel-badge">LIVE DATA</div>
+        </div>
+
+        <div class="snapshot-list">
+
+            <div class="snapshot-item bitcoin">
+                <div class="snapshot-name">₿ Bitcoin</div>
+                <div class="snapshot-value">${bitcoin.get("price_usd", "N/A")}</div>
+                <div class="snapshot-detail">
+                    Quy đổi: {bitcoin.get("price_vnd", "N/A")} VND<br>
+                    24h:
+                    <strong class="{bitcoin.get("change_class", "neutral")}">
+                        {bitcoin.get("change_24h", "N/A")}
+                    </strong><br>
+                    {bitcoin.get("note", "")}
+                </div>
+            </div>
+
+            <div class="snapshot-item gold-domestic">
+                <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
+                <div class="snapshot-value">{safe_get(gold, "domestic", "sell")}</div>
+                <div class="snapshot-detail">
+                    Mua vào: <strong>{safe_get(gold, "domestic", "buy")}</strong><br>
+                    Bán ra: <strong>{safe_get(gold, "domestic", "sell")}</strong><br>
+                    24h:
+                    <strong class="{safe_get(gold, "domestic", "change_class", default="neutral")}">
+                        {safe_get(gold, "domestic", "change_24h")}
+                    </strong><br>
+                    {safe_get(gold, "domestic", "note", default="")}
+                </div>
+            </div>
+
+            <div class="snapshot-item gold-world">
+                <div class="snapshot-name">🌍 Vàng thế giới</div>
+                <div class="snapshot-value">{safe_get(gold, "world", "price")}</div>
+                <div class="snapshot-detail">
+                    24h:
+                    <strong class="{safe_get(gold, "world", "change_class", default="neutral")}">
+                        {safe_get(gold, "world", "change_24h")}
+                    </strong><br>
+                    RSI kỹ thuật: <strong>{gold_rsi}</strong> — {gold_rsi_note}<br>
+                    {safe_get(gold, "world", "note", default="")}
+                </div>
+            </div>
+
+            <div class="snapshot-item vnindex">
+                <div class="snapshot-name">📊 VNINDEX</div>
+                <div class="snapshot-value">{vnindex.get("value", "N/A")}</div>
+                <div class="snapshot-detail">
+                    <strong class="{vnindex.get("change_class", "neutral")}">
+                        {vnindex.get("change", "N/A")}
+                    </strong><br>
+                    RSI: {vnindex_rsi} — {vnindex_rsi_note}<br>
+                    {vnindex.get("note", "")}
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <section class="panel chart-section">
         <div class="panel-title">
             <h2>🔥 Tin nóng hôm nay</h2>
             <div class="panel-badge">RSS FEEDS</div>
@@ -705,14 +926,17 @@ with open("index.html", "w", encoding="utf-8") as f:
 
 print(f"Generated dashboard at {updated_at} - {report_date}")
 print(f"Loaded {len(all_news)} news items from RSS feeds")
-print(f"Bitcoin USD: {bitcoin['price_usd']}")
+print(f"Bitcoin USD: {bitcoin.get('price_usd', 'N/A')}")
 print(f"Bitcoin RSI: {bitcoin_rsi}")
-print(f"Domestic gold buy: {gold['domestic']['buy']}")
-print(f"Domestic gold sell: {gold['domestic']['sell']}")
-print(f"Domestic gold 24h: {gold['domestic']['change_24h']}")
-print(f"World gold price: {gold['world']['price']}")
-print(f"World gold 24h: {gold['world']['change_24h']}")
+print(f"Bitcoin signal: {bitcoin_signal}")
+print(f"Domestic gold buy: {safe_get(gold, 'domestic', 'buy')}")
+print(f"Domestic gold sell: {safe_get(gold, 'domestic', 'sell')}")
+print(f"Domestic gold 24h: {safe_get(gold, 'domestic', 'change_24h')}")
+print(f"World gold price: {safe_get(gold, 'world', 'price')}")
+print(f"World gold 24h: {safe_get(gold, 'world', 'change_24h')}")
 print(f"Gold RSI: {gold_rsi}")
-print(f"VNINDEX: {vnindex['value']}")
+print(f"Gold signal: {gold_signal}")
+print(f"VNINDEX: {vnindex.get('value', 'N/A')}")
 print(f"VNINDEX RSI: {vnindex_rsi}")
+print(f"VNINDEX signal: {vnindex_signal}")
 print("AI Summary: generated")
