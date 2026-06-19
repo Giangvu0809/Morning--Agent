@@ -1,603 +1,600 @@
-
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Morning Agent Finance - 19/06/2026</title>
-
-<style>
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background:
-        radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 34%),
-        radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 30%),
-        #020617;
-    color: #e5e7eb;
-}
-
-.page {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 26px 18px 50px;
-}
-
-.terminal-header {
-    background:
-        linear-gradient(135deg, rgba(15, 118, 110, 0.95), rgba(30, 64, 175, 0.95)),
-        #0f172a;
-    border: 1px solid rgba(148, 163, 184, 0.22);
-    border-radius: 22px;
-    padding: 28px;
-    margin-bottom: 18px;
-    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42);
-}
-
-.header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-.header-title h1 {
-    margin: 0;
-    font-size: 32px;
-    line-height: 1.25;
-    letter-spacing: -0.6px;
-}
-
-.subtitle {
-    margin-top: 8px;
-    color: #dbeafe;
-    font-size: 14px;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-}
-
-.updated {
-    background: rgba(15, 23, 42, 0.52);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #f8fafc;
-    padding: 11px 15px;
-    border-radius: 999px;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-    margin-bottom: 18px;
-}
-
-.kpi-card {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(180deg, #111827, #0f172a);
-    border: 1px solid #1e293b;
-    border-radius: 18px;
-    padding: 18px;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
-}
-
-.kpi-card::after {
-    content: "";
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 110px;
-    height: 110px;
-    background: rgba(56, 189, 248, 0.08);
-    border-radius: 999px;
-}
-
-.kpi-label {
-    color: #94a3b8;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 10px;
-}
-
-.kpi-value {
-    font-size: 25px;
-    font-weight: bold;
-    color: #f8fafc;
-    margin-bottom: 8px;
-    word-break: break-word;
-}
-
-.kpi-note {
-    color: #94a3b8;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.positive {
-    color: #22c55e;
-}
-
-.negative {
-    color: #ef4444;
-}
-
-.neutral {
-    color: #cbd5e1;
-}
-
-.kpi-news {
-    border-top: 4px solid #38bdf8;
-}
-
-.kpi-bitcoin {
-    border-top: 4px solid #f97316;
-}
-
-.kpi-gold {
-    border-top: 4px solid #f59e0b;
-}
-
-.kpi-world-gold {
-    border-top: 4px solid #facc15;
-}
-
-.kpi-vnindex {
-    border-top: 4px solid #22c55e;
-}
-
-.terminal-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.28fr) minmax(340px, 0.72fr);
-    gap: 18px;
-    margin-bottom: 18px;
-}
-
-.panel {
-    background: rgba(15, 23, 42, 0.96);
-    border: 1px solid #1e293b;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
-}
-
-.panel-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #1e293b;
-}
-
-.panel-title h2 {
-    margin: 0;
-    font-size: 21px;
-    color: #f8fafc;
-}
-
-.panel-badge {
-    font-size: 12px;
-    color: #93c5fd;
-    background: rgba(37, 99, 235, 0.18);
-    border: 1px solid rgba(59, 130, 246, 0.35);
-    padding: 6px 9px;
-    border-radius: 999px;
-    white-space: nowrap;
-}
-
-.ai-summary {
-    line-height: 1.75;
-    color: #dbeafe;
-    font-size: 15px;
-}
-
-.ai-summary p {
-    margin-top: 0;
-}
-
-.ai-summary ul {
-    padding-left: 22px;
-}
-
-.ai-summary li {
-    margin-bottom: 8px;
-}
-
-.signal-grid {
-    display: grid;
-    gap: 12px;
-}
-
-.signal-card {
-    background: #111827;
-    border: 1px solid #243244;
-    border-radius: 15px;
-    padding: 15px;
-}
-
-.signal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 9px;
-}
-
-.signal-name {
-    font-weight: bold;
-    color: #f8fafc;
-}
-
-.signal-badge {
-    font-size: 12px;
-    font-weight: bold;
-    padding: 6px 9px;
-    border-radius: 999px;
-}
-
-.signal-bullish {
-    color: #86efac;
-    background: rgba(34, 197, 94, 0.14);
-    border: 1px solid rgba(34, 197, 94, 0.35);
-}
-
-.signal-bearish {
-    color: #fca5a5;
-    background: rgba(239, 68, 68, 0.14);
-    border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-.signal-neutral {
-    color: #cbd5e1;
-    background: rgba(148, 163, 184, 0.12);
-    border: 1px solid rgba(148, 163, 184, 0.3);
-}
-
-.signal-rsi {
-    color: #f8fafc;
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 6px;
-}
-
-.signal-note {
-    color: #94a3b8;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.snapshot-list {
-    display: grid;
-    gap: 12px;
-}
-
-.snapshot-item {
-    background: #111827;
-    border: 1px solid #243244;
-    border-radius: 15px;
-    padding: 14px;
-}
-
-.snapshot-item.gold-domestic {
-    border-left: 4px solid #f59e0b;
-}
-
-.snapshot-item.gold-world {
-    border-left: 4px solid #facc15;
-}
-
-.snapshot-item.bitcoin {
-    border-left: 4px solid #f97316;
-}
-
-.snapshot-item.vnindex {
-    border-left: 4px solid #22c55e;
-}
-
-.snapshot-name {
-    color: #94a3b8;
-    font-size: 13px;
-    margin-bottom: 6px;
-}
-
-.snapshot-value {
-    color: #f8fafc;
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 7px;
-}
-
-.snapshot-detail {
-    color: #cbd5e1;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
-.news-columns {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-}
-
-.news-column {
-    background: #111827;
-    border: 1px solid #243244;
-    border-radius: 16px;
-    padding: 16px;
-}
-
-.news-source {
-    color: #f8fafc;
-    font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 14px;
-}
-
-.terminal-news-item {
-    display: grid;
-    grid-template-columns: 38px minmax(0, 1fr);
-    gap: 10px;
-    padding: 12px 0;
-    border-bottom: 1px solid #1f2937;
-}
-
-.terminal-news-item:last-child {
-    border-bottom: none;
-}
-
-.terminal-news-index {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    background: rgba(56, 189, 248, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    color: #7dd3fc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.terminal-news-item a {
-    color: #e5e7eb;
-    text-decoration: none;
-    font-weight: bold;
-    line-height: 1.45;
-}
-
-.terminal-news-item a:hover {
-    color: #38bdf8;
-    text-decoration: underline;
-}
-
-.terminal-news-item p {
-    color: #94a3b8;
-    line-height: 1.6;
-    font-size: 14px;
-    margin: 7px 0 0;
-}
-
-.empty-news {
-    color: #94a3b8;
-}
-
-.chart-section {
-    margin-top: 18px;
-}
-
-.chart-wrapper {
-    margin-top: 12px;
-    background: #020617;
-    border: 1px solid #1e293b;
-    border-radius: 14px;
-    padding: 16px;
-    overflow-x: auto;
-}
-
-.chart-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #e5e7eb;
-}
-
-.chart-svg {
-    width: 100%;
-    min-width: 760px;
-    height: auto;
-}
-
-.grid-line {
-    stroke: #1e293b;
-    stroke-width: 1;
-}
-
-.candle-up {
-    stroke: #22c55e;
-    fill: #22c55e;
-}
-
-.candle-down {
-    stroke: #ef4444;
-    fill: #ef4444;
-}
-
-.rsi-line {
-    stroke: #38bdf8;
-    stroke-width: 2;
-}
-
-.rsi-high-line {
-    stroke: #f59e0b;
-    stroke-width: 1;
-    stroke-dasharray: 5 5;
-}
-
-.rsi-low-line {
-    stroke: #22c55e;
-    stroke-width: 1;
-    stroke-dasharray: 5 5;
-}
-
-.axis-text {
-    fill: #94a3b8;
-    font-size: 12px;
-}
-
-.chart-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    margin-top: 10px;
-    color: #cbd5e1;
-}
-
-.chart-empty {
-    color: #94a3b8;
-    padding: 16px;
-    background: #111827;
-    border-radius: 10px;
-}
-
-.footer {
-    color: #64748b;
-    text-align: center;
-    font-size: 13px;
-    margin-top: 24px;
-}
-
-@media (max-width: 980px) {
-    .terminal-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .news-columns {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 620px) {
-    .header-title h1 {
-        font-size: 24px;
-    }
-
-    .terminal-header,
-    .panel {
-        padding: 18px;
-    }
-
-    .kpi-value {
-        font-size: 22px;
-    }
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Agent Finance</title>
+
+    <style>
+        :root {
+            --bg: #070b14;
+            --panel: #101828;
+            --panel-soft: rgba(255, 255, 255, 0.045);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #e8eefc;
+            --muted: #8b9ab4;
+            --positive: #24d18b;
+            --negative: #ff5c7a;
+            --accent: #56a3ff;
+            --gold: #ffd166;
+            --purple: #b68cff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(86, 163, 255, 0.18), transparent 32%),
+                radial-gradient(circle at top right, rgba(255, 209, 102, 0.13), transparent 28%),
+                radial-gradient(circle at 50% 30%, rgba(182, 140, 255, 0.08), transparent 36%),
+                var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        code {
+            color: var(--gold);
+        }
+
+        .page {
+            width: min(1440px, 94vw);
+            margin: 0 auto;
+            padding: 32px 0 56px;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 780px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .time-chip,
+        .updated-pill,
+        .rsi-pill {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: var(--muted);
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .kpi-card,
+        .panel,
+        .chart-card,
+        .news-column {
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.025));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.23);
+        }
+
+        .kpi-card {
+            padding: 20px;
+            min-height: 136px;
+        }
+
+        .kpi-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-card strong {
+            display: block;
+            font-size: 26px;
+            letter-spacing: -0.03em;
+            word-break: break-word;
+        }
+
+        .kpi-card em {
+            display: block;
+            margin-top: 8px;
+            font-style: normal;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .panel {
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        h2,
+        h3 {
+            margin: 0;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: 26px;
+        }
+
+        h3 {
+            font-size: 18px;
+        }
+
+        .brief {
+            color: #d7e2f7;
+            line-height: 1.75;
+        }
+
+        .brief p:first-child {
+            margin-top: 0;
+        }
+
+        .brief p:last-child {
+            margin-bottom: 0;
+        }
+
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .market-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+        .market-item span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .market-item strong {
+            display: block;
+            font-size: 22px;
+            margin: 8px 0;
+            word-break: break-word;
+        }
+
+        .market-item em {
+            font-style: normal;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .positive {
+            color: var(--positive) !important;
+        }
+
+        .negative {
+            color: var(--negative) !important;
+        }
+
+        .neutral {
+            color: var(--muted) !important;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .crypto-overview {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .crypto-overview p {
+            max-width: 760px;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .sentiment-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: fit-content;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .sentiment-card span {
+            color: var(--muted);
+        }
+
+        .sentiment-card strong {
+            font-size: 26px;
+            color: var(--gold);
+        }
+
+        .sentiment-card em {
+            font-style: normal;
+            color: var(--text);
+        }
+
+        .alpha-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .alpha-card {
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .coin-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .coin-symbol {
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .coin-name {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .score-badge {
+            min-width: 44px;
+            text-align: center;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(86,163,255,0.16);
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 8px 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .metric-row strong {
+            color: var(--text);
+        }
+
+        .alpha-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+            margin-bottom: 0;
+        }
+
+        .mini-lists {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .mini-lists > div {
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.035);
+            border: 1px solid var(--border);
+        }
+
+        .mini-lists ul {
+            padding: 0;
+            margin: 14px 0 0;
+            list-style: none;
+        }
+
+        .mini-lists li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .chart-card {
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .chart-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .chart-note {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .chart-box {
+            overflow-x: auto;
+        }
+
+        .chart-wrapper {
+            min-width: 760px;
+        }
+
+        .chart-title {
+            display: none;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: auto;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 18px;
+        }
+
+        .grid-line {
+            stroke: rgba(255,255,255,0.12);
+            stroke-width: 1;
+        }
+
+        .axis-text {
+            fill: #8b9ab4;
+            font-size: 12px;
+        }
+
+        .candle-up {
+            stroke: var(--positive);
+            fill: var(--positive);
+        }
+
+        .candle-down {
+            stroke: var(--negative);
+            fill: var(--negative);
+        }
+
+        .rsi-line {
+            stroke: var(--accent);
+            stroke-width: 2.2;
+        }
+
+        .rsi-high-line {
+            stroke: rgba(255, 92, 122, 0.55);
+            stroke-width: 1;
+            stroke-dasharray: 5 5;
+        }
+
+        .rsi-low-line {
+            stroke: rgba(36, 209, 139, 0.55);
+            stroke-width: 1;
+            stroke-dasharray: 5 5;
+        }
+
+        .chart-meta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .chart-meta strong {
+            color: var(--text);
+        }
+
+        .chart-empty {
+            color: var(--muted);
+            min-height: 220px;
+            display: grid;
+            place-items: center;
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .news-column {
+            padding: 20px;
+        }
+
+        .news-card {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .news-card:last-child {
+            border-bottom: none;
+        }
+
+        .news-card a {
+            display: block;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .news-card a:hover {
+            color: var(--accent);
+        }
+
+        .news-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 8px 0 0;
+        }
+
+        @media (max-width: 1100px) {
+            .kpi-grid,
+            .market-grid,
+            .alpha-grid,
+            .news-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .mini-lists {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .hero,
+            .panel-header,
+            .chart-card-header {
+                flex-direction: column;
+            }
+
+            .kpi-grid,
+            .market-grid,
+            .alpha-grid,
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .time-chip,
+            .updated-pill,
+            .rsi-pill {
+                white-space: normal;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-<div class="page">
-
-    <header class="terminal-header">
-        <div class="header-row">
-            <div class="header-title">
-                <h1>Morning Agent Finance</h1>
-                <div class="subtitle">Bảng tổng hợp tin tức ngày 19/06/2026</div>
+    <main class="page">
+        <header class="hero">
+            <div>
+                <h1>Bảng tổng hợp tin tức ngày 19/06/2026</h1>
+                <p>
+                    Morning Agent Finance theo dõi tin tức, Bitcoin, vàng, VNINDEX,
+                    RSI kỹ thuật và tín hiệu Crypto Alpha để hỗ trợ bạn phát hiện
+                    cơ hội, rủi ro và xu hướng đáng chú ý mỗi ngày.
+                </p>
             </div>
 
-            <div class="updated">
-                Cập nhật lần cuối: 11:35:02
-            </div>
-        </div>
-    </header>
+            <div class="time-chip">Cập nhật lần cuối: 19/06/2026 08:49:46</div>
+        </header>
 
+        <section class="kpi-grid">
+            <article class="kpi-card">
+                <span>Tổng tin nóng</span>
+                <strong>15</strong>
+                <em class="neutral">VnExpress / Dân Trí / BBC</em>
+            </article>
 
-    <section class="kpi-grid">
+            <article class="kpi-card">
+                <span>Bitcoin</span>
+                <strong>$62,589.00</strong>
+                <em class="negative">
+                    -2.89%
+                </em>
+            </article>
 
-        <div class="kpi-card kpi-news">
-            <div class="kpi-label">Tin nóng</div>
-            <div class="kpi-value">15 tin</div>
-            <div class="kpi-note">VnExpress • Dân Trí • BBC</div>
-        </div>
+            <article class="kpi-card">
+                <span>Vàng thế giới</span>
+                <strong>$4,187.80/oz</strong>
+                <em class="negative">
+                    -0.86%
+                </em>
+            </article>
 
-        <div class="kpi-card kpi-bitcoin">
-            <div class="kpi-label">Bitcoin</div>
-            <div class="kpi-value">$62,540.00</div>
-            <div class="kpi-note">
-                24h:
-                <strong class="negative">
-                    -2.07%
-                </strong>
-                • RSI: 45.23
-            </div>
-        </div>
-
-        <div class="kpi-card kpi-gold">
-            <div class="kpi-label">Vàng SJC trong nước</div>
-            <div class="kpi-value">N/A</div>
-            <div class="kpi-note">
-                24h:
-                <strong class="neutral">
+            <article class="kpi-card">
+                <span>VNINDEX</span>
+                <strong>1,824.53</strong>
+                <em class="neutral">
                     N/A
-                </strong>
-            </div>
-        </div>
+                </em>
+            </article>
+        </section>
 
-        <div class="kpi-card kpi-world-gold">
-            <div class="kpi-label">Vàng thế giới</div>
-            <div class="kpi-value">$4,166.50/oz</div>
-            <div class="kpi-note">
-                24h:
-                <strong class="negative">
-                    -1.36%
-                </strong>
-                • RSI: 33.79
-            </div>
-        </div>
-
-        <div class="kpi-card kpi-vnindex">
-            <div class="kpi-label">VNINDEX</div>
-            <div class="kpi-value">1,828.90</div>
-            <div class="kpi-note">
-                <strong class="neutral">
-                    N/A
-                </strong>
-                • RSI: N/A
-            </div>
-        </div>
-
-    </section>
-
-
-    <section class="terminal-grid">
-
-        <div class="panel">
-            <div class="panel-title">
-                <h2>🎯 AI Market Brief</h2>
-                <div class="panel-badge">AUTO SUMMARY</div>
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">AI Brief</span>
+                    <h2>AI Market Brief</h2>
+                </div>
             </div>
 
-            <div class="ai-summary">
+            <div class="brief">
                 
     <p><strong>AI Market Brief đang dùng chế độ fallback.</strong></p>
     <p>
         Thị trường đang được cập nhật tự động. Bitcoin hiện biến động 
-        <strong>-2.07%</strong>, vàng SJC biến động 
+        <strong>-2.89%</strong>, vàng SJC biến động 
         <strong>N/A</strong>, 
-        vàng thế giới biến động <strong>-1.36%</strong>, 
+        vàng thế giới biến động <strong>-0.86%</strong>, 
         còn VNINDEX ghi nhận <strong>N/A</strong>.
     </p>
     <ul>
@@ -607,360 +604,419 @@ body {
     </ul>
     <p><strong>Lưu ý:</strong> Đây không phải lời khuyên đầu tư.</p>
     
+            <p><strong>Crypto Alpha:</strong></p>
+            <p>Crypto Alpha Signals<br><br>Fear &amp; Greed: 14 - Extreme Fear<br><br>Top cơ hội theo Alpha Score:<br>- SYN | Score: 80 | 24h: 35.01% | Volume 24h rất cao so với market cap; Giá tăng mạnh trong 24h<br>- JTO | Score: 70 | 24h: 6.9% | Volume 24h rất cao so với market cap; Động lượng giá tích cực trong 24h<br>- WLD | Score: 55 | 24h: 1.24% | Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực<br>- QUQ | Score: 55 | 24h: 0.01% | Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực<br>- UNI | Score: 55 | 24h: -2.83% | Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
+            
             </div>
-        </div>
+        </section>
 
-        <div class="panel">
-            <div class="panel-title">
-                <h2>📡 Technical Signals</h2>
-                <div class="panel-badge">RSI 14D</div>
-            </div>
-
-            <div class="signal-grid">
-
-                <div class="signal-card">
-                    <div class="signal-top">
-                        <div class="signal-name">₿ Bitcoin</div>
-                        <div class="signal-badge signal-neutral">Neutral</div>
-                    </div>
-                    <div class="signal-rsi">45.23</div>
-                    <div class="signal-note">RSI trung tính.</div>
-                </div>
-
-                <div class="signal-card">
-                    <div class="signal-top">
-                        <div class="signal-name">🟡 Vàng thế giới</div>
-                        <div class="signal-badge signal-bearish">Bearish</div>
-                    </div>
-                    <div class="signal-rsi">33.79</div>
-                    <div class="signal-note">RSI trung tính.</div>
-                </div>
-
-                <div class="signal-card">
-                    <div class="signal-top">
-                        <div class="signal-name">📊 VNINDEX</div>
-                        <div class="signal-badge signal-neutral">N/A</div>
-                    </div>
-                    <div class="signal-rsi">N/A</div>
-                    <div class="signal-note">Chưa đủ dữ liệu RSI.</div>
-                </div>
-
-            </div>
-        </div>
-
-    </section>
-
-
+        
     <section class="panel">
-        <div class="panel-title">
-            <h2>📈 Market Snapshot</h2>
-            <div class="panel-badge">LIVE DATA</div>
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">Crypto Alpha</span>
+                <h2>Crypto Alpha Agent</h2>
+            </div>
+            <div class="updated-pill">
+                Updated: 2026-06-19 08:49:28
+            </div>
         </div>
 
-        <div class="snapshot-list">
-
-            <div class="snapshot-item bitcoin">
-                <div class="snapshot-name">₿ Bitcoin</div>
-                <div class="snapshot-value">$62,540.00</div>
-                <div class="snapshot-detail">
-                    Quy đổi: 1,646,648,266 VND<br>
-                    24h:
-                    <strong class="negative">
-                        -2.07%
-                    </strong><br>
-                    Giảm trong 24h
-                </div>
+        <div class="crypto-overview">
+            <div class="sentiment-card">
+                <span>Fear & Greed Index</span>
+                <strong>14</strong>
+                <em>Extreme Fear</em>
             </div>
 
-            <div class="snapshot-item gold-domestic">
-                <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
-                <div class="snapshot-value">N/A</div>
-                <div class="snapshot-detail">
-                    Mua vào: <strong>N/A</strong><br>
-                    Bán ra: <strong>N/A</strong><br>
-                    24h:
-                    <strong class="neutral">
-                        N/A
-                    </strong><br>
-                    Chưa lấy được giá vàng trong nước từ vang.today.
+            <p class="muted">
+                Agent theo dõi CoinGecko, Binance Futures, funding rate và tâm lý thị trường
+                để phát hiện token có tín hiệu volume, momentum hoặc funding bất thường.
+            </p>
+        </div>
+
+        <div class="alpha-grid">
+            
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">SYN</div>
+                    <div class="coin-name">Synapse</div>
                 </div>
+                <div class="score-badge">80</div>
             </div>
 
-            <div class="snapshot-item gold-world">
-                <div class="snapshot-name">🌍 Vàng thế giới</div>
-                <div class="snapshot-value">$4,166.50/oz</div>
-                <div class="snapshot-detail">
-                    24h:
-                    <strong class="negative">
-                        -1.36%
-                    </strong><br>
-                    RSI kỹ thuật: <strong>33.79</strong> — RSI trung tính.<br>
-                    Dữ liệu vàng thế giới từ Yahoo Finance Gold Futures GC=F.
-                </div>
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="positive">+35.01%</strong>
             </div>
 
-            <div class="snapshot-item vnindex">
-                <div class="snapshot-name">📊 VNINDEX</div>
-                <div class="snapshot-value">1,828.90</div>
-                <div class="snapshot-detail">
-                    <strong class="neutral">
-                        N/A
-                    </strong><br>
-                    RSI: N/A — Chưa đủ dữ liệu RSI.<br>
-                    Dữ liệu VNINDEX lấy từ Yahoo Finance ticker ^VNINDEX.VN.
-                </div>
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$94,072,944</strong>
             </div>
 
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Giá tăng mạnh trong 24h</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">JTO</div>
+                    <div class="coin-name">Jito</div>
+                </div>
+                <div class="score-badge">70</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="positive">+6.90%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$103,571,858</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Động lượng giá tích cực trong 24h</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">WLD</div>
+                    <div class="coin-name">Worldcoin</div>
+                </div>
+                <div class="score-badge">55</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="positive">+1.24%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$778,821,694</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">QUQ</div>
+                    <div class="coin-name">Quq</div>
+                </div>
+                <div class="score-badge">55</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="positive">+0.01%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$408,533,745</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">UNI</div>
+                    <div class="coin-name">Uniswap</div>
+                </div>
+                <div class="score-badge">55</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="negative">-2.83%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$359,808,805</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">XPL</div>
+                    <div class="coin-name">Plasma</div>
+                </div>
+                <div class="score-badge">55</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="negative">-14.52%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$166,471,177</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Giảm mạnh, có thể xuất hiện cơ hội bắt đáy rủi ro cao</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">XLM</div>
+                    <div class="coin-name">Stellar</div>
+                </div>
+                <div class="score-badge">45</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="negative">-8.27%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$616,223,809</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h tăng đáng chú ý; Xu hướng 7 ngày tích cực</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">USDT</div>
+                    <div class="coin-name">Tether</div>
+                </div>
+                <div class="score-badge">40</div>
+            </div>
+
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="positive">+0.01%</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$50,116,705,346</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+
+            <p>Volume 24h rất cao so với market cap; Thị trường đang sợ hãi, có thể có cơ hội tích lũy</p>
+        </article>
+        
+        </div>
+
+        <div class="mini-lists">
+            <div>
+                <h3>Top Gainers 24h</h3>
+                <ul>
+            <li>
+                <span>SYN</span>
+                <strong class="positive">+35.01%</strong>
+            </li>
+            
+            <li>
+                <span>JTO</span>
+                <strong class="positive">+6.90%</strong>
+            </li>
+            
+            <li>
+                <span>NIGHT</span>
+                <strong class="positive">+4.10%</strong>
+            </li>
+            
+            <li>
+                <span>WLD</span>
+                <strong class="positive">+1.24%</strong>
+            </li>
+            
+            <li>
+                <span>PYUSD</span>
+                <strong class="positive">+0.02%</strong>
+            </li>
+            </ul>
+            </div>
+
+            <div>
+                <h3>Top Losers 24h</h3>
+                <ul>
+            <li>
+                <span>RE</span>
+                <strong class="negative">-32.61%</strong>
+            </li>
+            
+            <li>
+                <span>XPL</span>
+                <strong class="negative">-14.52%</strong>
+            </li>
+            
+            <li>
+                <span>AVAX</span>
+                <strong class="negative">-9.69%</strong>
+            </li>
+            
+            <li>
+                <span>ASTER</span>
+                <strong class="negative">-8.58%</strong>
+            </li>
+            
+            <li>
+                <span>XLM</span>
+                <strong class="negative">-8.27%</strong>
+            </li>
+            </ul>
+            </div>
+
+            <div>
+                <h3>Top Volume 24h</h3>
+                <ul>
+            <li>
+                <span>USDT</span>
+                <strong>$50,116,705,346</strong>
+            </li>
+            
+            <li>
+                <span>RSPCX</span>
+                <strong>$35,005,902,497</strong>
+            </li>
+            
+            <li>
+                <span>BTC</span>
+                <strong>$29,072,806,310</strong>
+            </li>
+            
+            <li>
+                <span>SHEB</span>
+                <strong>$19,653,102,211</strong>
+            </li>
+            
+            <li>
+                <span>USDC</span>
+                <strong>$12,083,588,371</strong>
+            </li>
+            </ul>
+            </div>
         </div>
     </section>
+    
 
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">Market Data</span>
+                    <h2>Market Snapshot</h2>
+                </div>
+            </div>
 
-    <section class="panel chart-section">
-        <div class="panel-title">
-            <h2>🔥 Tin nóng hôm nay</h2>
-            <div class="panel-badge">RSS FEEDS</div>
-        </div>
+            <div class="market-grid">
+                <article class="market-item">
+                    <span>Bitcoin USD</span>
+                    <strong>$62,589.00</strong>
+                    <em class="negative">
+                        -2.89% — Giảm trong 24h
+                    </em>
+                </article>
 
-        <div class="news-columns">
+                <article class="market-item">
+                    <span>Bitcoin VND</span>
+                    <strong>1,647,956,839 VND</strong>
+                    <em class="negative">
+                        -2.89%
+                    </em>
+                </article>
 
-            <div class="news-column">
-                <div class="news-source">VnExpress</div>
-                
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">01</div>
+                <article class="market-item">
+                    <span>Vàng SJC trong nước</span>
+                    <strong>N/A</strong>
+                    <em class="neutral">
+                        Mua: N/A<br>
+                        Bán: N/A<br>
+                        24h: N/A
+                    </em>
+                </article>
 
+                <article class="market-item">
+                    <span>Vàng thế giới</span>
+                    <strong>$4,187.80/oz</strong>
+                    <em class="negative">
+                        -0.86%
+                    </em>
+                </article>
+
+                <article class="market-item">
+                    <span>VNINDEX</span>
+                    <strong>1,824.53</strong>
+                    <em class="neutral">
+                        N/A
+                    </em>
+                </article>
+            </div>
+        </section>
+
+        <section class="charts-grid">
+            
+    <section class="chart-card">
+        <div class="chart-card-header">
             <div>
-                <a href="https://vnexpress.net/gia-vang-giam-ve-gan-147-trieu-dong-5087558.html" target="_blank">
-                    Giá vàng giảm về gần 147 triệu đồng
-                </a>
-
-                <p>
-                    Mỗi lượng vàng giảm hơn 4 triệu đồng về sát 147 triệu đồng, chênh lệch với thế giới sáng nay gần 15 triệu một lượng.
-                </p>
+                <span class="eyebrow">Technical Chart</span>
+                <h3>Bitcoin Chart</h3>
             </div>
+            <div class="rsi-pill">RSI: 46.11</div>
         </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">02</div>
-
-            <div>
-                <a href="https://vnexpress.net/nguoi-dan-chi-it-hon-cho-mam-cung-tet-doan-ngo-5087483.html" target="_blank">
-                    Người dân chi ít hơn cho mâm cúng Tết Đoan Ngọ
-                </a>
-
-                <p>
-                    Thay vì chi cả triệu đồng cho mâm cúng cầu kỳ, nhiều gia đình chuyển sang các set giá vài trăm nghìn đồng.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">03</div>
-
-            <div>
-                <a href="https://vnexpress.net/gia-vang-the-gioi-quay-dau-giam-5087485.html" target="_blank">
-                    Giá vàng thế giới quay đầu giảm
-                </a>
-
-                <p>
-                    Mỗi ounce vàng hiện về dưới 4.200 USD, do khả năng Cục Dự trữ liên bang Mỹ (Fed) tăng lãi suất cuối năm nay.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">04</div>
-
-            <div>
-                <a href="https://vnexpress.net/gia-vai-khong-hat-trung-quoc-giam-mot-nua-5086646.html" target="_blank">
-                    Giá vải không hạt Trung Quốc giảm một nửa
-                </a>
-
-                <p>
-                    Vải không hạt nhập từ Trung Quốc được bán giá 350.000-480.000 đồng một kg, giảm 40-50% so với cùng kỳ năm ngoái nhờ nguồn cung dồi dào.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">05</div>
-
-            <div>
-                <a href="https://vnexpress.net/deutsche-bank-chat-luong-doanh-nghiep-moi-la-dieu-thu-hut-von-ngoai-5087426.html" target="_blank">
-                    Deutsche Bank: Chất lượng doanh nghiệp mới là điều thu hút vốn ngoại
-                </a>
-
-                <p>
-                    Theo ngân hàng lớn nhất Đức, vốn ngoại đầu tư không chỉ nhờ thể chế, quan trọng hơn là sức hấp dẫn của các doanh nghiệp trên sàn chứng khoán.
-                </p>
-            </div>
-        </div>
-        
-            </div>
-
-            <div class="news-column">
-                <div class="news-source">Dân Trí</div>
-                
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">01</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/gia-vang-roi-thang-dung-thung-moc-150-trieu-dongluong-20260619084656384.htm" target="_blank">
-                    Giá vàng rơi thẳng đứng, “thủng” mốc 150 triệu đồng/lượng
-                </a>
-
-                <p>
-                    (Dân trí) - Giá vàng trong nước sáng 19/6 giảm mạnh tới 3 triệu đồng/lượng ở chiều thu mua, trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">02</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank">
-                    Elon Musk giàu đến mức nào so với những người Mỹ giàu nhất lịch sử?
-                </a>
-
-                <p>
-                    (Dân trí) - Sở hữu khối tài sản chạm mốc 1.400 tỷ USD vào năm 2026, tỷ phú Elon Musk không chỉ đứng đầu thế giới hiện tại mà còn tạo ra khoảng cách không tưởng với các đại tư bản trong lịch sử nước Mỹ.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">03</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/chan-gan-1-tan-thuc-pham-lau-nhieu-lo-hang-da-boc-mui-hoi-thoi-20260618224956994.htm" target="_blank">
-                    Chặn gần 1 tấn thực phẩm lậu, nhiều lô hàng đã bốc mùi hôi thối
-                </a>
-
-                <p>
-                    (Dân trí) - Lực lượng hải quan tại nhiều địa phương đã liên tiếp phát hiện, thu giữ gần 1 tấn thực phẩm nhập lậu gồm chân gà, xúc xích, lạp xưởng và các mặt hàng đông lạnh không rõ nguồn gốc.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">04</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank">
-                    Giá vàng trong nước, thế giới đồng loạt quay đầu giảm
-                </a>
-
-                <p>
-                    (Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">05</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/nhom-co-phieu-ho-vingroup-dong-loat-tang-tran-keo-thi-truong-but-pha-20260618155317346.htm" target="_blank">
-                    Nhóm cổ phiếu &quot;họ&quot; Vingroup đồng loạt tăng trần kéo thị trường bứt phá
-                </a>
-
-                <p>
-                    (Dân trí) - Nhóm cổ phiếu Vingroup đồng loạt tăng trần trong phiên 18/6, với VIC, VHM và VRE dẫn đầu đà tăng của thị trường. Cùng với PC1 tăng hết biên độ, các mã này đã góp công lớn đưa VN-Index bứt phá.
-                </p>
-            </div>
-        </div>
-        
-            </div>
-
-            <div class="news-column">
-                <div class="news-source">BBC</div>
-                
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">01</div>
-
-            <div>
-                <a href="https://www.bbc.com/vietnamese/articles/cn59yzy04d0o?at_medium=RSS&at_campaign=rss" target="_blank">
-                    Cơ thể các cầu thủ bóng đá hàng đầu thay đổi thế nào trong 50 năm qua
-                </a>
-
-                <p>
-                    Các chuyên gia cho biết cường độ thi đấu cao hơn cùng với những tiến bộ trong y học và khoa học thể thao đã làm thay đổi sinh lý của các cầu thủ hàng đầu.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">02</div>
-
-            <div>
-                <a href="https://www.bbc.com/vietnamese/articles/cm203nmz2l2o?at_medium=RSS&at_campaign=rss" target="_blank">
-                    Thấy gì từ việc công dân Việt Nam chết trong trung tâm giam giữ di trú Mỹ
-                </a>
-
-                <p>
-                    Một bài phân tích mới đây của hãng thông tấn Reuters cho thấy tỷ lệ tử vong tại các trung tâm giam giữ người nhập cư của Mỹ tăng gấp đôi dưới thời Tổng thống Donald Trump.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">03</div>
-
-            <div>
-                <a href="https://www.bbc.com/vietnamese/articles/cyv0ejd8330o?at_medium=RSS&at_campaign=rss" target="_blank">
-                    Siêu dự án Trục đại lộ cảnh quan sông Hồng: Những thành phố khác đã làm gì với các dòng sông của họ?
-                </a>
-
-                <p>
-                    Theo các chuyên gia, việc Hà Nội hướng mặt ra sông cần dựa trên bối cảnh đặc thù của địa phương và có định hướng cũng như cách làm phù hợp, khoa học chứ không phải là câu chuyện đơn giản là xây rừng cao ốc bám theo xa lộ ven sông.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">04</div>
-
-            <div>
-                <a href="https://www.bbc.com/vietnamese/articles/ceqdrq5nnpro?at_medium=RSS&at_campaign=rss" target="_blank">
-                    &#x27;Bàn tay của Chúa&#x27; là biểu tượng, nhưng còn bàn thắng tuyệt vời thứ hai của Maradona thì sao?
-                </a>
-
-                <p>
-                    Lần đầu tiên tôi đi xem bóng đá trực tiếp lại đúng vào một trong những trận đấu gây tranh cãi nhất lịch sử thể thao.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">05</div>
-
-            <div>
-                <a href="https://www.bbc.com/vietnamese/articles/c4gy2glgpgyo?at_medium=RSS&at_campaign=rss" target="_blank">
-                    Thỏa thuận Mỹ - Iran: Yếu tố nào đáng chú ý?
-                </a>
-
-                <p>
-                    Bản ghi nhớ gồm 14 điểm này bao gồm việc chấm dứt giao tranh, thỏa thuận rằng Iran sẽ không bao giờ sở hữu vũ khí hạt nhân và một gói tái phát triển trị giá 300 tỷ USD dành cho Iran.
-                </p>
-            </div>
-        </div>
-        
-            </div>
-
-        </div>
-    </section>
-
-
-    <section class="panel chart-section">
-        <div class="panel-title">
-            <h2>📊 Bitcoin / Nến ngày / 3 tháng</h2>
-            <div class="panel-badge">BTC-USD</div>
-        </div>
-
-        
+        <div class="chart-note">RSI trung tính.</div>
+        <div class="chart-box">
+            
     <div class="chart-wrapper">
-        <div class="chart-title">Bitcoin / Nến ngày / 3 tháng</div>
+        <div class="chart-title">Bitcoin / USD</div>
 
         <svg viewBox="0 0 920 390" class="chart-svg" role="img">
 
@@ -973,30 +1029,14 @@ body {
             
             <line
                 x1="64.61"
-                y1="146.15"
-                x2="64.61"
-                y2="165.07"
-                class="candle-up"
-            />
-
-            <rect
-                x="62.08"
-                y="154.16"
-                width="5.07"
-                height="5.93"
-                class="candle-up"
-            />
-        
-            <line
-                x1="73.83"
                 y1="149.02"
-                x2="73.83"
+                x2="64.61"
                 y2="172.80"
                 class="candle-down"
             />
 
             <rect
-                x="71.30"
+                x="62.08"
                 y="154.16"
                 width="5.07"
                 height="17.59"
@@ -1004,15 +1044,15 @@ body {
             />
         
             <line
-                x1="83.06"
+                x1="73.83"
                 y1="163.49"
-                x2="83.06"
+                x2="73.83"
                 y2="184.74"
                 class="candle-down"
             />
 
             <rect
-                x="80.52"
+                x="71.30"
                 y="171.49"
                 width="5.07"
                 height="8.66"
@@ -1020,15 +1060,15 @@ body {
             />
         
             <line
-                x1="92.28"
+                x1="83.06"
                 y1="141.92"
-                x2="92.28"
+                x2="83.06"
                 y2="183.91"
                 class="candle-up"
             />
 
             <rect
-                x="89.74"
+                x="80.52"
                 y="150.35"
                 width="5.07"
                 height="29.83"
@@ -1036,15 +1076,15 @@ body {
             />
         
             <line
-                x1="101.50"
+                x1="92.28"
                 y1="145.91"
-                x2="101.50"
+                x2="92.28"
                 y2="169.71"
                 class="candle-down"
             />
 
             <rect
-                x="98.96"
+                x="89.74"
                 y="150.37"
                 width="5.07"
                 height="3.83"
@@ -1052,15 +1092,15 @@ body {
             />
         
             <line
-                x1="110.72"
+                x1="101.50"
                 y1="139.95"
-                x2="110.72"
+                x2="101.50"
                 y2="155.51"
                 class="candle-up"
             />
 
             <rect
-                x="108.19"
+                x="98.96"
                 y="146.51"
                 width="5.07"
                 height="7.67"
@@ -1068,15 +1108,15 @@ body {
             />
         
             <line
-                x1="119.94"
+                x1="110.72"
                 y1="145.53"
-                x2="119.94"
+                x2="110.72"
                 y2="177.51"
                 class="candle-down"
             />
 
             <rect
-                x="117.41"
+                x="108.19"
                 y="146.51"
                 width="5.07"
                 height="24.46"
@@ -1084,15 +1124,15 @@ body {
             />
         
             <line
-                x1="129.17"
+                x1="119.94"
                 y1="167.80"
-                x2="129.17"
+                x2="119.94"
                 y2="202.62"
                 class="candle-down"
             />
 
             <rect
-                x="126.63"
+                x="117.41"
                 y="170.97"
                 width="5.07"
                 height="23.82"
@@ -1100,15 +1140,15 @@ body {
             />
         
             <line
-                x1="138.39"
+                x1="129.17"
                 y1="186.10"
-                x2="138.39"
+                x2="129.17"
                 y2="198.98"
                 class="candle-down"
             />
 
             <rect
-                x="135.85"
+                x="126.63"
                 y="194.79"
                 width="5.07"
                 height="2.00"
@@ -1116,15 +1156,15 @@ body {
             />
         
             <line
-                x1="147.61"
+                x1="138.39"
                 y1="187.85"
-                x2="147.61"
+                x2="138.39"
                 y2="208.06"
                 class="candle-down"
             />
 
             <rect
-                x="145.08"
+                x="135.85"
                 y="194.97"
                 width="5.07"
                 height="3.54"
@@ -1132,15 +1172,15 @@ body {
             />
         
             <line
-                x1="156.83"
+                x1="147.61"
                 y1="177.81"
-                x2="156.83"
+                x2="147.61"
                 y2="200.41"
                 class="candle-up"
             />
 
             <rect
-                x="154.30"
+                x="145.08"
                 y="191.36"
                 width="5.07"
                 height="7.12"
@@ -1148,15 +1188,15 @@ body {
             />
         
             <line
-                x1="166.06"
+                x1="156.83"
                 y1="173.84"
-                x2="166.06"
+                x2="156.83"
                 y2="198.56"
                 class="candle-up"
             />
 
             <rect
-                x="163.52"
+                x="154.30"
                 y="176.39"
                 width="5.07"
                 height="14.94"
@@ -1164,15 +1204,15 @@ body {
             />
         
             <line
-                x1="175.28"
+                x1="166.06"
                 y1="166.71"
-                x2="175.28"
+                x2="166.06"
                 y2="182.97"
                 class="candle-down"
             />
 
             <rect
-                x="172.74"
+                x="163.52"
                 y="176.39"
                 width="5.07"
                 height="2.00"
@@ -1180,15 +1220,15 @@ body {
             />
         
             <line
-                x1="184.50"
+                x1="175.28"
                 y1="172.51"
-                x2="184.50"
+                x2="175.28"
                 y2="200.75"
                 class="candle-down"
             />
 
             <rect
-                x="181.96"
+                x="172.74"
                 y="177.90"
                 width="5.07"
                 height="11.55"
@@ -1196,15 +1236,15 @@ body {
             />
         
             <line
-                x1="193.72"
+                x1="184.50"
                 y1="185.49"
-                x2="193.72"
+                x2="184.50"
                 y2="195.34"
                 class="candle-up"
             />
 
             <rect
-                x="191.19"
+                x="181.96"
                 y="189.03"
                 width="5.07"
                 height="2.00"
@@ -1212,15 +1252,15 @@ body {
             />
         
             <line
-                x1="202.94"
+                x1="193.72"
                 y1="183.36"
-                x2="202.94"
+                x2="193.72"
                 y2="190.60"
                 class="candle-up"
             />
 
             <rect
-                x="200.41"
+                x="191.19"
                 y="185.54"
                 width="5.07"
                 height="3.42"
@@ -1228,15 +1268,15 @@ body {
             />
         
             <line
-                x1="212.17"
+                x1="202.94"
                 y1="168.09"
-                x2="212.17"
+                x2="202.94"
                 y2="192.15"
                 class="candle-up"
             />
 
             <rect
-                x="209.63"
+                x="200.41"
                 y="169.12"
                 width="5.07"
                 height="16.42"
@@ -1244,15 +1284,15 @@ body {
             />
         
             <line
-                x1="221.39"
+                x1="212.17"
                 y1="156.27"
-                x2="221.39"
+                x2="212.17"
                 y2="175.28"
                 class="candle-down"
             />
 
             <rect
-                x="218.85"
+                x="209.63"
                 y="169.11"
                 width="5.07"
                 height="2.00"
@@ -1260,15 +1300,15 @@ body {
             />
         
             <line
-                x1="230.61"
+                x1="221.39"
                 y1="132.70"
-                x2="230.61"
+                x2="221.39"
                 y2="181.17"
                 class="candle-up"
             />
 
             <rect
-                x="228.08"
+                x="218.85"
                 y="140.38"
                 width="5.07"
                 height="29.92"
@@ -1276,15 +1316,15 @@ body {
             />
         
             <line
-                x1="239.83"
+                x1="230.61"
                 y1="131.79"
-                x2="239.83"
+                x2="230.61"
                 y2="152.36"
                 class="candle-down"
             />
 
             <rect
-                x="237.30"
+                x="228.08"
                 y="140.29"
                 width="5.07"
                 height="8.03"
@@ -1292,15 +1332,15 @@ body {
             />
         
             <line
-                x1="249.06"
+                x1="239.83"
                 y1="129.06"
-                x2="249.06"
+                x2="239.83"
                 y2="154.51"
                 class="candle-up"
             />
 
             <rect
-                x="246.52"
+                x="237.30"
                 y="142.06"
                 width="5.07"
                 height="6.29"
@@ -1308,15 +1348,15 @@ body {
             />
         
             <line
-                x1="258.28"
+                x1="249.06"
                 y1="125.82"
-                x2="258.28"
+                x2="249.06"
                 y2="145.30"
                 class="candle-up"
             />
 
             <rect
-                x="255.74"
+                x="246.52"
                 y="130.30"
                 width="5.07"
                 height="11.70"
@@ -1324,15 +1364,15 @@ body {
             />
         
             <line
-                x1="267.50"
+                x1="258.28"
                 y1="122.48"
-                x2="267.50"
+                x2="258.28"
                 y2="134.41"
                 class="candle-up"
             />
 
             <rect
-                x="264.96"
+                x="255.74"
                 y="129.57"
                 width="5.07"
                 height="2.00"
@@ -1340,15 +1380,15 @@ body {
             />
         
             <line
-                x1="276.72"
+                x1="267.50"
                 y1="128.60"
-                x2="276.72"
+                x2="267.50"
                 y2="153.98"
                 class="candle-down"
             />
 
             <rect
-                x="274.19"
+                x="264.96"
                 y="129.55"
                 width="5.07"
                 height="22.36"
@@ -1356,15 +1396,15 @@ body {
             />
         
             <line
-                x1="285.94"
+                x1="276.72"
                 y1="111.68"
-                x2="285.94"
+                x2="276.72"
                 y2="153.52"
                 class="candle-up"
             />
 
             <rect
-                x="283.41"
+                x="274.19"
                 y="115.68"
                 width="5.07"
                 height="36.19"
@@ -1372,15 +1412,15 @@ body {
             />
         
             <line
-                x1="295.17"
+                x1="285.94"
                 y1="100.36"
-                x2="295.17"
+                x2="285.94"
                 y2="121.58"
                 class="candle-down"
             />
 
             <rect
-                x="292.63"
+                x="283.41"
                 y="115.74"
                 width="5.07"
                 height="2.88"
@@ -1388,15 +1428,15 @@ body {
             />
         
             <line
-                x1="304.39"
+                x1="295.17"
                 y1="106.70"
-                x2="304.39"
+                x2="295.17"
                 y2="124.76"
                 class="candle-up"
             />
 
             <rect
-                x="301.85"
+                x="292.63"
                 y="112.57"
                 width="5.07"
                 height="6.05"
@@ -1404,15 +1444,15 @@ body {
             />
         
             <line
-                x1="313.61"
+                x1="304.39"
                 y1="105.75"
-                x2="313.61"
+                x2="304.39"
                 y2="126.73"
                 class="candle-up"
             />
 
             <rect
-                x="311.07"
+                x="301.85"
                 y="109.20"
                 width="5.07"
                 height="3.31"
@@ -1420,15 +1460,15 @@ body {
             />
         
             <line
-                x1="322.83"
+                x1="313.61"
                 y1="78.43"
-                x2="322.83"
+                x2="313.61"
                 y2="114.96"
                 class="candle-up"
             />
 
             <rect
-                x="320.30"
+                x="311.07"
                 y="90.02"
                 width="5.07"
                 height="19.06"
@@ -1436,15 +1476,15 @@ body {
             />
         
             <line
-                x1="332.06"
+                x1="322.83"
                 y1="87.20"
-                x2="332.06"
+                x2="322.83"
                 y2="105.77"
                 class="candle-down"
             />
 
             <rect
-                x="329.52"
+                x="320.30"
                 y="89.93"
                 width="5.07"
                 height="13.69"
@@ -1452,15 +1492,15 @@ body {
             />
         
             <line
-                x1="341.28"
+                x1="332.06"
                 y1="98.60"
-                x2="341.28"
+                x2="332.06"
                 y2="122.30"
                 class="candle-down"
             />
 
             <rect
-                x="338.74"
+                x="329.52"
                 y="103.65"
                 width="5.07"
                 height="18.13"
@@ -1468,15 +1508,15 @@ body {
             />
         
             <line
-                x1="350.50"
+                x1="341.28"
                 y1="95.37"
-                x2="350.50"
+                x2="341.28"
                 y2="122.56"
                 class="candle-up"
             />
 
             <rect
-                x="347.96"
+                x="338.74"
                 y="102.20"
                 width="5.07"
                 height="19.60"
@@ -1484,15 +1524,15 @@ body {
             />
         
             <line
-                x1="359.72"
+                x1="350.50"
                 y1="92.40"
-                x2="359.72"
+                x2="350.50"
                 y2="112.10"
                 class="candle-up"
             />
 
             <rect
-                x="357.19"
+                x="347.96"
                 y="97.54"
                 width="5.07"
                 height="4.66"
@@ -1500,15 +1540,15 @@ body {
             />
         
             <line
-                x1="368.94"
+                x1="359.72"
                 y1="67.28"
-                x2="368.94"
+                x2="359.72"
                 y2="99.41"
                 class="candle-up"
             />
 
             <rect
-                x="366.41"
+                x="357.19"
                 y="79.57"
                 width="5.07"
                 height="17.96"
@@ -1516,15 +1556,15 @@ body {
             />
         
             <line
-                x1="378.17"
+                x1="368.94"
                 y1="74.97"
-                x2="378.17"
+                x2="368.94"
                 y2="91.11"
                 class="candle-up"
             />
 
             <rect
-                x="375.63"
+                x="366.41"
                 y="78.93"
                 width="5.07"
                 height="2.00"
@@ -1532,15 +1572,15 @@ body {
             />
         
             <line
-                x1="387.39"
+                x1="378.17"
                 y1="76.16"
-                x2="387.39"
+                x2="378.17"
                 y2="88.16"
                 class="candle-down"
             />
 
             <rect
-                x="384.85"
+                x="375.63"
                 y="78.98"
                 width="5.07"
                 height="7.85"
@@ -1548,15 +1588,15 @@ body {
             />
         
             <line
-                x1="396.61"
+                x1="387.39"
                 y1="82.68"
-                x2="396.61"
+                x2="387.39"
                 y2="89.46"
                 class="candle-up"
             />
 
             <rect
-                x="394.07"
+                x="384.85"
                 y="85.31"
                 width="5.07"
                 height="2.00"
@@ -1564,15 +1604,15 @@ body {
             />
         
             <line
-                x1="405.83"
+                x1="396.61"
                 y1="72.57"
-                x2="405.83"
+                x2="396.61"
                 y2="88.00"
                 class="candle-up"
             />
 
             <rect
-                x="403.30"
+                x="394.07"
                 y="75.15"
                 width="5.07"
                 height="10.14"
@@ -1580,15 +1620,15 @@ body {
             />
         
             <line
-                x1="415.06"
+                x1="405.83"
                 y1="67.09"
-                x2="415.06"
+                x2="405.83"
                 y2="96.29"
                 class="candle-down"
             />
 
             <rect
-                x="412.52"
+                x="403.30"
                 y="75.12"
                 width="5.07"
                 height="12.57"
@@ -1596,15 +1636,15 @@ body {
             />
         
             <line
-                x1="424.28"
+                x1="415.06"
                 y1="86.55"
-                x2="424.28"
+                x2="415.06"
                 y2="104.13"
                 class="candle-down"
             />
 
             <rect
-                x="421.74"
+                x="412.52"
                 y="87.68"
                 width="5.07"
                 height="9.88"
@@ -1612,15 +1652,15 @@ body {
             />
         
             <line
-                x1="433.50"
+                x1="424.28"
                 y1="82.66"
-                x2="433.50"
+                x2="424.28"
                 y2="111.08"
                 class="candle-down"
             />
 
             <rect
-                x="430.96"
+                x="421.74"
                 y="97.56"
                 width="5.07"
                 height="5.58"
@@ -1628,15 +1668,15 @@ body {
             />
         
             <line
-                x1="442.72"
+                x1="433.50"
                 y1="95.02"
-                x2="442.72"
+                x2="433.50"
                 y2="107.58"
                 class="candle-up"
             />
 
             <rect
-                x="440.19"
+                x="430.96"
                 y="98.01"
                 width="5.07"
                 height="5.11"
@@ -1644,15 +1684,15 @@ body {
             />
         
             <line
-                x1="451.94"
+                x1="442.72"
                 y1="72.85"
-                x2="451.94"
+                x2="442.72"
                 y2="98.10"
                 class="candle-up"
             />
 
             <rect
-                x="449.41"
+                x="440.19"
                 y="79.80"
                 width="5.07"
                 height="18.20"
@@ -1660,15 +1700,15 @@ body {
             />
         
             <line
-                x1="461.17"
+                x1="451.94"
                 y1="70.66"
-                x2="461.17"
+                x2="451.94"
                 y2="81.23"
                 class="candle-up"
             />
 
             <rect
-                x="458.63"
+                x="449.41"
                 y="75.16"
                 width="5.07"
                 height="4.66"
@@ -1676,15 +1716,15 @@ body {
             />
         
             <line
-                x1="470.39"
+                x1="461.17"
                 y1="67.92"
-                x2="470.39"
+                x2="461.17"
                 y2="80.83"
                 class="candle-down"
             />
 
             <rect
-                x="467.85"
+                x="458.63"
                 y="75.16"
                 width="5.07"
                 height="2.00"
@@ -1692,15 +1732,15 @@ body {
             />
         
             <line
-                x1="479.61"
+                x1="470.39"
                 y1="54.91"
-                x2="479.61"
+                x2="470.39"
                 y2="79.42"
                 class="candle-up"
             />
 
             <rect
-                x="477.07"
+                x="467.85"
                 y="63.79"
                 width="5.07"
                 height="12.50"
@@ -1708,15 +1748,15 @@ body {
             />
         
             <line
-                x1="488.83"
+                x1="479.61"
                 y1="45.11"
-                x2="488.83"
+                x2="479.61"
                 y2="64.18"
                 class="candle-up"
             />
 
             <rect
-                x="486.30"
+                x="477.07"
                 y="53.11"
                 width="5.07"
                 height="10.72"
@@ -1724,15 +1764,15 @@ body {
             />
         
             <line
-                x1="498.06"
+                x1="488.83"
                 y1="35.00"
-                x2="498.06"
+                x2="488.83"
                 y2="54.82"
                 class="candle-up"
             />
 
             <rect
-                x="495.52"
+                x="486.30"
                 y="48.25"
                 width="5.07"
                 height="4.82"
@@ -1740,15 +1780,15 @@ body {
             />
         
             <line
-                x1="507.28"
+                x1="498.06"
                 y1="45.75"
-                x2="507.28"
+                x2="498.06"
                 y2="66.75"
                 class="candle-down"
             />
 
             <rect
-                x="504.74"
+                x="495.52"
                 y="48.24"
                 width="5.07"
                 height="13.78"
@@ -1756,15 +1796,15 @@ body {
             />
         
             <line
-                x1="516.50"
+                x1="507.28"
                 y1="57.77"
-                x2="516.50"
+                x2="507.28"
                 y2="69.83"
                 class="candle-up"
             />
 
             <rect
-                x="513.96"
+                x="504.74"
                 y="60.30"
                 width="5.07"
                 height="2.00"
@@ -1772,15 +1812,15 @@ body {
             />
         
             <line
-                x1="525.72"
+                x1="516.50"
                 y1="52.11"
-                x2="525.72"
+                x2="516.50"
                 y2="60.95"
                 class="candle-up"
             />
 
             <rect
-                x="523.19"
+                x="513.96"
                 y="55.66"
                 width="5.07"
                 height="4.63"
@@ -1788,15 +1828,15 @@ body {
             />
         
             <line
-                x1="534.94"
+                x1="525.72"
                 y1="38.52"
-                x2="534.94"
+                x2="525.72"
                 y2="59.45"
                 class="candle-up"
             />
 
             <rect
-                x="532.41"
+                x="523.19"
                 y="41.34"
                 width="5.07"
                 height="14.31"
@@ -1804,15 +1844,15 @@ body {
             />
         
             <line
-                x1="544.17"
+                x1="534.94"
                 y1="39.53"
-                x2="544.17"
+                x2="534.94"
                 y2="57.73"
                 class="candle-down"
             />
 
             <rect
-                x="541.63"
+                x="532.41"
                 y="41.34"
                 width="5.07"
                 height="3.99"
@@ -1820,15 +1860,15 @@ body {
             />
         
             <line
-                x1="553.39"
+                x1="544.17"
                 y1="45.09"
-                x2="553.39"
+                x2="544.17"
                 y2="63.75"
                 class="candle-down"
             />
 
             <rect
-                x="550.85"
+                x="541.63"
                 y="45.36"
                 width="5.07"
                 height="12.12"
@@ -1836,15 +1876,15 @@ body {
             />
         
             <line
-                x1="562.61"
+                x1="553.39"
                 y1="49.72"
-                x2="562.61"
+                x2="553.39"
                 y2="74.49"
                 class="candle-down"
             />
 
             <rect
-                x="560.07"
+                x="550.85"
                 y="57.49"
                 width="5.07"
                 height="11.65"
@@ -1852,15 +1892,15 @@ body {
             />
         
             <line
-                x1="571.83"
+                x1="562.61"
                 y1="42.64"
-                x2="571.83"
+                x2="562.61"
                 y2="72.71"
                 class="candle-up"
             />
 
             <rect
-                x="569.30"
+                x="560.07"
                 y="51.91"
                 width="5.07"
                 height="17.23"
@@ -1868,15 +1908,15 @@ body {
             />
         
             <line
-                x1="581.06"
+                x1="571.83"
                 y1="46.24"
-                x2="581.06"
+                x2="571.83"
                 y2="75.37"
                 class="candle-down"
             />
 
             <rect
-                x="578.52"
+                x="569.30"
                 y="51.95"
                 width="5.07"
                 height="19.24"
@@ -1884,15 +1924,15 @@ body {
             />
         
             <line
-                x1="590.28"
+                x1="581.06"
                 y1="70.14"
-                x2="590.28"
+                x2="581.06"
                 y2="85.13"
                 class="candle-down"
             />
 
             <rect
-                x="587.74"
+                x="578.52"
                 y="71.19"
                 width="5.07"
                 height="9.08"
@@ -1900,15 +1940,15 @@ body {
             />
         
             <line
-                x1="599.50"
+                x1="590.28"
                 y1="76.30"
-                x2="599.50"
+                x2="590.28"
                 y2="93.35"
                 class="candle-down"
             />
 
             <rect
-                x="596.96"
+                x="587.74"
                 y="80.24"
                 width="5.07"
                 height="6.84"
@@ -1916,15 +1956,15 @@ body {
             />
         
             <line
-                x1="608.72"
+                x1="599.50"
                 y1="83.97"
-                x2="608.72"
+                x2="599.50"
                 y2="100.68"
                 class="candle-down"
             />
 
             <rect
-                x="606.19"
+                x="596.96"
                 y="87.11"
                 width="5.07"
                 height="4.59"
@@ -1932,15 +1972,15 @@ body {
             />
         
             <line
-                x1="617.94"
+                x1="608.72"
                 y1="87.88"
-                x2="617.94"
+                x2="608.72"
                 y2="100.16"
                 class="candle-down"
             />
 
             <rect
-                x="615.41"
+                x="606.19"
                 y="91.69"
                 width="5.07"
                 height="2.00"
@@ -1948,15 +1988,15 @@ body {
             />
         
             <line
-                x1="627.17"
+                x1="617.94"
                 y1="83.72"
-                x2="627.17"
+                x2="617.94"
                 y2="96.46"
                 class="candle-up"
             />
 
             <rect
-                x="624.63"
+                x="615.41"
                 y="86.81"
                 width="5.07"
                 height="6.88"
@@ -1964,15 +2004,15 @@ body {
             />
         
             <line
-                x1="636.39"
+                x1="627.17"
                 y1="80.56"
-                x2="636.39"
+                x2="627.17"
                 y2="94.60"
                 class="candle-up"
             />
 
             <rect
-                x="633.85"
+                x="624.63"
                 y="86.01"
                 width="5.07"
                 height="2.00"
@@ -1980,15 +2020,15 @@ body {
             />
         
             <line
-                x1="645.61"
+                x1="636.39"
                 y1="83.29"
-                x2="645.61"
+                x2="636.39"
                 y2="107.53"
                 class="candle-down"
             />
 
             <rect
-                x="643.07"
+                x="633.85"
                 y="86.03"
                 width="5.07"
                 height="19.91"
@@ -1996,15 +2036,15 @@ body {
             />
         
             <line
-                x1="654.83"
+                x1="645.61"
                 y1="88.45"
-                x2="654.83"
+                x2="645.61"
                 y2="117.91"
                 class="candle-up"
             />
 
             <rect
-                x="652.30"
+                x="643.07"
                 y="94.42"
                 width="5.07"
                 height="11.51"
@@ -2012,15 +2052,15 @@ body {
             />
         
             <line
-                x1="664.06"
+                x1="654.83"
                 y1="87.63"
-                x2="664.06"
+                x2="654.83"
                 y2="100.77"
                 class="candle-up"
             />
 
             <rect
-                x="661.52"
+                x="652.30"
                 y="91.43"
                 width="5.07"
                 height="3.02"
@@ -2028,15 +2068,15 @@ body {
             />
         
             <line
-                x1="673.28"
+                x1="664.06"
                 y1="83.43"
-                x2="673.28"
+                x2="664.06"
                 y2="92.87"
                 class="candle-up"
             />
 
             <rect
-                x="670.74"
+                x="661.52"
                 y="88.53"
                 width="5.07"
                 height="2.90"
@@ -2044,15 +2084,15 @@ body {
             />
         
             <line
-                x1="682.50"
+                x1="673.28"
                 y1="81.63"
-                x2="682.50"
+                x2="673.28"
                 y2="105.14"
                 class="candle-down"
             />
 
             <rect
-                x="679.96"
+                x="670.74"
                 y="88.53"
                 width="5.07"
                 height="14.12"
@@ -2060,15 +2100,15 @@ body {
             />
         
             <line
-                x1="691.72"
+                x1="682.50"
                 y1="100.82"
-                x2="691.72"
+                x2="682.50"
                 y2="119.06"
                 class="candle-down"
             />
 
             <rect
-                x="689.19"
+                x="679.96"
                 y="102.66"
                 width="5.07"
                 height="14.38"
@@ -2076,15 +2116,15 @@ body {
             />
         
             <line
-                x1="700.94"
+                x1="691.72"
                 y1="115.92"
-                x2="700.94"
+                x2="691.72"
                 y2="135.02"
                 class="candle-down"
             />
 
             <rect
-                x="698.41"
+                x="689.19"
                 y="117.09"
                 width="5.07"
                 height="7.80"
@@ -2092,15 +2132,15 @@ body {
             />
         
             <line
-                x1="710.17"
+                x1="700.94"
                 y1="118.26"
-                x2="710.17"
+                x2="700.94"
                 y2="135.58"
                 class="candle-down"
             />
 
             <rect
-                x="707.63"
+                x="698.41"
                 y="124.88"
                 width="5.07"
                 height="2.00"
@@ -2108,15 +2148,15 @@ body {
             />
         
             <line
-                x1="719.39"
+                x1="710.17"
                 y1="120.18"
-                x2="719.39"
+                x2="710.17"
                 y2="128.88"
                 class="candle-up"
             />
 
             <rect
-                x="716.85"
+                x="707.63"
                 y="122.77"
                 width="5.07"
                 height="3.73"
@@ -2124,15 +2164,15 @@ body {
             />
         
             <line
-                x1="728.61"
+                x1="719.39"
                 y1="118.89"
-                x2="728.61"
+                x2="719.39"
                 y2="127.04"
                 class="candle-down"
             />
 
             <rect
-                x="726.07"
+                x="716.85"
                 y="122.78"
                 width="5.07"
                 height="2.00"
@@ -2140,15 +2180,15 @@ body {
             />
         
             <line
-                x1="737.83"
+                x1="728.61"
                 y1="120.68"
-                x2="737.83"
+                x2="728.61"
                 y2="153.41"
                 class="candle-down"
             />
 
             <rect
-                x="735.30"
+                x="726.07"
                 y="124.46"
                 width="5.07"
                 height="21.95"
@@ -2156,15 +2196,15 @@ body {
             />
         
             <line
-                x1="747.06"
+                x1="737.83"
                 y1="146.27"
-                x2="747.06"
+                x2="737.83"
                 y2="196.84"
                 class="candle-down"
             />
 
             <rect
-                x="744.52"
+                x="735.30"
                 y="146.40"
                 width="5.07"
                 height="44.84"
@@ -2172,15 +2212,15 @@ body {
             />
         
             <line
-                x1="756.28"
+                x1="747.06"
                 y1="184.45"
-                x2="756.28"
+                x2="747.06"
                 y2="217.41"
                 class="candle-down"
             />
 
             <rect
-                x="753.74"
+                x="744.52"
                 y="191.34"
                 width="5.07"
                 height="26.02"
@@ -2188,15 +2228,15 @@ body {
             />
         
             <line
-                x1="765.50"
+                x1="756.28"
                 y1="211.05"
-                x2="765.50"
+                x2="756.28"
                 y2="243.37"
                 class="candle-down"
             />
 
             <rect
-                x="762.96"
+                x="753.74"
                 y="217.31"
                 width="5.07"
                 height="2.12"
@@ -2204,15 +2244,15 @@ body {
             />
         
             <line
-                x1="774.72"
+                x1="765.50"
                 y1="218.46"
-                x2="774.72"
+                x2="765.50"
                 y2="265.00"
                 class="candle-down"
             />
 
             <rect
-                x="772.19"
+                x="762.96"
                 y="219.37"
                 width="5.07"
                 height="28.02"
@@ -2220,15 +2260,15 @@ body {
             />
         
             <line
-                x1="783.94"
+                x1="774.72"
                 y1="241.86"
-                x2="783.94"
+                x2="774.72"
                 y2="261.23"
                 class="candle-down"
             />
 
             <rect
-                x="781.41"
+                x="772.19"
                 y="247.37"
                 width="5.07"
                 height="2.00"
@@ -2236,15 +2276,15 @@ body {
             />
         
             <line
-                x1="793.17"
+                x1="783.94"
                 y1="216.26"
-                x2="793.17"
+                x2="783.94"
                 y2="249.31"
                 class="candle-up"
             />
 
             <rect
-                x="790.63"
+                x="781.41"
                 y="224.89"
                 width="5.07"
                 height="23.04"
@@ -2252,15 +2292,15 @@ body {
             />
         
             <line
-                x1="802.39"
+                x1="793.17"
                 y1="215.70"
-                x2="802.39"
+                x2="793.17"
                 y2="233.19"
                 class="candle-down"
             />
 
             <rect
-                x="799.85"
+                x="790.63"
                 y="224.84"
                 width="5.07"
                 height="2.00"
@@ -2268,15 +2308,15 @@ body {
             />
         
             <line
-                x1="811.61"
+                x1="802.39"
                 y1="222.49"
-                x2="811.61"
+                x2="802.39"
                 y2="249.00"
                 class="candle-down"
             />
 
             <rect
-                x="809.07"
+                x="799.85"
                 y="226.31"
                 width="5.07"
                 height="14.07"
@@ -2284,15 +2324,15 @@ body {
             />
         
             <line
-                x1="820.83"
+                x1="811.61"
                 y1="229.27"
-                x2="820.83"
+                x2="811.61"
                 y2="248.69"
                 class="candle-down"
             />
 
             <rect
-                x="818.30"
+                x="809.07"
                 y="240.39"
                 width="5.07"
                 height="2.00"
@@ -2300,15 +2340,15 @@ body {
             />
         
             <line
-                x1="830.06"
+                x1="820.83"
                 y1="218.94"
-                x2="830.06"
+                x2="820.83"
                 y2="242.28"
                 class="candle-up"
             />
 
             <rect
-                x="827.52"
+                x="818.30"
                 y="221.76"
                 width="5.07"
                 height="20.51"
@@ -2316,15 +2356,15 @@ body {
             />
         
             <line
-                x1="839.28"
+                x1="830.06"
                 y1="214.26"
-                x2="839.28"
+                x2="830.06"
                 y2="229.36"
                 class="candle-down"
             />
 
             <rect
-                x="836.74"
+                x="827.52"
                 y="221.90"
                 width="5.07"
                 height="2.00"
@@ -2332,15 +2372,15 @@ body {
             />
         
             <line
-                x1="848.50"
+                x1="839.28"
                 y1="210.69"
-                x2="848.50"
+                x2="839.28"
                 y2="223.02"
                 class="candle-up"
             />
 
             <rect
-                x="845.96"
+                x="836.74"
                 y="213.41"
                 width="5.07"
                 height="8.54"
@@ -2348,15 +2388,15 @@ body {
             />
         
             <line
-                x1="857.72"
+                x1="848.50"
                 y1="200.51"
-                x2="857.72"
+                x2="848.50"
                 y2="221.05"
                 class="candle-up"
             />
 
             <rect
-                x="855.19"
+                x="845.96"
                 y="200.89"
                 width="5.07"
                 height="12.53"
@@ -2364,15 +2404,15 @@ body {
             />
         
             <line
-                x1="866.94"
+                x1="857.72"
                 y1="185.96"
-                x2="866.94"
+                x2="857.72"
                 y2="204.72"
                 class="candle-up"
             />
 
             <rect
-                x="864.41"
+                x="855.19"
                 y="195.27"
                 width="5.07"
                 height="5.62"
@@ -2380,15 +2420,15 @@ body {
             />
         
             <line
-                x1="876.17"
+                x1="866.94"
                 y1="189.06"
-                x2="876.17"
+                x2="866.94"
                 y2="204.73"
                 class="candle-down"
             />
 
             <rect
-                x="873.63"
+                x="864.41"
                 y="195.27"
                 width="5.07"
                 height="6.69"
@@ -2396,10 +2436,26 @@ body {
             />
         
             <line
+                x1="876.17"
+                y1="210.34"
+                x2="876.17"
+                y2="234.97"
+                class="candle-down"
+            />
+
+            <rect
+                x="873.63"
+                y="213.43"
+                width="5.07"
+                height="14.79"
+                class="candle-down"
+            />
+        
+            <line
                 x1="885.39"
                 y1="227.00"
                 x2="885.39"
-                y2="232.68"
+                y2="233.14"
                 class="candle-down"
             />
 
@@ -2407,7 +2463,7 @@ body {
                 x="882.85"
                 y="228.35"
                 width="5.07"
-                height="3.82"
+                height="2.92"
                 class="candle-down"
             />
         
@@ -2422,31 +2478,36 @@ body {
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="175.28,331.39 184.50,333.45 193.72,334.81 202.94,330.69 212.17,325.09 221.39,332.89 230.61,324.43 239.83,327.90 249.06,320.18 258.28,309.48 267.50,309.31 276.72,316.33 285.94,312.57 295.17,315.21 304.39,314.00 313.61,310.00 322.83,308.32 332.06,312.54 341.28,318.94 350.50,316.33 359.72,319.44 368.94,315.28 378.17,315.92 387.39,319.35 396.61,319.24 405.83,312.10 415.06,320.92 424.28,322.79 433.50,325.38 442.72,325.02 451.94,325.22 461.17,320.73 470.39,315.14 479.61,316.40 488.83,315.32 498.06,317.84 507.28,322.87 516.50,319.82 525.72,319.15 534.94,318.32 544.17,315.10 553.39,316.01 562.61,318.25 571.83,316.11 581.06,325.39 590.28,328.71 599.50,329.95 608.72,334.23 617.94,337.95 627.17,337.28 636.39,334.27 645.61,338.62 654.83,336.48 664.06,340.14 673.28,338.49 682.50,338.82 691.72,339.25 700.94,346.77 710.17,344.55 719.39,341.31 728.61,340.30 737.83,343.34 747.06,347.94 756.28,351.84 765.50,352.19 774.72,352.53 783.94,356.39 793.17,350.00 802.39,350.91 811.61,350.91 820.83,350.27 830.06,343.95 839.28,343.83 848.50,342.63 857.72,339.58 866.94,335.88 876.17,329.80 885.39,330.60" />
+            <polyline fill="none" class="rsi-line" points="166.06,331.39 175.28,333.45 184.50,334.81 193.72,330.69 202.94,325.09 212.17,332.89 221.39,324.43 230.61,327.90 239.83,320.18 249.06,309.48 258.28,309.31 267.50,316.33 276.72,312.57 285.94,315.21 295.17,314.00 304.39,310.00 313.61,308.32 322.83,312.54 332.06,318.94 341.28,316.33 350.50,319.44 359.72,315.28 368.94,315.92 378.17,319.35 387.39,319.24 396.61,312.10 405.83,320.92 415.06,322.79 424.28,325.38 433.50,325.02 442.72,325.22 451.94,320.73 461.17,315.14 470.39,316.40 479.61,315.32 488.83,317.84 498.06,322.87 507.28,319.82 516.50,319.15 525.72,318.32 534.94,315.10 544.17,316.01 553.39,318.25 562.61,316.11 571.83,325.39 581.06,328.71 590.28,329.95 599.50,334.23 608.72,337.95 617.94,337.28 627.17,334.27 636.39,338.62 645.61,336.48 654.83,340.14 664.06,338.49 673.28,338.82 682.50,339.25 691.72,346.77 700.94,344.55 710.17,341.31 719.39,340.30 728.61,343.34 737.83,347.94 747.06,351.84 756.28,352.19 765.50,352.53 774.72,356.39 783.94,350.00 793.17,350.91 802.39,350.91 811.61,350.27 820.83,343.95 830.06,343.83 839.28,342.63 848.50,339.58 857.72,335.88 866.94,329.80 876.17,329.83 885.39,330.03" />
 
-            <text x="60" y="382" class="axis-text">20/03</text>
+            <text x="60" y="382" class="axis-text">21/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
 
         </svg>
 
         <div class="chart-meta">
-            <span>Giá BTC/USD mới nhất: <strong>62,490.00</strong></span>
-            <span>RSI 14 ngày: <strong>45.23</strong></span>
+            <span>BTC Close: <strong>62,581.95</strong></span>
+            <span>RSI 14: <strong>46.11</strong></span>
         </div>
     </div>
     
-    </section>
-
-
-    <section class="panel chart-section">
-        <div class="panel-title">
-            <h2>🟡 Vàng thế giới / Nến ngày / 3 tháng</h2>
-            <div class="panel-badge">GC=F</div>
         </div>
-
-        
+    </section>
+    
+            
+    <section class="chart-card">
+        <div class="chart-card-header">
+            <div>
+                <span class="eyebrow">Technical Chart</span>
+                <h3>Vàng thế giới Chart</h3>
+            </div>
+            <div class="rsi-pill">RSI: 34.56</div>
+        </div>
+        <div class="chart-note">RSI trung tính.</div>
+        <div class="chart-box">
+            
     <div class="chart-wrapper">
-        <div class="chart-title">Vàng quốc tế / Nến ngày / 3 tháng</div>
+        <div class="chart-title">Gold Futures / USD</div>
 
         <svg viewBox="0 0 920 390" class="chart-svg" role="img">
 
@@ -3485,7 +3546,7 @@ body {
                 x1="883.62"
                 y1="210.69"
                 x2="883.62"
-                y2="230.37"
+                y2="235.81"
                 class="candle-down"
             />
 
@@ -3493,7 +3554,7 @@ body {
                 x="880.10"
                 y="210.75"
                 width="7.02"
-                height="17.53"
+                height="11.76"
                 class="candle-down"
             />
         
@@ -3508,7 +3569,7 @@ body {
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,338.04" />
+            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,337.54" />
 
             <text x="60" y="382" class="axis-text">19/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -3516,23 +3577,28 @@ body {
         </svg>
 
         <div class="chart-meta">
-            <span>Giá Gold Futures mới nhất: <strong>4,166.50</strong></span>
-            <span>RSI 14 ngày: <strong>33.79</strong></span>
+            <span>Gold Close: <strong>4,187.80</strong></span>
+            <span>RSI 14: <strong>34.56</strong></span>
         </div>
     </div>
     
-    </section>
-
-
-    <section class="panel chart-section">
-        <div class="panel-title">
-            <h2>📊 VNINDEX / Nến ngày / 3 tháng</h2>
-            <div class="panel-badge">^VNINDEX.VN</div>
         </div>
-
-        
+    </section>
+    
+            
+    <section class="chart-card">
+        <div class="chart-card-header">
+            <div>
+                <span class="eyebrow">Technical Chart</span>
+                <h3>VNINDEX Chart</h3>
+            </div>
+            <div class="rsi-pill">RSI: N/A</div>
+        </div>
+        <div class="chart-note">Chưa đủ dữ liệu RSI.</div>
+        <div class="chart-box">
+            
     <div class="chart-wrapper">
-        <div class="chart-title">VNINDEX / Nến ngày / 3 tháng</div>
+        <div class="chart-title">VNINDEX</div>
 
         <svg viewBox="0 0 920 390" class="chart-svg" role="img">
 
@@ -3540,7 +3606,7 @@ body {
             <line x1="60" y1="265" x2="890" y2="265" class="grid-line" />
 
             <text x="10" y="40" class="axis-text">1,843.35</text>
-            <text x="10" y="265" class="axis-text">1,825.51</text>
+            <text x="10" y="265" class="axis-text">1,798.56</text>
 
             
             <line
@@ -3553,9 +3619,9 @@ body {
 
             <rect
                 x="470.00"
-                y="201.05"
+                y="101.14"
                 width="10.00"
-                height="20.24"
+                height="30.50"
                 class="candle-down"
             />
         
@@ -3578,19 +3644,141 @@ body {
         </svg>
 
         <div class="chart-meta">
-            <span>Điểm VNINDEX mới nhất: <strong>1,828.90</strong></span>
-            <span>RSI 14 ngày: <strong>N/A</strong></span>
+            <span>VNINDEX Close: <strong>1,824.53</strong></span>
+            <span>RSI 14: <strong>N/A</strong></span>
         </div>
     </div>
     
+        </div>
     </section>
+    
+        </section>
 
-
-    <div class="footer">
-        Dữ liệu được tổng hợp tự động từ RSS, Yahoo Finance, CoinGecko, nguồn giá vàng trong nước và OpenAI API.
-    </div>
-
-</div>
-
+        <section class="news-grid">
+            
+    <section class="news-column">
+        <h3>VnExpress</h3>
+        
+        <article class="news-card">
+            <a href="https://vnexpress.net/50-nguoi-mua-bitcoin-duoi-62-358-usd-co-the-loi-gap-doi-sau-mot-nam-5087535.html" target="_blank" rel="noopener noreferrer">
+                50% người mua Bitcoin dưới 62.358 USD có thể lời gấp đôi sau một năm
+            </a>
+            <p>Nghiên cứu chỉ ra một nửa nhà đầu tư mua Bitcoin dưới đường SMA 200 tuần có lợi nhuận hơn 113% sau một năm, mốc hiện tại là 62.358 USD.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://vnexpress.net/acv-co-chu-tich-moi-5087592.html" target="_blank" rel="noopener noreferrer">
+                ACV có chủ tịch mới
+            </a>
+            <p>Phó tổng giám đốc ACV Nguyễn Cao Cường, 50 tuổi, được bổ nhiệm làm Chủ tịch HĐQT trong phiên họp cổ đông thường niên sáng 19/6.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://vnexpress.net/gia-vang-giam-ve-gan-147-trieu-dong-5087558.html" target="_blank" rel="noopener noreferrer">
+                Giá vàng giảm về gần 147 triệu đồng
+            </a>
+            <p>Mỗi lượng vàng giảm hơn 4 triệu đồng về sát 147 triệu đồng, chênh lệch với thế giới sáng nay gần 15 triệu một lượng.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://vnexpress.net/nguoi-dan-chi-it-hon-cho-mam-cung-tet-doan-ngo-5087483.html" target="_blank" rel="noopener noreferrer">
+                Người dân chi ít hơn cho mâm cúng Tết Đoan Ngọ
+            </a>
+            <p>Thay vì chi cả triệu đồng cho mâm cúng cầu kỳ, nhiều gia đình chuyển sang các set giá vài trăm nghìn đồng.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://vnexpress.net/gia-vang-the-gioi-quay-dau-giam-5087485.html" target="_blank" rel="noopener noreferrer">
+                Giá vàng thế giới quay đầu giảm
+            </a>
+            <p>Mỗi ounce vàng hiện về dưới 4.200 USD, do khả năng Cục Dự trữ liên bang Mỹ (Fed) tăng lãi suất cuối năm nay.</p>
+        </article>
+        
+    </section>
+    
+            
+    <section class="news-column">
+        <h3>Dân Trí</h3>
+        
+        <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/dieu-gi-khien-gia-xang-dau-giam-manh-lien-tuc-20260619100450528.htm" target="_blank" rel="noopener noreferrer">
+                Điều gì khiến giá xăng dầu giảm mạnh liên tục?
+            </a>
+            <p>(Dân trí) - Giá xăng dầu tiếp tục giảm mạnh từ 15h ngày 18/6, đánh dấu kỳ giảm thứ 4 liên tiếp nhờ những tín hiệu hạ nhiệt từ thị trường thế giới. Sau điều chỉnh, xăng E10 RON 95-III còn 20.750 đồng/lít.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-mieng-giam-ve-sat-147-trieu-dongluong-20260619084656384.htm" target="_blank" rel="noopener noreferrer">
+                Giá vàng miếng giảm về sát 147 triệu đồng/lượng
+            </a>
+            <p>(Dân trí) - Giá vàng trong nước sáng 19/6 giảm về sát 147 triệu đồng/lượng trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank" rel="noopener noreferrer">
+                Elon Musk giàu đến mức nào so với những người Mỹ giàu nhất lịch sử?
+            </a>
+            <p>(Dân trí) - Sở hữu khối tài sản chạm mốc 1.400 tỷ USD vào năm 2026, tỷ phú Elon Musk không chỉ đứng đầu thế giới hiện tại mà còn tạo ra khoảng cách không tưởng với các đại tư bản trong lịch sử nước Mỹ.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/chan-gan-1-tan-thuc-pham-lau-nhieu-lo-hang-da-boc-mui-hoi-thoi-20260618224956994.htm" target="_blank" rel="noopener noreferrer">
+                Chặn gần 1 tấn thực phẩm lậu, nhiều lô hàng đã bốc mùi hôi thối
+            </a>
+            <p>(Dân trí) - Lực lượng hải quan tại nhiều địa phương đã liên tiếp phát hiện, thu giữ gần 1 tấn thực phẩm nhập lậu gồm chân gà, xúc xích, lạp xưởng và các mặt hàng đông lạnh không rõ nguồn gốc.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank" rel="noopener noreferrer">
+                Giá vàng trong nước, thế giới đồng loạt quay đầu giảm
+            </a>
+            <p>(Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.</p>
+        </article>
+        
+    </section>
+    
+            
+    <section class="news-column">
+        <h3>BBC</h3>
+        
+        <article class="news-card">
+            <a href="https://www.bbc.com/vietnamese/articles/c8x2gdkrqzvo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
+                Iran và Mỹ được gì từ thỏa thuận và vì sao hai bên khó giữ cam kết?
+            </a>
+            <p>Thỏa thuận đã chính thức chấm dứt giao tranh, nhưng những cuộc đàm phán khó khăn hơn mới chỉ bắt đầu.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://www.bbc.com/vietnamese/articles/cy8wd4jdjlxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
+                &#x27;Ngoài 20 tuổi, chúng tôi mới phát hiện mình là chị em từ người cha hiến tinh trùng&#x27;
+            </a>
+            <p>Natasha, Gemma và Helen nói rằng việc tìm thấy nhau giống như một &quot;câu chuyện cổ tích&quot;.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://www.bbc.com/vietnamese/articles/cn59yzy04d0o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
+                Cơ thể các cầu thủ bóng đá hàng đầu thay đổi thế nào trong 50 năm qua
+            </a>
+            <p>Các chuyên gia cho biết cường độ thi đấu cao hơn cùng với những tiến bộ trong y học và khoa học thể thao đã làm thay đổi sinh lý của các cầu thủ hàng đầu.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://www.bbc.com/vietnamese/articles/cm203nmz2l2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
+                Thấy gì từ việc công dân Việt Nam chết trong trung tâm giam giữ di trú Mỹ
+            </a>
+            <p>Một bài phân tích mới đây của hãng thông tấn Reuters cho thấy tỷ lệ tử vong tại các trung tâm giam giữ người nhập cư của Mỹ tăng gấp đôi dưới thời Tổng thống Donald Trump.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://www.bbc.com/vietnamese/articles/cyv0ejd8330o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">
+                Siêu dự án Trục đại lộ cảnh quan sông Hồng: Những thành phố khác đã làm gì với các dòng sông của họ?
+            </a>
+            <p>Theo các chuyên gia, việc Hà Nội hướng mặt ra sông cần dựa trên bối cảnh đặc thù của địa phương và có định hướng cũng như cách làm phù hợp, khoa học chứ không phải là câu chuyện đơn giản là xây rừng cao ốc bám theo xa lộ ven sông.</p>
+        </article>
+        
+    </section>
+    
+        </section>
+    </main>
 </body>
 </html>
