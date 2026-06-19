@@ -1,4 +1,5 @@
 import html
+import re
 from datetime import datetime
 
 from modules.news import get_all_news
@@ -7,10 +8,23 @@ from modules.charts import get_history_with_rsi, build_candlestick_svg
 from modules.ai_summary import get_ai_summary
 
 try:
-    from modules.crypto_alpha import build_crypto_alpha, format_crypto_alpha_text
+    from modules.crypto_alpha import build_crypto_alpha
 except Exception:
     build_crypto_alpha = None
-    format_crypto_alpha_text = None
+
+
+STABLECOINS = {
+    "USDT", "USDC", "DAI", "FDUSD", "TUSD", "PYUSD", "USDE", "USDD",
+    "FRAX", "LUSD", "BUSD", "GUSD", "EURC"
+}
+
+NEWS_KEYWORDS = [
+    "kinh tế", "thị trường", "chứng khoán", "cổ phiếu", "vn-index",
+    "vnindex", "vàng", "usd", "lãi suất", "ngân hàng", "tỷ giá",
+    "bitcoin", "crypto", "tiền số", "đầu tư", "bất động sản",
+    "doanh nghiệp", "xuất khẩu", "nhập khẩu", "fed", "oil", "gold",
+    "stock", "market", "finance", "economy", "inflation", "rate"
+]
 
 
 def safe_text(value, default="N/A"):
@@ -19,19 +33,53 @@ def safe_text(value, default="N/A"):
     return html.escape(str(value))
 
 
-def get_change_class_from_text(value):
+def is_na(value):
     if value is None:
+        return True
+    return str(value).strip().upper() in {"", "N/A", "NONE", "NULL"}
+
+
+def parse_percent(value):
+    if value is None:
+        return None
+
+    text = str(value)
+    match = re.search(r"[-+]?\d+(\.\d+)?", text)
+
+    if not match:
+        return None
+
+    try:
+        return float(match.group(0))
+    except Exception:
+        return None
+
+
+def change_class(value):
+    pct = parse_percent(value)
+
+    if pct is None:
         return "neutral"
 
-    text = str(value).strip()
-
-    if text.startswith("+"):
+    if pct > 0:
         return "positive"
 
-    if text.startswith("-"):
+    if pct < 0:
         return "negative"
 
     return "neutral"
+
+
+def clean_price_prefix(value, prefix="$"):
+    if is_na(value):
+        return "N/A"
+
+    text = str(value)
+
+    if text.startswith(prefix):
+        return text
+
+    return f"{prefix}{text}"
 
 
 def group_news_by_source(news_items):
@@ -49,27 +97,203 @@ def group_news_by_source(news_items):
     return grouped
 
 
+def is_financial_news(item):
+    text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+    return any(keyword.lower() in text for keyword in NEWS_KEYWORDS)
+
+
+def filter_curated_news(news_items, max_items=12):
+    curated = [item for item in news_items if is_financial_news(item)]
+
+    if len(curated) < 6:
+        curated = news_items
+
+    return curated[:max_items]
+
+
+def filter_crypto_items(items, limit=8):
+    filtered = []
+
+    for item in items or []:
+        symbol = str(item.get("symbol", "")).upper()
+
+        if not symbol:
+            continue
+
+        if symbol in STABLECOINS:
+            continue
+
+        filtered.append(item)
+
+        if len(filtered) >= limit:
+            break
+
+    return filtered
+
+
+def get_market_mood(bitcoin, gold, vnindex, crypto_alpha):
+    btc_change = parse_percent(bitcoin.get("change_24h"))
+    gold_change = parse_percent((gold.get("world") or {}).get("change_24h"))
+    vn_change = parse_percent(vnindex.get("change_percent"))
+
+    fear_greed = ((crypto_alpha or {}).get("fear_greed") or {}).get("value")
+
+    risk_score = 0
+    drivers = []
+
+    if btc_change is not None:
+        if btc_change < -2:
+            risk_score -= 2
+            drivers.append("Bitcoin suy yếu")
+        elif btc_change > 2:
+            risk_score += 2
+            drivers.append("Bitcoin tích cực")
+
+    if gold_change is not None:
+        if gold_change > 0.5:
+            risk_score -= 1
+            drivers.append("Vàng tăng, dòng tiền có xu hướng phòng thủ")
+        elif gold_change < -0.5:
+            risk_score += 1
+            drivers.append("Vàng giảm, khẩu vị rủi ro có thể cải thiện")
+
+    if vn_change is not None:
+        if vn_change < -0.5:
+            risk_score -= 1
+            drivers.append("VNINDEX giảm")
+        elif vn_change > 0.5:
+            risk_score += 1
+            drivers.append("VNINDEX tích cực")
+
+    try:
+        fear_greed = int(fear_greed)
+
+        if fear_greed <= 25:
+            risk_score -= 2
+            drivers.append("Crypto Fear & Greed ở vùng sợ hãi")
+        elif fear_greed >= 75:
+            risk_score += 1
+            drivers.append("Crypto Fear & Greed ở vùng tham lam")
+    except Exception:
+        pass
+
+    if risk_score <= -3:
+        mood = "Risk-off"
+        level = "Cao"
+        summary = "Thị trường nghiêng về thận trọng, ưu tiên quản trị rủi ro và chờ tín hiệu xác nhận."
+    elif risk_score >= 3:
+        mood = "Risk-on"
+        level = "Trung bình"
+        summary = "Tâm lý thị trường cải thiện, có thể theo dõi các tài sản có động lượng tốt."
+    else:
+        mood = "Trung tính"
+        level = "Vừa phải"
+        summary = "Thị trường chưa có tín hiệu áp đảo, nên ưu tiên quan sát các vùng giá quan trọng."
+
+    if not drivers:
+        drivers = ["Dữ liệu chưa đủ mạnh để xác định động lực chính."]
+
+    return {
+        "mood": mood,
+        "risk_level": level,
+        "summary": summary,
+        "drivers": drivers[:4],
+    }
+
+
+def get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha):
+    warnings = []
+
+    domestic_gold = gold.get("domestic", {}) or {}
+    world_gold = gold.get("world", {}) or {}
+
+    if is_na(domestic_gold.get("sell")):
+        warnings.append("Vàng SJC trong nước chưa có dữ liệu khả dụng.")
+
+    if is_na(world_gold.get("price")):
+        warnings.append("Vàng thế giới chưa có dữ liệu khả dụng.")
+
+    if is_na(bitcoin.get("price_usd")):
+        warnings.append("Bitcoin chưa có dữ liệu giá USD.")
+
+    if is_na(vnindex.get("value")):
+        warnings.append("VNINDEX chưa có dữ liệu chỉ số.")
+
+    if charts.get("vnindex", {}).get("rsi") == "N/A":
+        warnings.append("RSI VNINDEX chưa đủ dữ liệu hoặc Yahoo Finance trả dữ liệu không đầy đủ.")
+
+    if not crypto_alpha:
+        warnings.append("Crypto Alpha chưa lấy được dữ liệu.")
+
+    if not warnings:
+        warnings.append("Dữ liệu chính đang hoạt động bình thường.")
+
+    return warnings
+
+
+def get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha):
+    items = []
+
+    fear_greed = ((crypto_alpha or {}).get("fear_greed") or {}).get("value")
+    btc_change = parse_percent(bitcoin.get("change_24h"))
+    gold_change = parse_percent((gold.get("world") or {}).get("change_24h"))
+    vn_change = parse_percent(vnindex.get("change_percent"))
+
+    if btc_change is not None:
+        if btc_change < -2:
+            items.append("Theo dõi Bitcoin có giữ được vùng hỗ trợ gần nhất hay không.")
+        elif btc_change > 2:
+            items.append("Theo dõi Bitcoin có duy trì được động lượng tăng trong phiên tiếp theo không.")
+
+    try:
+        fg = int(fear_greed)
+        if fg <= 25:
+            items.append("Crypto đang ở vùng sợ hãi, ưu tiên quan sát thay vì FOMO.")
+        elif fg >= 75:
+            items.append("Crypto đang hưng phấn, cần kiểm soát rủi ro khi đuổi giá.")
+    except Exception:
+        pass
+
+    if gold_change is not None:
+        if gold_change > 0:
+            items.append("Theo dõi vàng thế giới vì dòng tiền phòng thủ có dấu hiệu tăng.")
+        else:
+            items.append("Theo dõi vàng thế giới để xác nhận xu hướng giảm hay chỉ là điều chỉnh ngắn hạn.")
+
+    if vn_change is not None:
+        if vn_change > 0:
+            items.append("Quan sát nhóm cổ phiếu dẫn dắt VNINDEX nếu chỉ số tiếp tục tích cực.")
+        elif vn_change < 0:
+            items.append("Theo dõi thanh khoản VNINDEX để đánh giá áp lực bán.")
+
+    items.append("Không dùng dashboard như khuyến nghị mua bán; chỉ dùng để phát hiện tín hiệu cần nghiên cứu thêm.")
+
+    return items[:5]
+
+
+def render_list(items):
+    return "".join([f"<li>{safe_text(item)}</li>" for item in items])
+
+
 def render_news_column(source_name, items):
     if not items:
         return f"""
         <section class="news-column">
             <h3>{safe_text(source_name)}</h3>
-            <p class="muted">Chưa có dữ liệu tin tức.</p>
+            <p class="muted">Chưa có tin phù hợp.</p>
         </section>
         """
 
     cards_html = ""
 
-    for item in items:
+    for item in items[:5]:
         title = item.get("title", "Không có tiêu đề")
         summary = item.get("summary", "Chưa có mô tả.")
         link = item.get("link", "#")
 
         cards_html += f"""
         <article class="news-card">
-            <a href="{safe_text(link)}" target="_blank" rel="noopener noreferrer">
-                {title}
-            </a>
+            <a href="{safe_text(link)}" target="_blank" rel="noopener noreferrer">{title}</a>
             <p>{summary}</p>
         </article>
         """
@@ -87,15 +311,13 @@ def render_chart_card(title, chart_html, rsi_value, rsi_note):
     <section class="chart-card">
         <div class="chart-card-header">
             <div>
-                <span class="eyebrow">Technical Chart</span>
+                <span class="eyebrow">Technical Analysis</span>
                 <h3>{safe_text(title)}</h3>
             </div>
             <div class="rsi-pill">RSI: {safe_text(rsi_value)}</div>
         </div>
-        <div class="chart-note">{safe_text(rsi_note)}</div>
-        <div class="chart-box">
-            {chart_html}
-        </div>
+        <p class="chart-note">{safe_text(rsi_note)}</p>
+        <div class="chart-box">{chart_html}</div>
     </section>
     """
 
@@ -106,42 +328,37 @@ def render_crypto_alpha_section(crypto_alpha):
         <section class="panel">
             <div class="panel-header">
                 <div>
-                    <span class="eyebrow">Crypto Alpha</span>
-                    <h2>Crypto Alpha Agent</h2>
+                    <span class="eyebrow">Opportunity Radar</span>
+                    <h2>Crypto Alpha Signals</h2>
                 </div>
             </div>
-            <p class="muted">
-                Chưa có dữ liệu Crypto Alpha. Hãy kiểm tra file
-                <code>modules/crypto_alpha.py</code> hoặc kết nối API.
-            </p>
+            <p class="muted">Chưa có dữ liệu Crypto Alpha.</p>
         </section>
         """
 
     fear_greed = crypto_alpha.get("fear_greed", {}) or {}
-    top_alpha = crypto_alpha.get("top_alpha", [])[:8]
-    top_gainers = crypto_alpha.get("top_gainers", [])[:5]
-    top_losers = crypto_alpha.get("top_losers", [])[:5]
-    top_volume = crypto_alpha.get("top_volume", [])[:5]
+    top_alpha = filter_crypto_items(crypto_alpha.get("top_alpha", []), limit=8)
+    top_gainers = filter_crypto_items(crypto_alpha.get("top_gainers", []), limit=5)
+    top_losers = filter_crypto_items(crypto_alpha.get("top_losers", []), limit=5)
+    top_volume = filter_crypto_items(crypto_alpha.get("top_volume", []), limit=5)
 
     alpha_cards = ""
 
     for coin in top_alpha:
         symbol = safe_text(coin.get("symbol"))
         name = safe_text(coin.get("name"))
-        score = coin.get("alpha_score", 0)
+        score = safe_text(coin.get("alpha_score", 0))
         change_24h = coin.get("change_24h")
-        change_class = "neutral"
+        cls = "neutral"
 
         try:
-            if float(change_24h or 0) > 0:
-                change_class = "positive"
-            elif float(change_24h or 0) < 0:
-                change_class = "negative"
-        except Exception:
-            pass
+            change_num = float(change_24h or 0)
+            change_text = f"{change_num:+.2f}%"
 
-        try:
-            change_text = f"{float(change_24h):+.2f}%"
+            if change_num > 0:
+                cls = "positive"
+            elif change_num < 0:
+                cls = "negative"
         except Exception:
             change_text = "N/A"
 
@@ -167,93 +384,88 @@ def render_crypto_alpha_section(crypto_alpha):
                     <div class="coin-symbol">{symbol}</div>
                     <div class="coin-name">{name}</div>
                 </div>
-                <div class="score-badge">{safe_text(score)}</div>
+                <div class="score-badge">{score}</div>
             </div>
-
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="{change_class}">{safe_text(change_text)}</strong>
+                <strong class="{cls}">{safe_text(change_text)}</strong>
             </div>
-
             <div class="metric-row">
                 <span>Volume</span>
                 <strong>{safe_text(volume_text)}</strong>
             </div>
-
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>{safe_text(funding_text)}</strong>
             </div>
-
             <p>{safe_text(reason_text)}</p>
         </article>
         """
 
-    def render_coin_list(items):
-        output = ""
+    def render_change_list(items):
+        html_items = ""
 
         for item in items:
             symbol = item.get("symbol", "N/A")
             change = item.get("change_24h")
 
             try:
-                change_text = f"{float(change):+.2f}%"
+                change_num = float(change or 0)
+                change_text = f"{change_num:+.2f}%"
+                cls = "positive" if change_num > 0 else "negative" if change_num < 0 else "neutral"
             except Exception:
                 change_text = "N/A"
+                cls = "neutral"
 
-            change_class = "positive" if str(change_text).startswith("+") else "negative" if str(change_text).startswith("-") else "neutral"
-
-            output += f"""
+            html_items += f"""
             <li>
                 <span>{safe_text(symbol)}</span>
-                <strong class="{change_class}">{safe_text(change_text)}</strong>
+                <strong class="{cls}">{safe_text(change_text)}</strong>
             </li>
             """
 
-        return output or '<li class="muted">Chưa có dữ liệu</li>'
+        return html_items or '<li class="muted">Chưa có dữ liệu</li>'
 
     def render_volume_list(items):
-        output = ""
+        html_items = ""
 
         for item in items:
             symbol = item.get("symbol", "N/A")
 
             try:
-                volume_text = f"${float(item.get('volume_24h') or 0):,.0f}"
+                volume = f"${float(item.get('volume_24h') or 0):,.0f}"
             except Exception:
-                volume_text = "N/A"
+                volume = "N/A"
 
-            output += f"""
+            html_items += f"""
             <li>
                 <span>{safe_text(symbol)}</span>
-                <strong>{safe_text(volume_text)}</strong>
+                <strong>{safe_text(volume)}</strong>
             </li>
             """
 
-        return output or '<li class="muted">Chưa có dữ liệu</li>'
+        return html_items or '<li class="muted">Chưa có dữ liệu</li>'
 
     return f"""
     <section class="panel">
         <div class="panel-header">
             <div>
-                <span class="eyebrow">Crypto Alpha</span>
-                <h2>Crypto Alpha Agent</h2>
+                <span class="eyebrow">Opportunity Radar</span>
+                <h2>Crypto Alpha Signals</h2>
             </div>
-            <div class="updated-pill">
-                Updated: {safe_text(crypto_alpha.get("updated_at"))}
-            </div>
+            <div class="updated-pill">Updated: {safe_text(crypto_alpha.get("updated_at"))}</div>
         </div>
 
         <div class="crypto-overview">
             <div class="sentiment-card">
-                <span>Fear & Greed Index</span>
+                <span>Fear & Greed</span>
                 <strong>{safe_text(fear_greed.get("value"))}</strong>
                 <em>{safe_text(fear_greed.get("classification"))}</em>
             </div>
 
             <p class="muted">
-                Agent theo dõi CoinGecko, Binance Futures, funding rate và tâm lý thị trường
-                để phát hiện token có tín hiệu volume, momentum hoặc funding bất thường.
+                Bộ lọc đã loại stablecoin khỏi danh sách tín hiệu. Alpha Score ưu tiên volume,
+                động lượng giá, thanh khoản futures và funding rate bất thường.
             </p>
         </div>
 
@@ -264,14 +476,12 @@ def render_crypto_alpha_section(crypto_alpha):
         <div class="mini-lists">
             <div>
                 <h3>Top Gainers 24h</h3>
-                <ul>{render_coin_list(top_gainers)}</ul>
+                <ul>{render_change_list(top_gainers)}</ul>
             </div>
-
             <div>
                 <h3>Top Losers 24h</h3>
-                <ul>{render_coin_list(top_losers)}</ul>
+                <ul>{render_change_list(top_losers)}</ul>
             </div>
-
             <div>
                 <h3>Top Volume 24h</h3>
                 <ul>{render_volume_list(top_volume)}</ul>
@@ -286,40 +496,19 @@ def build_charts():
     gold_history, gold_rsi, gold_rsi_note = get_history_with_rsi("GC=F")
     vnindex_history, vnindex_rsi, vnindex_rsi_note = get_history_with_rsi("^VNINDEX.VN")
 
-    btc_chart = build_candlestick_svg(
-        btc_history,
-        "Bitcoin / USD",
-        "BTC Close",
-        "RSI 14"
-    )
-
-    gold_chart = build_candlestick_svg(
-        gold_history,
-        "Gold Futures / USD",
-        "Gold Close",
-        "RSI 14"
-    )
-
-    vnindex_chart = build_candlestick_svg(
-        vnindex_history,
-        "VNINDEX",
-        "VNINDEX Close",
-        "RSI 14"
-    )
-
     return {
         "bitcoin": {
-            "html": btc_chart,
+            "html": build_candlestick_svg(btc_history, "Bitcoin / USD", "BTC Close", "RSI 14"),
             "rsi": btc_rsi,
             "note": btc_rsi_note,
         },
         "gold": {
-            "html": gold_chart,
+            "html": build_candlestick_svg(gold_history, "Gold Futures / USD", "Gold Close", "RSI 14"),
             "rsi": gold_rsi,
             "note": gold_rsi_note,
         },
         "vnindex": {
-            "html": vnindex_chart,
+            "html": build_candlestick_svg(vnindex_history, "VNINDEX", "VNINDEX Close", "RSI 14"),
             "rsi": vnindex_rsi,
             "note": vnindex_rsi_note,
         },
@@ -330,25 +519,29 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     today = datetime.now().strftime("%d/%m/%Y")
 
-    grouped_news = group_news_by_source(news_items)
-    crypto_alpha_html = render_crypto_alpha_section(crypto_alpha)
+    curated_news = filter_curated_news(news_items, max_items=15)
+    grouped_news = group_news_by_source(curated_news)
 
     domestic_gold = gold.get("domestic", {}) or {}
     world_gold = gold.get("world", {}) or {}
 
-    total_news = len(news_items)
+    mood = get_market_mood(bitcoin, gold, vnindex, crypto_alpha)
+    data_warnings = get_data_quality_warnings(bitcoin, gold, vnindex, charts, crypto_alpha)
+    action_items = get_action_items(mood, bitcoin, gold, vnindex, crypto_alpha)
+
+    crypto_alpha_html = render_crypto_alpha_section(crypto_alpha)
 
     return f"""<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Agent Finance</title>
+    <title>Morning Financial Intelligence</title>
 
     <style>
         :root {{
             --bg: #070b14;
-            --panel: #101828;
+            --panel: rgba(16, 24, 40, 0.86);
             --panel-soft: rgba(255, 255, 255, 0.045);
             --border: rgba(255, 255, 255, 0.09);
             --text: #e8eefc;
@@ -369,8 +562,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background:
                 radial-gradient(circle at top left, rgba(86, 163, 255, 0.18), transparent 32%),
-                radial-gradient(circle at top right, rgba(255, 209, 102, 0.13), transparent 28%),
-                radial-gradient(circle at 50% 30%, rgba(182, 140, 255, 0.08), transparent 36%),
+                radial-gradient(circle at top right, rgba(255, 209, 102, 0.12), transparent 28%),
+                radial-gradient(circle at 50% 22%, rgba(182, 140, 255, 0.08), transparent 36%),
                 var(--bg);
             color: var(--text);
         }}
@@ -393,28 +586,29 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         .hero {{
             display: flex;
             justify-content: space-between;
-            gap: 24px;
             align-items: flex-start;
+            gap: 24px;
             margin-bottom: 24px;
         }}
 
         .hero h1 {{
             margin: 0;
-            font-size: clamp(34px, 5vw, 58px);
+            font-size: clamp(34px, 5vw, 60px);
             line-height: 1;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.055em;
         }}
 
         .hero p {{
             color: var(--muted);
-            max-width: 780px;
+            max-width: 820px;
             font-size: 16px;
             line-height: 1.7;
         }}
 
         .time-chip,
         .updated-pill,
-        .rsi-pill {{
+        .rsi-pill,
+        .tag {{
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.05);
             padding: 10px 14px;
@@ -426,7 +620,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
         .kpi-grid {{
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 16px;
             margin-bottom: 18px;
         }}
@@ -439,11 +633,12 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             border: 1px solid var(--border);
             border-radius: 24px;
             box-shadow: 0 22px 60px rgba(0, 0, 0, 0.23);
+            backdrop-filter: blur(14px);
         }}
 
         .kpi-card {{
             padding: 20px;
-            min-height: 136px;
+            min-height: 130px;
         }}
 
         .kpi-card span {{
@@ -455,7 +650,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
         .kpi-card strong {{
             display: block;
-            font-size: 26px;
+            font-size: 24px;
             letter-spacing: -0.03em;
             word-break: break-word;
         }}
@@ -501,6 +696,44 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
         h3 {{
             font-size: 18px;
+        }}
+
+        .executive-grid {{
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 1fr;
+            gap: 14px;
+        }}
+
+        .insight-card {{
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+        }}
+
+        .insight-card p {{
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 0;
+        }}
+
+        .insight-card ul {{
+            margin: 12px 0 0;
+            padding-left: 20px;
+            color: var(--muted);
+            line-height: 1.65;
+        }}
+
+        .mood-badge {{
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(86,163,255,0.14);
+            color: var(--accent);
+            font-weight: 800;
+            margin-top: 12px;
         }}
 
         .brief {{
@@ -714,7 +947,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         .chart-note {{
             color: var(--muted);
             font-size: 13px;
-            margin-bottom: 14px;
+            margin: 0 0 14px;
         }}
 
         .chart-box {{
@@ -832,11 +1065,15 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             margin: 8px 0 0;
         }}
 
-        @media (max-width: 1100px) {{
-            .kpi-grid,
+        @media (max-width: 1200px) {{
+            .kpi-grid {{
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }}
+
             .market-grid,
             .alpha-grid,
-            .news-grid {{
+            .news-grid,
+            .executive-grid {{
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }}
 
@@ -855,7 +1092,8 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
             .kpi-grid,
             .market-grid,
             .alpha-grid,
-            .news-grid {{
+            .news-grid,
+            .executive-grid {{
                 grid-template-columns: 1fr;
             }}
 
@@ -876,34 +1114,33 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
     <main class="page">
         <header class="hero">
             <div>
-                <h1>Bảng tổng hợp tin tức ngày {today}</h1>
+                <h1>Morning Financial Intelligence</h1>
                 <p>
-                    Morning Agent Finance theo dõi tin tức, Bitcoin, vàng, VNINDEX,
-                    RSI kỹ thuật và tín hiệu Crypto Alpha để hỗ trợ bạn phát hiện
-                    cơ hội, rủi ro và xu hướng đáng chú ý mỗi ngày.
+                    Bản tin phân tích tài chính tự động ngày {today}: tổng hợp thị trường,
+                    rủi ro, cơ hội crypto, vàng, VNINDEX, tin tức và tín hiệu kỹ thuật.
                 </p>
             </div>
 
-            <div class="time-chip">Cập nhật lần cuối: {now}</div>
+            <div class="time-chip">Cập nhật: {now}</div>
         </header>
 
         <section class="kpi-grid">
             <article class="kpi-card">
-                <span>Tổng tin nóng</span>
-                <strong>{total_news}</strong>
-                <em class="neutral">VnExpress / Dân Trí / BBC</em>
+                <span>Market Mood</span>
+                <strong>{safe_text(mood["mood"])}</strong>
+                <em class="neutral">Risk Level: {safe_text(mood["risk_level"])}</em>
             </article>
 
             <article class="kpi-card">
                 <span>Bitcoin</span>
-                <strong>${safe_text(bitcoin.get("price_usd"))}</strong>
+                <strong>{safe_text(clean_price_prefix(bitcoin.get("price_usd")))}</strong>
                 <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
                     {safe_text(bitcoin.get("change_24h"))}
                 </em>
             </article>
 
             <article class="kpi-card">
-                <span>Vàng thế giới</span>
+                <span>Gold World</span>
                 <strong>{safe_text(world_gold.get("price"))}</strong>
                 <em class="{safe_text(world_gold.get("change_class", "neutral"))}">
                     {safe_text(world_gold.get("change_24h"))}
@@ -917,12 +1154,46 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
                     {safe_text(vnindex.get("change_percent"))}
                 </em>
             </article>
+
+            <article class="kpi-card">
+                <span>Curated News</span>
+                <strong>{len(curated_news)}</strong>
+                <em class="neutral">Tin đã lọc theo chủ đề tài chính</em>
+            </article>
         </section>
 
         <section class="panel">
             <div class="panel-header">
                 <div>
-                    <span class="eyebrow">AI Brief</span>
+                    <span class="eyebrow">Executive Summary</span>
+                    <h2>Market Intelligence Brief</h2>
+                </div>
+                <span class="tag">{safe_text(mood["mood"])}</span>
+            </div>
+
+            <div class="executive-grid">
+                <article class="insight-card">
+                    <h3>Tổng quan</h3>
+                    <div class="mood-badge">{safe_text(mood["mood"])} · Risk {safe_text(mood["risk_level"])}</div>
+                    <p>{safe_text(mood["summary"])}</p>
+                </article>
+
+                <article class="insight-card">
+                    <h3>Động lực chính</h3>
+                    <ul>{render_list(mood["drivers"])}</ul>
+                </article>
+
+                <article class="insight-card">
+                    <h3>Việc nên theo dõi</h3>
+                    <ul>{render_list(action_items)}</ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">AI Analysis</span>
                     <h2>AI Market Brief</h2>
                 </div>
             </div>
@@ -937,15 +1208,50 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         <section class="panel">
             <div class="panel-header">
                 <div>
+                    <span class="eyebrow">Risk Monitor</span>
+                    <h2>Data Quality & Risk Checklist</h2>
+                </div>
+            </div>
+
+            <div class="executive-grid">
+                <article class="insight-card">
+                    <h3>Data Quality</h3>
+                    <ul>{render_list(data_warnings)}</ul>
+                </article>
+
+                <article class="insight-card">
+                    <h3>Gold Signal</h3>
+                    <p>
+                        Vàng thế giới: <strong>{safe_text(world_gold.get("price"))}</strong>,
+                        biến động <strong class="{safe_text(world_gold.get("change_class", "neutral"))}">
+                        {safe_text(world_gold.get("change_24h"))}</strong>.
+                        Vàng SJC: <strong>{safe_text(domestic_gold.get("sell"))}</strong>.
+                    </p>
+                </article>
+
+                <article class="insight-card">
+                    <h3>VNINDEX Signal</h3>
+                    <p>
+                        VNINDEX hiện ở <strong>{safe_text(vnindex.get("value"))}</strong>,
+                        biến động <strong class="{safe_text(vnindex.get("change_class", "neutral"))}">
+                        {safe_text(vnindex.get("change"))}</strong>.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
                     <span class="eyebrow">Market Data</span>
-                    <h2>Market Snapshot</h2>
+                    <h2>Market Overview</h2>
                 </div>
             </div>
 
             <div class="market-grid">
                 <article class="market-item">
                     <span>Bitcoin USD</span>
-                    <strong>${safe_text(bitcoin.get("price_usd"))}</strong>
+                    <strong>{safe_text(clean_price_prefix(bitcoin.get("price_usd")))}</strong>
                     <em class="{safe_text(bitcoin.get("change_class", "neutral"))}">
                         {safe_text(bitcoin.get("change_24h"))} — {safe_text(bitcoin.get("note"))}
                     </em>
@@ -960,11 +1266,10 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
                 </article>
 
                 <article class="market-item">
-                    <span>Vàng SJC trong nước</span>
+                    <span>Vàng SJC</span>
                     <strong>{safe_text(domestic_gold.get("sell"))}</strong>
                     <em class="{safe_text(domestic_gold.get("change_class", "neutral"))}">
                         Mua: {safe_text(domestic_gold.get("buy"))}<br>
-                        Bán: {safe_text(domestic_gold.get("sell"))}<br>
                         24h: {safe_text(domestic_gold.get("change_24h"))}
                     </em>
                 </article>
@@ -988,15 +1293,25 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
         </section>
 
         <section class="charts-grid">
-            {render_chart_card("Bitcoin Chart", charts["bitcoin"]["html"], charts["bitcoin"]["rsi"], charts["bitcoin"]["note"])}
-            {render_chart_card("Vàng thế giới Chart", charts["gold"]["html"], charts["gold"]["rsi"], charts["gold"]["note"])}
-            {render_chart_card("VNINDEX Chart", charts["vnindex"]["html"], charts["vnindex"]["rsi"], charts["vnindex"]["note"])}
+            {render_chart_card("Bitcoin Technical Chart", charts["bitcoin"]["html"], charts["bitcoin"]["rsi"], charts["bitcoin"]["note"])}
+            {render_chart_card("Gold Technical Chart", charts["gold"]["html"], charts["gold"]["rsi"], charts["gold"]["note"])}
+            {render_chart_card("VNINDEX Technical Chart", charts["vnindex"]["html"], charts["vnindex"]["rsi"], charts["vnindex"]["note"])}
         </section>
 
-        <section class="news-grid">
-            {render_news_column("VnExpress", grouped_news.get("VnExpress", []))}
-            {render_news_column("Dân Trí", grouped_news.get("Dân Trí", []))}
-            {render_news_column("BBC", grouped_news.get("BBC", []))}
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <span class="eyebrow">Curated News</span>
+                    <h2>Tin tức tài chính đã lọc</h2>
+                </div>
+                <span class="tag">{len(curated_news)} tin</span>
+            </div>
+
+            <section class="news-grid">
+                {render_news_column("VnExpress", grouped_news.get("VnExpress", []))}
+                {render_news_column("Dân Trí", grouped_news.get("Dân Trí", []))}
+                {render_news_column("BBC", grouped_news.get("BBC", []))}
+            </section>
         </section>
     </main>
 </body>
@@ -1006,7 +1321,7 @@ def build_html(news_items, bitcoin, gold, vnindex, ai_summary, charts, crypto_al
 
 def main():
     print("Loading news...")
-    news_items = get_all_news(limit_per_source=5)
+    news_items = get_all_news(limit_per_source=8)
 
     print("Loading market data...")
     bitcoin = get_bitcoin_price()
@@ -1018,14 +1333,10 @@ def main():
 
     print("Loading Crypto Alpha...")
     crypto_alpha = None
-    crypto_alpha_text = ""
 
     if build_crypto_alpha:
         try:
             crypto_alpha = build_crypto_alpha()
-
-            if format_crypto_alpha_text:
-                crypto_alpha_text = format_crypto_alpha_text(crypto_alpha)
         except Exception as exc:
             print(f"ERROR loading Crypto Alpha: {exc}")
     else:
@@ -1034,18 +1345,11 @@ def main():
     print("Generating AI summary...")
     try:
         ai_summary = get_ai_summary(
-            news_items=news_items,
+            news_items=filter_curated_news(news_items, max_items=10),
             bitcoin=bitcoin,
             gold=gold,
             vnindex=vnindex,
         )
-
-        if crypto_alpha_text:
-            ai_summary += f"""
-            <p><strong>Crypto Alpha:</strong></p>
-            <p>{safe_text(crypto_alpha_text).replace(chr(10), "<br>")}</p>
-            """
-
     except Exception as exc:
         print(f"ERROR generating AI summary: {exc}")
         ai_summary = """
