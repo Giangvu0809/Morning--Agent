@@ -6,7 +6,6 @@ import html
 # =========================
 # RSS SOURCES
 # =========================
-``` thêm source
 RSS_FEEDS = {
     "VnExpress": "https://vnexpress.net/rss/kinh-doanh.rss",
     "Dân Trí": "https://dantri.com.vn/rss/kinh-doanh.rss",
