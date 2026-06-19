@@ -20,7 +20,12 @@ bitcoin_chart_data, bitcoin_rsi, bitcoin_rsi_note = get_history_with_rsi("BTC-US
 gold_chart_data, gold_rsi, gold_rsi_note = get_history_with_rsi("GC=F")
 vnindex_chart_data, vnindex_rsi, vnindex_rsi_note = get_history_with_rsi("^VNINDEX.VN")
 
-ai_summary = get_ai_summary()
+ai_summary = get_ai_summary(
+    news_items=all_news,
+    bitcoin=bitcoin,
+    gold=gold,
+    vnindex=vnindex
+)
 
 
 # =========================
@@ -253,6 +258,20 @@ ul {{
     color: #6b7280;
 }}
 
+.ai-summary {{
+    line-height: 1.7;
+    color: #374151;
+}}
+
+.ai-summary ul {{
+    list-style: disc;
+    padding-left: 22px;
+}}
+
+.ai-summary li {{
+    margin-bottom: 8px;
+}}
+
 </style>
 
 </head>
@@ -364,9 +383,9 @@ ul {{
 
     <h2>🎯 AI Summary</h2>
 
-    <p class="placeholder">
+    <div class="ai-summary">
         {ai_summary}
-    </p>
+    </div>
 
 </div>
 
@@ -390,3 +409,4 @@ print(f"Bitcoin RSI: {bitcoin_rsi}")
 print(f"Gold RSI: {gold_rsi}")
 print(f"VNINDEX: {vnindex['value']}")
 print(f"VNINDEX RSI: {vnindex_rsi}")
+print("AI Summary: generated")
