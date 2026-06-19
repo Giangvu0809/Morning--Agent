@@ -27,6 +27,13 @@ def format_number(value, digits=2):
         return "N/A"
 
 
+def format_vnd(value):
+    try:
+        return f"{float(value):,.0f} VND/lượng"
+    except Exception:
+        return "N/A"
+
+
 def get_bitcoin_price():
     url = "https://api.coingecko.com/api/v3/simple/price"
 
@@ -67,12 +74,135 @@ def get_bitcoin_price():
     }
 
 
+def extract_gold_price(data):
+    if not data:
+        return None
+
+    possible_lists = []
+
+    if isinstance(data, list):
+        possible_lists.append(data)
+
+    if isinstance(data, dict):
+        for key in ["data", "prices", "items", "results"]:
+            if isinstance(data.get(key), list):
+                possible_lists.append(data.get(key))
+
+        for value in data.values():
+            if isinstance(value, list):
+                possible_lists.append(value)
+
+    for items in possible_lists:
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+
+            text = " ".join(
+                str(item.get(k, ""))
+                for k in ["code", "name", "type", "brand", "gold_type"]
+            ).lower()
+
+            if (
+                "sjc" in text
+                or "sjl1l10" in text
+                or "vngsjc" in text
+            ):
+                buy = (
+                    item.get("buy")
+                    or item.get("buy_price")
+                    or item.get("buyPrice")
+                    or item.get("bid")
+                )
+
+                sell = (
+                    item.get("sell")
+                    or item.get("sell_price")
+                    or item.get("sellPrice")
+                    or item.get("ask")
+                )
+
+                updated = (
+                    item.get("updated_at")
+                    or item.get("updatedAt")
+                    or item.get("time")
+                    or item.get("date")
+                    or ""
+                )
+
+                if buy and sell:
+                    return {
+                        "buy": buy,
+                        "sell": sell,
+                        "updated": updated
+                    }
+
+    if isinstance(data, dict):
+        buy = (
+            data.get("buy")
+            or data.get("buy_price")
+            or data.get("buyPrice")
+            or data.get("bid")
+        )
+
+        sell = (
+            data.get("sell")
+            or data.get("sell_price")
+            or data.get("sellPrice")
+            or data.get("ask")
+        )
+
+        updated = (
+            data.get("updated_at")
+            or data.get("updatedAt")
+            or data.get("time")
+            or data.get("date")
+            or ""
+        )
+
+        if buy and sell:
+            return {
+                "buy": buy,
+                "sell": sell,
+                "updated": updated
+            }
+
+    return None
+
+
 def get_gold_price():
+    api_urls = [
+        "https://www.vang.today/api/v1/gold/SJL1L10",
+        "https://www.vang.today/api/v1/gold/VNGSJC",
+        "https://giavang.now/api/v1/gold/SJL1L10",
+        "https://giavang.now/api/v1/gold/VNGSJC",
+    ]
+
+    for url in api_urls:
+        data = safe_request_json(url)
+
+        gold_data = extract_gold_price(data)
+
+        if gold_data:
+            buy = gold_data.get("buy")
+            sell = gold_data.get("sell")
+            updated = gold_data.get("updated", "")
+
+            note = "Giá vàng trong nước SJC, đơn vị VND/lượng."
+            if updated:
+                note += f" Cập nhật: {updated}."
+
+            return {
+                "buy": format_vnd(buy),
+                "sell": format_vnd(sell),
+                "change": "Đang cập nhật",
+                "note": note
+            }
+
     return {
-        "buy": "Đang kết nối",
-        "sell": "Đang kết nối",
-        "change": "Đang cập nhật",
-        "note": "Chart đang dùng dữ liệu vàng quốc tế Gold Futures: GC=F."
+        "buy": "N/A",
+        "sell": "N/A",
+        "change": "N/A",
+        "note": "Chưa lấy được giá vàng trong nước. Chart bên dưới vẫn dùng dữ liệu vàng quốc tế Gold Futures: GC=F."
     }
 
 
