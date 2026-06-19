@@ -1,4 +1,4 @@
-```python
+
 from datetime import datetime, timezone, timedelta
 import feedparser
 import html
@@ -261,4 +261,4 @@ print(
 print(
     f"Loaded {len(all_news)} news items from RSS feeds"
 )
-```
+
