@@ -193,6 +193,14 @@ body {
     padding: 14px;
 }
 
+.snapshot-item.gold-domestic {
+    border-left: 4px solid #f59e0b;
+}
+
+.snapshot-item.gold-world {
+    border-left: 4px solid #facc15;
+}
+
 .snapshot-name {
     color: #94a3b8;
     font-size: 13px;
@@ -406,7 +414,7 @@ body {
             </div>
 
             <div class="updated">
-                Cập nhật lần cuối: 10:34:19
+                Cập nhật lần cuối: 10:58:23
             </div>
         </div>
     </header>
@@ -422,14 +430,16 @@ body {
 
         <div class="kpi-card kpi-bitcoin">
             <div class="kpi-label">Bitcoin</div>
-            <div class="kpi-value">$62,718.00</div>
-            <div class="kpi-note">24h: -2.43% • RSI: 46.41</div>
+            <div class="kpi-value">$62,706.00</div>
+            <div class="kpi-note">24h: -2.37% • RSI: 45.98</div>
         </div>
 
         <div class="kpi-card kpi-gold">
-            <div class="kpi-label">Vàng quốc tế</div>
-            <div class="kpi-value">GC=F</div>
-            <div class="kpi-note">RSI: 31.63 • RSI trung tính.</div>
+            <div class="kpi-label">Vàng SJC trong nước</div>
+            <div class="kpi-value">N/A</div>
+            <div class="kpi-note">
+                Mua vào: N/A • 24h: N/A
+            </div>
         </div>
 
         <div class="kpi-card kpi-vnindex">
@@ -467,20 +477,32 @@ body {
 
                 <div class="snapshot-item">
                     <div class="snapshot-name">₿ Bitcoin</div>
-                    <div class="snapshot-value">$62,718.00</div>
+                    <div class="snapshot-value">$62,706.00</div>
                     <div class="snapshot-detail">
-                        Quy đổi: 1,651,550,700 VND<br>
-                        24h: -2.43%<br>
-                        RSI: 46.41 — RSI trung tính.
+                        Quy đổi: 1,651,018,614 VND<br>
+                        24h: -2.37%<br>
+                        RSI: 45.98 — RSI trung tính.
                     </div>
                 </div>
 
-                <div class="snapshot-item">
-                    <div class="snapshot-name">🟡 Gold Futures</div>
-                    <div class="snapshot-value">RSI 31.63</div>
+                <div class="snapshot-item gold-domestic">
+                    <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
+                    <div class="snapshot-value">N/A</div>
                     <div class="snapshot-detail">
-                        RSI trung tính.<br>
-                        Chart đang dùng dữ liệu vàng quốc tế Gold Futures: GC=F.
+                        Mua vào: <strong>N/A</strong><br>
+                        Bán ra: <strong>N/A</strong><br>
+                        24h: <strong>N/A</strong><br>
+                        Chưa lấy được giá vàng trong nước.
+                    </div>
+                </div>
+
+                <div class="snapshot-item gold-world">
+                    <div class="snapshot-name">🌍 Vàng thế giới</div>
+                    <div class="snapshot-value">$4,176.80/oz</div>
+                    <div class="snapshot-detail">
+                        24h: <strong>-4.18%</strong><br>
+                        RSI kỹ thuật: <strong>31.32</strong> — RSI trung tính.<br>
+                        Dữ liệu vàng thế giới từ Yahoo Finance Gold Futures GC=F.
                     </div>
                 </div>
 
@@ -514,6 +536,20 @@ body {
             <div class="terminal-news-index">01</div>
 
             <div>
+                <a href="https://vnexpress.net/gia-vang-giam-ve-gan-147-trieu-dong-5087558.html" target="_blank">
+                    Giá vàng giảm về gần 147 triệu đồng
+                </a>
+
+                <p>
+                    Mỗi lượng vàng giảm hơn 4 triệu đồng về sát 147 triệu đồng, chênh lệch với thế giới sáng nay gần 15 triệu một lượng.
+                </p>
+            </div>
+        </div>
+        
+        <div class="terminal-news-item">
+            <div class="terminal-news-index">02</div>
+
+            <div>
                 <a href="https://vnexpress.net/nguoi-dan-chi-it-hon-cho-mam-cung-tet-doan-ngo-5087483.html" target="_blank">
                     Người dân chi ít hơn cho mâm cúng Tết Đoan Ngọ
                 </a>
@@ -525,7 +561,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">02</div>
+            <div class="terminal-news-index">03</div>
 
             <div>
                 <a href="https://vnexpress.net/gia-vang-the-gioi-quay-dau-giam-5087485.html" target="_blank">
@@ -539,7 +575,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">03</div>
+            <div class="terminal-news-index">04</div>
 
             <div>
                 <a href="https://vnexpress.net/gia-vai-khong-hat-trung-quoc-giam-mot-nua-5086646.html" target="_blank">
@@ -553,7 +589,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">04</div>
+            <div class="terminal-news-index">05</div>
 
             <div>
                 <a href="https://vnexpress.net/deutsche-bank-chat-luong-doanh-nghiep-moi-la-dieu-thu-hut-von-ngoai-5087426.html" target="_blank">
@@ -562,20 +598,6 @@ body {
 
                 <p>
                     Theo ngân hàng lớn nhất Đức, vốn ngoại đầu tư không chỉ nhờ thể chế, quan trọng hơn là sức hấp dẫn của các doanh nghiệp trên sàn chứng khoán.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">05</div>
-
-            <div>
-                <a href="https://vnexpress.net/dac-san-van-loay-hoay-tim-duong-vao-sieu-thi-5087263.html" target="_blank">
-                    Đặc sản vẫn loay hoay &#x27;tìm đường&#x27; vào siêu thị
-                </a>
-
-                <p>
-                    Mặc dù đã xuất khẩu sang Mỹ, châu Âu, nhiều đặc sản hiện nay vẫn loay hoay tìm chỗ đứng trong hệ thống bán lẻ hiện đại tại Việt Nam.
                 </p>
             </div>
         </div>
@@ -589,6 +611,34 @@ body {
             <div class="terminal-news-index">01</div>
 
             <div>
+                <a href="https://dantri.com.vn/kinh-doanh/gia-vang-roi-thang-dung-thung-moc-150-trieu-dongluong-20260619084656384.htm" target="_blank">
+                    Giá vàng rơi thẳng đứng, “thủng” mốc 150 triệu đồng/lượng
+                </a>
+
+                <p>
+                    (Dân trí) - Giá vàng trong nước sáng 19/6 giảm mạnh tới 3 triệu đồng/lượng ở chiều thu mua, trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.
+                </p>
+            </div>
+        </div>
+        
+        <div class="terminal-news-item">
+            <div class="terminal-news-index">02</div>
+
+            <div>
+                <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank">
+                    Elon Musk giàu đến mức nào so với những người Mỹ giàu nhất lịch sử?
+                </a>
+
+                <p>
+                    (Dân trí) - Sở hữu khối tài sản chạm mốc 1.400 tỷ USD vào năm 2026, tỷ phú Elon Musk không chỉ đứng đầu thế giới hiện tại mà còn tạo ra khoảng cách không tưởng với các đại tư bản trong lịch sử nước Mỹ.
+                </p>
+            </div>
+        </div>
+        
+        <div class="terminal-news-item">
+            <div class="terminal-news-index">03</div>
+
+            <div>
                 <a href="https://dantri.com.vn/kinh-doanh/chan-gan-1-tan-thuc-pham-lau-nhieu-lo-hang-da-boc-mui-hoi-thoi-20260618224956994.htm" target="_blank">
                     Chặn gần 1 tấn thực phẩm lậu, nhiều lô hàng đã bốc mùi hôi thối
                 </a>
@@ -600,7 +650,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">02</div>
+            <div class="terminal-news-index">04</div>
 
             <div>
                 <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank">
@@ -614,7 +664,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">03</div>
+            <div class="terminal-news-index">05</div>
 
             <div>
                 <a href="https://dantri.com.vn/kinh-doanh/nhom-co-phieu-ho-vingroup-dong-loat-tang-tran-keo-thi-truong-but-pha-20260618155317346.htm" target="_blank">
@@ -623,34 +673,6 @@ body {
 
                 <p>
                     (Dân trí) - Nhóm cổ phiếu Vingroup đồng loạt tăng trần trong phiên 18/6, với VIC, VHM và VRE dẫn đầu đà tăng của thị trường. Cùng với PC1 tăng hết biên độ, các mã này đã góp công lớn đưa VN-Index bứt phá.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">04</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/viet-nam-muon-co-10-doanh-nghiep-cong-nghe-chien-luoc-ty-usd-20260618152658446.htm" target="_blank">
-                    Việt Nam muốn có 10 doanh nghiệp công nghệ chiến lược tỷ USD
-                </a>
-
-                <p>
-                    (Dân trí) - Chính phủ đặt mục tiêu năm 2030 Việt Nam hình thành tối tiểu 10 doanh nghiệp công nghệ chiến lược, có tổng doanh thu 1 tỷ USD/năm trở lên.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">05</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/chu-dau-tu-san-bay-long-thanh-vi-pham-cua-mot-so-lanh-dao-rat-tinh-vi-20260618131551781.htm" target="_blank">
-                    Chủ đầu tư Sân bay Long Thành: Vi phạm của một số lãnh đạo rất tinh vi
-                </a>
-
-                <p>
-                    (Dân trí) - Chủ tịch là ông Vũ Thế Phiệt cùng nhiều lãnh đạo đã bị bắt giam, ACV cho biết hành vi vi phạm được thực hiện một cách tinh vi, vượt ngoài khả năng kiểm soát của HĐQT.
                 </p>
             </div>
         </div>
@@ -757,14 +779,30 @@ body {
             
             <line
                 x1="64.61"
-                y1="149.02"
+                y1="146.15"
                 x2="64.61"
+                y2="165.07"
+                class="candle-up"
+            />
+
+            <rect
+                x="62.08"
+                y="154.16"
+                width="5.07"
+                height="5.93"
+                class="candle-up"
+            />
+        
+            <line
+                x1="73.83"
+                y1="149.02"
+                x2="73.83"
                 y2="172.80"
                 class="candle-down"
             />
 
             <rect
-                x="62.08"
+                x="71.30"
                 y="154.16"
                 width="5.07"
                 height="17.59"
@@ -772,15 +810,15 @@ body {
             />
         
             <line
-                x1="73.83"
+                x1="83.06"
                 y1="163.49"
-                x2="73.83"
+                x2="83.06"
                 y2="184.74"
                 class="candle-down"
             />
 
             <rect
-                x="71.30"
+                x="80.52"
                 y="171.49"
                 width="5.07"
                 height="8.66"
@@ -788,15 +826,15 @@ body {
             />
         
             <line
-                x1="83.06"
+                x1="92.28"
                 y1="141.92"
-                x2="83.06"
+                x2="92.28"
                 y2="183.91"
                 class="candle-up"
             />
 
             <rect
-                x="80.52"
+                x="89.74"
                 y="150.35"
                 width="5.07"
                 height="29.83"
@@ -804,15 +842,15 @@ body {
             />
         
             <line
-                x1="92.28"
+                x1="101.50"
                 y1="145.91"
-                x2="92.28"
+                x2="101.50"
                 y2="169.71"
                 class="candle-down"
             />
 
             <rect
-                x="89.74"
+                x="98.96"
                 y="150.37"
                 width="5.07"
                 height="3.83"
@@ -820,15 +858,15 @@ body {
             />
         
             <line
-                x1="101.50"
+                x1="110.72"
                 y1="139.95"
-                x2="101.50"
+                x2="110.72"
                 y2="155.51"
                 class="candle-up"
             />
 
             <rect
-                x="98.96"
+                x="108.19"
                 y="146.51"
                 width="5.07"
                 height="7.67"
@@ -836,15 +874,15 @@ body {
             />
         
             <line
-                x1="110.72"
+                x1="119.94"
                 y1="145.53"
-                x2="110.72"
+                x2="119.94"
                 y2="177.51"
                 class="candle-down"
             />
 
             <rect
-                x="108.19"
+                x="117.41"
                 y="146.51"
                 width="5.07"
                 height="24.46"
@@ -852,15 +890,15 @@ body {
             />
         
             <line
-                x1="119.94"
+                x1="129.17"
                 y1="167.80"
-                x2="119.94"
+                x2="129.17"
                 y2="202.62"
                 class="candle-down"
             />
 
             <rect
-                x="117.41"
+                x="126.63"
                 y="170.97"
                 width="5.07"
                 height="23.82"
@@ -868,15 +906,15 @@ body {
             />
         
             <line
-                x1="129.17"
+                x1="138.39"
                 y1="186.10"
-                x2="129.17"
+                x2="138.39"
                 y2="198.98"
                 class="candle-down"
             />
 
             <rect
-                x="126.63"
+                x="135.85"
                 y="194.79"
                 width="5.07"
                 height="2.00"
@@ -884,15 +922,15 @@ body {
             />
         
             <line
-                x1="138.39"
+                x1="147.61"
                 y1="187.85"
-                x2="138.39"
+                x2="147.61"
                 y2="208.06"
                 class="candle-down"
             />
 
             <rect
-                x="135.85"
+                x="145.08"
                 y="194.97"
                 width="5.07"
                 height="3.54"
@@ -900,15 +938,15 @@ body {
             />
         
             <line
-                x1="147.61"
+                x1="156.83"
                 y1="177.81"
-                x2="147.61"
+                x2="156.83"
                 y2="200.41"
                 class="candle-up"
             />
 
             <rect
-                x="145.08"
+                x="154.30"
                 y="191.36"
                 width="5.07"
                 height="7.12"
@@ -916,15 +954,15 @@ body {
             />
         
             <line
-                x1="156.83"
+                x1="166.06"
                 y1="173.84"
-                x2="156.83"
+                x2="166.06"
                 y2="198.56"
                 class="candle-up"
             />
 
             <rect
-                x="154.30"
+                x="163.52"
                 y="176.39"
                 width="5.07"
                 height="14.94"
@@ -932,15 +970,15 @@ body {
             />
         
             <line
-                x1="166.06"
+                x1="175.28"
                 y1="166.71"
-                x2="166.06"
+                x2="175.28"
                 y2="182.97"
                 class="candle-down"
             />
 
             <rect
-                x="163.52"
+                x="172.74"
                 y="176.39"
                 width="5.07"
                 height="2.00"
@@ -948,15 +986,15 @@ body {
             />
         
             <line
-                x1="175.28"
+                x1="184.50"
                 y1="172.51"
-                x2="175.28"
+                x2="184.50"
                 y2="200.75"
                 class="candle-down"
             />
 
             <rect
-                x="172.74"
+                x="181.96"
                 y="177.90"
                 width="5.07"
                 height="11.55"
@@ -964,15 +1002,15 @@ body {
             />
         
             <line
-                x1="184.50"
+                x1="193.72"
                 y1="185.49"
-                x2="184.50"
+                x2="193.72"
                 y2="195.34"
                 class="candle-up"
             />
 
             <rect
-                x="181.96"
+                x="191.19"
                 y="189.03"
                 width="5.07"
                 height="2.00"
@@ -980,15 +1018,15 @@ body {
             />
         
             <line
-                x1="193.72"
+                x1="202.94"
                 y1="183.36"
-                x2="193.72"
+                x2="202.94"
                 y2="190.60"
                 class="candle-up"
             />
 
             <rect
-                x="191.19"
+                x="200.41"
                 y="185.54"
                 width="5.07"
                 height="3.42"
@@ -996,15 +1034,15 @@ body {
             />
         
             <line
-                x1="202.94"
+                x1="212.17"
                 y1="168.09"
-                x2="202.94"
+                x2="212.17"
                 y2="192.15"
                 class="candle-up"
             />
 
             <rect
-                x="200.41"
+                x="209.63"
                 y="169.12"
                 width="5.07"
                 height="16.42"
@@ -1012,15 +1050,15 @@ body {
             />
         
             <line
-                x1="212.17"
+                x1="221.39"
                 y1="156.27"
-                x2="212.17"
+                x2="221.39"
                 y2="175.28"
                 class="candle-down"
             />
 
             <rect
-                x="209.63"
+                x="218.85"
                 y="169.11"
                 width="5.07"
                 height="2.00"
@@ -1028,15 +1066,15 @@ body {
             />
         
             <line
-                x1="221.39"
+                x1="230.61"
                 y1="132.70"
-                x2="221.39"
+                x2="230.61"
                 y2="181.17"
                 class="candle-up"
             />
 
             <rect
-                x="218.85"
+                x="228.08"
                 y="140.38"
                 width="5.07"
                 height="29.92"
@@ -1044,15 +1082,15 @@ body {
             />
         
             <line
-                x1="230.61"
+                x1="239.83"
                 y1="131.79"
-                x2="230.61"
+                x2="239.83"
                 y2="152.36"
                 class="candle-down"
             />
 
             <rect
-                x="228.08"
+                x="237.30"
                 y="140.29"
                 width="5.07"
                 height="8.03"
@@ -1060,15 +1098,15 @@ body {
             />
         
             <line
-                x1="239.83"
+                x1="249.06"
                 y1="129.06"
-                x2="239.83"
+                x2="249.06"
                 y2="154.51"
                 class="candle-up"
             />
 
             <rect
-                x="237.30"
+                x="246.52"
                 y="142.06"
                 width="5.07"
                 height="6.29"
@@ -1076,15 +1114,15 @@ body {
             />
         
             <line
-                x1="249.06"
+                x1="258.28"
                 y1="125.82"
-                x2="249.06"
+                x2="258.28"
                 y2="145.30"
                 class="candle-up"
             />
 
             <rect
-                x="246.52"
+                x="255.74"
                 y="130.30"
                 width="5.07"
                 height="11.70"
@@ -1092,15 +1130,15 @@ body {
             />
         
             <line
-                x1="258.28"
+                x1="267.50"
                 y1="122.48"
-                x2="258.28"
+                x2="267.50"
                 y2="134.41"
                 class="candle-up"
             />
 
             <rect
-                x="255.74"
+                x="264.96"
                 y="129.57"
                 width="5.07"
                 height="2.00"
@@ -1108,15 +1146,15 @@ body {
             />
         
             <line
-                x1="267.50"
+                x1="276.72"
                 y1="128.60"
-                x2="267.50"
+                x2="276.72"
                 y2="153.98"
                 class="candle-down"
             />
 
             <rect
-                x="264.96"
+                x="274.19"
                 y="129.55"
                 width="5.07"
                 height="22.36"
@@ -1124,15 +1162,15 @@ body {
             />
         
             <line
-                x1="276.72"
+                x1="285.94"
                 y1="111.68"
-                x2="276.72"
+                x2="285.94"
                 y2="153.52"
                 class="candle-up"
             />
 
             <rect
-                x="274.19"
+                x="283.41"
                 y="115.68"
                 width="5.07"
                 height="36.19"
@@ -1140,15 +1178,15 @@ body {
             />
         
             <line
-                x1="285.94"
+                x1="295.17"
                 y1="100.36"
-                x2="285.94"
+                x2="295.17"
                 y2="121.58"
                 class="candle-down"
             />
 
             <rect
-                x="283.41"
+                x="292.63"
                 y="115.74"
                 width="5.07"
                 height="2.88"
@@ -1156,15 +1194,15 @@ body {
             />
         
             <line
-                x1="295.17"
+                x1="304.39"
                 y1="106.70"
-                x2="295.17"
+                x2="304.39"
                 y2="124.76"
                 class="candle-up"
             />
 
             <rect
-                x="292.63"
+                x="301.85"
                 y="112.57"
                 width="5.07"
                 height="6.05"
@@ -1172,15 +1210,15 @@ body {
             />
         
             <line
-                x1="304.39"
+                x1="313.61"
                 y1="105.75"
-                x2="304.39"
+                x2="313.61"
                 y2="126.73"
                 class="candle-up"
             />
 
             <rect
-                x="301.85"
+                x="311.07"
                 y="109.20"
                 width="5.07"
                 height="3.31"
@@ -1188,15 +1226,15 @@ body {
             />
         
             <line
-                x1="313.61"
+                x1="322.83"
                 y1="78.43"
-                x2="313.61"
+                x2="322.83"
                 y2="114.96"
                 class="candle-up"
             />
 
             <rect
-                x="311.07"
+                x="320.30"
                 y="90.02"
                 width="5.07"
                 height="19.06"
@@ -1204,15 +1242,15 @@ body {
             />
         
             <line
-                x1="322.83"
+                x1="332.06"
                 y1="87.20"
-                x2="322.83"
+                x2="332.06"
                 y2="105.77"
                 class="candle-down"
             />
 
             <rect
-                x="320.30"
+                x="329.52"
                 y="89.93"
                 width="5.07"
                 height="13.69"
@@ -1220,15 +1258,15 @@ body {
             />
         
             <line
-                x1="332.06"
+                x1="341.28"
                 y1="98.60"
-                x2="332.06"
+                x2="341.28"
                 y2="122.30"
                 class="candle-down"
             />
 
             <rect
-                x="329.52"
+                x="338.74"
                 y="103.65"
                 width="5.07"
                 height="18.13"
@@ -1236,15 +1274,15 @@ body {
             />
         
             <line
-                x1="341.28"
+                x1="350.50"
                 y1="95.37"
-                x2="341.28"
+                x2="350.50"
                 y2="122.56"
                 class="candle-up"
             />
 
             <rect
-                x="338.74"
+                x="347.96"
                 y="102.20"
                 width="5.07"
                 height="19.60"
@@ -1252,15 +1290,15 @@ body {
             />
         
             <line
-                x1="350.50"
+                x1="359.72"
                 y1="92.40"
-                x2="350.50"
+                x2="359.72"
                 y2="112.10"
                 class="candle-up"
             />
 
             <rect
-                x="347.96"
+                x="357.19"
                 y="97.54"
                 width="5.07"
                 height="4.66"
@@ -1268,15 +1306,15 @@ body {
             />
         
             <line
-                x1="359.72"
+                x1="368.94"
                 y1="67.28"
-                x2="359.72"
+                x2="368.94"
                 y2="99.41"
                 class="candle-up"
             />
 
             <rect
-                x="357.19"
+                x="366.41"
                 y="79.57"
                 width="5.07"
                 height="17.96"
@@ -1284,15 +1322,15 @@ body {
             />
         
             <line
-                x1="368.94"
+                x1="378.17"
                 y1="74.97"
-                x2="368.94"
+                x2="378.17"
                 y2="91.11"
                 class="candle-up"
             />
 
             <rect
-                x="366.41"
+                x="375.63"
                 y="78.93"
                 width="5.07"
                 height="2.00"
@@ -1300,15 +1338,15 @@ body {
             />
         
             <line
-                x1="378.17"
+                x1="387.39"
                 y1="76.16"
-                x2="378.17"
+                x2="387.39"
                 y2="88.16"
                 class="candle-down"
             />
 
             <rect
-                x="375.63"
+                x="384.85"
                 y="78.98"
                 width="5.07"
                 height="7.85"
@@ -1316,15 +1354,15 @@ body {
             />
         
             <line
-                x1="387.39"
+                x1="396.61"
                 y1="82.68"
-                x2="387.39"
+                x2="396.61"
                 y2="89.46"
                 class="candle-up"
             />
 
             <rect
-                x="384.85"
+                x="394.07"
                 y="85.31"
                 width="5.07"
                 height="2.00"
@@ -1332,15 +1370,15 @@ body {
             />
         
             <line
-                x1="396.61"
+                x1="405.83"
                 y1="72.57"
-                x2="396.61"
+                x2="405.83"
                 y2="88.00"
                 class="candle-up"
             />
 
             <rect
-                x="394.07"
+                x="403.30"
                 y="75.15"
                 width="5.07"
                 height="10.14"
@@ -1348,15 +1386,15 @@ body {
             />
         
             <line
-                x1="405.83"
+                x1="415.06"
                 y1="67.09"
-                x2="405.83"
+                x2="415.06"
                 y2="96.29"
                 class="candle-down"
             />
 
             <rect
-                x="403.30"
+                x="412.52"
                 y="75.12"
                 width="5.07"
                 height="12.57"
@@ -1364,15 +1402,15 @@ body {
             />
         
             <line
-                x1="415.06"
+                x1="424.28"
                 y1="86.55"
-                x2="415.06"
+                x2="424.28"
                 y2="104.13"
                 class="candle-down"
             />
 
             <rect
-                x="412.52"
+                x="421.74"
                 y="87.68"
                 width="5.07"
                 height="9.88"
@@ -1380,15 +1418,15 @@ body {
             />
         
             <line
-                x1="424.28"
+                x1="433.50"
                 y1="82.66"
-                x2="424.28"
+                x2="433.50"
                 y2="111.08"
                 class="candle-down"
             />
 
             <rect
-                x="421.74"
+                x="430.96"
                 y="97.56"
                 width="5.07"
                 height="5.58"
@@ -1396,15 +1434,15 @@ body {
             />
         
             <line
-                x1="433.50"
+                x1="442.72"
                 y1="95.02"
-                x2="433.50"
+                x2="442.72"
                 y2="107.58"
                 class="candle-up"
             />
 
             <rect
-                x="430.96"
+                x="440.19"
                 y="98.01"
                 width="5.07"
                 height="5.11"
@@ -1412,15 +1450,15 @@ body {
             />
         
             <line
-                x1="442.72"
+                x1="451.94"
                 y1="72.85"
-                x2="442.72"
+                x2="451.94"
                 y2="98.10"
                 class="candle-up"
             />
 
             <rect
-                x="440.19"
+                x="449.41"
                 y="79.80"
                 width="5.07"
                 height="18.20"
@@ -1428,15 +1466,15 @@ body {
             />
         
             <line
-                x1="451.94"
+                x1="461.17"
                 y1="70.66"
-                x2="451.94"
+                x2="461.17"
                 y2="81.23"
                 class="candle-up"
             />
 
             <rect
-                x="449.41"
+                x="458.63"
                 y="75.16"
                 width="5.07"
                 height="4.66"
@@ -1444,15 +1482,15 @@ body {
             />
         
             <line
-                x1="461.17"
+                x1="470.39"
                 y1="67.92"
-                x2="461.17"
+                x2="470.39"
                 y2="80.83"
                 class="candle-down"
             />
 
             <rect
-                x="458.63"
+                x="467.85"
                 y="75.16"
                 width="5.07"
                 height="2.00"
@@ -1460,15 +1498,15 @@ body {
             />
         
             <line
-                x1="470.39"
+                x1="479.61"
                 y1="54.91"
-                x2="470.39"
+                x2="479.61"
                 y2="79.42"
                 class="candle-up"
             />
 
             <rect
-                x="467.85"
+                x="477.07"
                 y="63.79"
                 width="5.07"
                 height="12.50"
@@ -1476,15 +1514,15 @@ body {
             />
         
             <line
-                x1="479.61"
+                x1="488.83"
                 y1="45.11"
-                x2="479.61"
+                x2="488.83"
                 y2="64.18"
                 class="candle-up"
             />
 
             <rect
-                x="477.07"
+                x="486.30"
                 y="53.11"
                 width="5.07"
                 height="10.72"
@@ -1492,15 +1530,15 @@ body {
             />
         
             <line
-                x1="488.83"
+                x1="498.06"
                 y1="35.00"
-                x2="488.83"
+                x2="498.06"
                 y2="54.82"
                 class="candle-up"
             />
 
             <rect
-                x="486.30"
+                x="495.52"
                 y="48.25"
                 width="5.07"
                 height="4.82"
@@ -1508,15 +1546,15 @@ body {
             />
         
             <line
-                x1="498.06"
+                x1="507.28"
                 y1="45.75"
-                x2="498.06"
+                x2="507.28"
                 y2="66.75"
                 class="candle-down"
             />
 
             <rect
-                x="495.52"
+                x="504.74"
                 y="48.24"
                 width="5.07"
                 height="13.78"
@@ -1524,15 +1562,15 @@ body {
             />
         
             <line
-                x1="507.28"
+                x1="516.50"
                 y1="57.77"
-                x2="507.28"
+                x2="516.50"
                 y2="69.83"
                 class="candle-up"
             />
 
             <rect
-                x="504.74"
+                x="513.96"
                 y="60.30"
                 width="5.07"
                 height="2.00"
@@ -1540,15 +1578,15 @@ body {
             />
         
             <line
-                x1="516.50"
+                x1="525.72"
                 y1="52.11"
-                x2="516.50"
+                x2="525.72"
                 y2="60.95"
                 class="candle-up"
             />
 
             <rect
-                x="513.96"
+                x="523.19"
                 y="55.66"
                 width="5.07"
                 height="4.63"
@@ -1556,15 +1594,15 @@ body {
             />
         
             <line
-                x1="525.72"
+                x1="534.94"
                 y1="38.52"
-                x2="525.72"
+                x2="534.94"
                 y2="59.45"
                 class="candle-up"
             />
 
             <rect
-                x="523.19"
+                x="532.41"
                 y="41.34"
                 width="5.07"
                 height="14.31"
@@ -1572,15 +1610,15 @@ body {
             />
         
             <line
-                x1="534.94"
+                x1="544.17"
                 y1="39.53"
-                x2="534.94"
+                x2="544.17"
                 y2="57.73"
                 class="candle-down"
             />
 
             <rect
-                x="532.41"
+                x="541.63"
                 y="41.34"
                 width="5.07"
                 height="3.99"
@@ -1588,15 +1626,15 @@ body {
             />
         
             <line
-                x1="544.17"
+                x1="553.39"
                 y1="45.09"
-                x2="544.17"
+                x2="553.39"
                 y2="63.75"
                 class="candle-down"
             />
 
             <rect
-                x="541.63"
+                x="550.85"
                 y="45.36"
                 width="5.07"
                 height="12.12"
@@ -1604,15 +1642,15 @@ body {
             />
         
             <line
-                x1="553.39"
+                x1="562.61"
                 y1="49.72"
-                x2="553.39"
+                x2="562.61"
                 y2="74.49"
                 class="candle-down"
             />
 
             <rect
-                x="550.85"
+                x="560.07"
                 y="57.49"
                 width="5.07"
                 height="11.65"
@@ -1620,15 +1658,15 @@ body {
             />
         
             <line
-                x1="562.61"
+                x1="571.83"
                 y1="42.64"
-                x2="562.61"
+                x2="571.83"
                 y2="72.71"
                 class="candle-up"
             />
 
             <rect
-                x="560.07"
+                x="569.30"
                 y="51.91"
                 width="5.07"
                 height="17.23"
@@ -1636,15 +1674,15 @@ body {
             />
         
             <line
-                x1="571.83"
+                x1="581.06"
                 y1="46.24"
-                x2="571.83"
+                x2="581.06"
                 y2="75.37"
                 class="candle-down"
             />
 
             <rect
-                x="569.30"
+                x="578.52"
                 y="51.95"
                 width="5.07"
                 height="19.24"
@@ -1652,15 +1690,15 @@ body {
             />
         
             <line
-                x1="581.06"
+                x1="590.28"
                 y1="70.14"
-                x2="581.06"
+                x2="590.28"
                 y2="85.13"
                 class="candle-down"
             />
 
             <rect
-                x="578.52"
+                x="587.74"
                 y="71.19"
                 width="5.07"
                 height="9.08"
@@ -1668,15 +1706,15 @@ body {
             />
         
             <line
-                x1="590.28"
+                x1="599.50"
                 y1="76.30"
-                x2="590.28"
+                x2="599.50"
                 y2="93.35"
                 class="candle-down"
             />
 
             <rect
-                x="587.74"
+                x="596.96"
                 y="80.24"
                 width="5.07"
                 height="6.84"
@@ -1684,15 +1722,15 @@ body {
             />
         
             <line
-                x1="599.50"
+                x1="608.72"
                 y1="83.97"
-                x2="599.50"
+                x2="608.72"
                 y2="100.68"
                 class="candle-down"
             />
 
             <rect
-                x="596.96"
+                x="606.19"
                 y="87.11"
                 width="5.07"
                 height="4.59"
@@ -1700,15 +1738,15 @@ body {
             />
         
             <line
-                x1="608.72"
+                x1="617.94"
                 y1="87.88"
-                x2="608.72"
+                x2="617.94"
                 y2="100.16"
                 class="candle-down"
             />
 
             <rect
-                x="606.19"
+                x="615.41"
                 y="91.69"
                 width="5.07"
                 height="2.00"
@@ -1716,15 +1754,15 @@ body {
             />
         
             <line
-                x1="617.94"
+                x1="627.17"
                 y1="83.72"
-                x2="617.94"
+                x2="627.17"
                 y2="96.46"
                 class="candle-up"
             />
 
             <rect
-                x="615.41"
+                x="624.63"
                 y="86.81"
                 width="5.07"
                 height="6.88"
@@ -1732,15 +1770,15 @@ body {
             />
         
             <line
-                x1="627.17"
+                x1="636.39"
                 y1="80.56"
-                x2="627.17"
+                x2="636.39"
                 y2="94.60"
                 class="candle-up"
             />
 
             <rect
-                x="624.63"
+                x="633.85"
                 y="86.01"
                 width="5.07"
                 height="2.00"
@@ -1748,15 +1786,15 @@ body {
             />
         
             <line
-                x1="636.39"
+                x1="645.61"
                 y1="83.29"
-                x2="636.39"
+                x2="645.61"
                 y2="107.53"
                 class="candle-down"
             />
 
             <rect
-                x="633.85"
+                x="643.07"
                 y="86.03"
                 width="5.07"
                 height="19.91"
@@ -1764,15 +1802,15 @@ body {
             />
         
             <line
-                x1="645.61"
+                x1="654.83"
                 y1="88.45"
-                x2="645.61"
+                x2="654.83"
                 y2="117.91"
                 class="candle-up"
             />
 
             <rect
-                x="643.07"
+                x="652.30"
                 y="94.42"
                 width="5.07"
                 height="11.51"
@@ -1780,15 +1818,15 @@ body {
             />
         
             <line
-                x1="654.83"
+                x1="664.06"
                 y1="87.63"
-                x2="654.83"
+                x2="664.06"
                 y2="100.77"
                 class="candle-up"
             />
 
             <rect
-                x="652.30"
+                x="661.52"
                 y="91.43"
                 width="5.07"
                 height="3.02"
@@ -1796,15 +1834,15 @@ body {
             />
         
             <line
-                x1="664.06"
+                x1="673.28"
                 y1="83.43"
-                x2="664.06"
+                x2="673.28"
                 y2="92.87"
                 class="candle-up"
             />
 
             <rect
-                x="661.52"
+                x="670.74"
                 y="88.53"
                 width="5.07"
                 height="2.90"
@@ -1812,15 +1850,15 @@ body {
             />
         
             <line
-                x1="673.28"
+                x1="682.50"
                 y1="81.63"
-                x2="673.28"
+                x2="682.50"
                 y2="105.14"
                 class="candle-down"
             />
 
             <rect
-                x="670.74"
+                x="679.96"
                 y="88.53"
                 width="5.07"
                 height="14.12"
@@ -1828,15 +1866,15 @@ body {
             />
         
             <line
-                x1="682.50"
+                x1="691.72"
                 y1="100.82"
-                x2="682.50"
+                x2="691.72"
                 y2="119.06"
                 class="candle-down"
             />
 
             <rect
-                x="679.96"
+                x="689.19"
                 y="102.66"
                 width="5.07"
                 height="14.38"
@@ -1844,15 +1882,15 @@ body {
             />
         
             <line
-                x1="691.72"
+                x1="700.94"
                 y1="115.92"
-                x2="691.72"
+                x2="700.94"
                 y2="135.02"
                 class="candle-down"
             />
 
             <rect
-                x="689.19"
+                x="698.41"
                 y="117.09"
                 width="5.07"
                 height="7.80"
@@ -1860,15 +1898,15 @@ body {
             />
         
             <line
-                x1="700.94"
+                x1="710.17"
                 y1="118.26"
-                x2="700.94"
+                x2="710.17"
                 y2="135.58"
                 class="candle-down"
             />
 
             <rect
-                x="698.41"
+                x="707.63"
                 y="124.88"
                 width="5.07"
                 height="2.00"
@@ -1876,15 +1914,15 @@ body {
             />
         
             <line
-                x1="710.17"
+                x1="719.39"
                 y1="120.18"
-                x2="710.17"
+                x2="719.39"
                 y2="128.88"
                 class="candle-up"
             />
 
             <rect
-                x="707.63"
+                x="716.85"
                 y="122.77"
                 width="5.07"
                 height="3.73"
@@ -1892,15 +1930,15 @@ body {
             />
         
             <line
-                x1="719.39"
+                x1="728.61"
                 y1="118.89"
-                x2="719.39"
+                x2="728.61"
                 y2="127.04"
                 class="candle-down"
             />
 
             <rect
-                x="716.85"
+                x="726.07"
                 y="122.78"
                 width="5.07"
                 height="2.00"
@@ -1908,15 +1946,15 @@ body {
             />
         
             <line
-                x1="728.61"
+                x1="737.83"
                 y1="120.68"
-                x2="728.61"
+                x2="737.83"
                 y2="153.41"
                 class="candle-down"
             />
 
             <rect
-                x="726.07"
+                x="735.30"
                 y="124.46"
                 width="5.07"
                 height="21.95"
@@ -1924,15 +1962,15 @@ body {
             />
         
             <line
-                x1="737.83"
+                x1="747.06"
                 y1="146.27"
-                x2="737.83"
+                x2="747.06"
                 y2="196.84"
                 class="candle-down"
             />
 
             <rect
-                x="735.30"
+                x="744.52"
                 y="146.40"
                 width="5.07"
                 height="44.84"
@@ -1940,15 +1978,15 @@ body {
             />
         
             <line
-                x1="747.06"
+                x1="756.28"
                 y1="184.45"
-                x2="747.06"
+                x2="756.28"
                 y2="217.41"
                 class="candle-down"
             />
 
             <rect
-                x="744.52"
+                x="753.74"
                 y="191.34"
                 width="5.07"
                 height="26.02"
@@ -1956,15 +1994,15 @@ body {
             />
         
             <line
-                x1="756.28"
+                x1="765.50"
                 y1="211.05"
-                x2="756.28"
+                x2="765.50"
                 y2="243.37"
                 class="candle-down"
             />
 
             <rect
-                x="753.74"
+                x="762.96"
                 y="217.31"
                 width="5.07"
                 height="2.12"
@@ -1972,15 +2010,15 @@ body {
             />
         
             <line
-                x1="765.50"
+                x1="774.72"
                 y1="218.46"
-                x2="765.50"
+                x2="774.72"
                 y2="265.00"
                 class="candle-down"
             />
 
             <rect
-                x="762.96"
+                x="772.19"
                 y="219.37"
                 width="5.07"
                 height="28.02"
@@ -1988,15 +2026,15 @@ body {
             />
         
             <line
-                x1="774.72"
+                x1="783.94"
                 y1="241.86"
-                x2="774.72"
+                x2="783.94"
                 y2="261.23"
                 class="candle-down"
             />
 
             <rect
-                x="772.19"
+                x="781.41"
                 y="247.37"
                 width="5.07"
                 height="2.00"
@@ -2004,15 +2042,15 @@ body {
             />
         
             <line
-                x1="783.94"
+                x1="793.17"
                 y1="216.26"
-                x2="783.94"
+                x2="793.17"
                 y2="249.31"
                 class="candle-up"
             />
 
             <rect
-                x="781.41"
+                x="790.63"
                 y="224.89"
                 width="5.07"
                 height="23.04"
@@ -2020,15 +2058,15 @@ body {
             />
         
             <line
-                x1="793.17"
+                x1="802.39"
                 y1="215.70"
-                x2="793.17"
+                x2="802.39"
                 y2="233.19"
                 class="candle-down"
             />
 
             <rect
-                x="790.63"
+                x="799.85"
                 y="224.84"
                 width="5.07"
                 height="2.00"
@@ -2036,15 +2074,15 @@ body {
             />
         
             <line
-                x1="802.39"
+                x1="811.61"
                 y1="222.49"
-                x2="802.39"
+                x2="811.61"
                 y2="249.00"
                 class="candle-down"
             />
 
             <rect
-                x="799.85"
+                x="809.07"
                 y="226.31"
                 width="5.07"
                 height="14.07"
@@ -2052,15 +2090,15 @@ body {
             />
         
             <line
-                x1="811.61"
+                x1="820.83"
                 y1="229.27"
-                x2="811.61"
+                x2="820.83"
                 y2="248.69"
                 class="candle-down"
             />
 
             <rect
-                x="809.07"
+                x="818.30"
                 y="240.39"
                 width="5.07"
                 height="2.00"
@@ -2068,15 +2106,15 @@ body {
             />
         
             <line
-                x1="820.83"
+                x1="830.06"
                 y1="218.94"
-                x2="820.83"
+                x2="830.06"
                 y2="242.28"
                 class="candle-up"
             />
 
             <rect
-                x="818.30"
+                x="827.52"
                 y="221.76"
                 width="5.07"
                 height="20.51"
@@ -2084,15 +2122,15 @@ body {
             />
         
             <line
-                x1="830.06"
+                x1="839.28"
                 y1="214.26"
-                x2="830.06"
+                x2="839.28"
                 y2="229.36"
                 class="candle-down"
             />
 
             <rect
-                x="827.52"
+                x="836.74"
                 y="221.90"
                 width="5.07"
                 height="2.00"
@@ -2100,15 +2138,15 @@ body {
             />
         
             <line
-                x1="839.28"
+                x1="848.50"
                 y1="210.69"
-                x2="839.28"
+                x2="848.50"
                 y2="223.02"
                 class="candle-up"
             />
 
             <rect
-                x="836.74"
+                x="845.96"
                 y="213.41"
                 width="5.07"
                 height="8.54"
@@ -2116,15 +2154,15 @@ body {
             />
         
             <line
-                x1="848.50"
+                x1="857.72"
                 y1="200.51"
-                x2="848.50"
+                x2="857.72"
                 y2="221.05"
                 class="candle-up"
             />
 
             <rect
-                x="845.96"
+                x="855.19"
                 y="200.89"
                 width="5.07"
                 height="12.53"
@@ -2132,15 +2170,15 @@ body {
             />
         
             <line
-                x1="857.72"
+                x1="866.94"
                 y1="185.96"
-                x2="857.72"
+                x2="866.94"
                 y2="204.72"
                 class="candle-up"
             />
 
             <rect
-                x="855.19"
+                x="864.41"
                 y="195.27"
                 width="5.07"
                 height="5.62"
@@ -2148,34 +2186,18 @@ body {
             />
         
             <line
-                x1="866.94"
+                x1="876.17"
                 y1="189.06"
-                x2="866.94"
+                x2="876.17"
                 y2="204.73"
                 class="candle-down"
             />
 
             <rect
-                x="864.41"
+                x="873.63"
                 y="195.27"
                 width="5.07"
                 height="6.69"
-                class="candle-down"
-            />
-        
-            <line
-                x1="876.17"
-                y1="194.63"
-                x2="876.17"
-                y2="218.75"
-                class="candle-down"
-            />
-
-            <rect
-                x="873.63"
-                y="201.96"
-                width="5.07"
-                height="11.48"
                 class="candle-down"
             />
         
@@ -2206,16 +2228,16 @@ body {
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="166.06,331.39 175.28,333.45 184.50,334.81 193.72,330.69 202.94,325.09 212.17,332.89 221.39,324.43 230.61,327.90 239.83,320.18 249.06,309.48 258.28,309.31 267.50,316.33 276.72,312.57 285.94,315.21 295.17,314.00 304.39,310.00 313.61,308.32 322.83,312.54 332.06,318.94 341.28,316.33 350.50,319.44 359.72,315.28 368.94,315.92 378.17,319.35 387.39,319.24 396.61,312.10 405.83,320.92 415.06,322.79 424.28,325.38 433.50,325.02 442.72,325.22 451.94,320.73 461.17,315.14 470.39,316.40 479.61,315.32 488.83,317.84 498.06,322.87 507.28,319.82 516.50,319.15 525.72,318.32 534.94,315.10 544.17,316.01 553.39,318.25 562.61,316.11 571.83,325.39 581.06,328.71 590.28,329.95 599.50,334.23 608.72,337.95 617.94,337.28 627.17,334.27 636.39,338.62 645.61,336.48 654.83,340.14 664.06,338.49 673.28,338.82 682.50,339.25 691.72,346.77 700.94,344.55 710.17,341.31 719.39,340.30 728.61,343.34 737.83,347.94 747.06,351.84 756.28,352.19 765.50,352.53 774.72,356.39 783.94,350.00 793.17,350.91 802.39,350.91 811.61,350.27 820.83,343.95 830.06,343.83 839.28,342.63 848.50,339.58 857.72,335.88 866.94,329.80 876.17,326.56 885.39,329.83" />
+            <polyline fill="none" class="rsi-line" points="175.28,331.39 184.50,333.45 193.72,334.81 202.94,330.69 212.17,325.09 221.39,332.89 230.61,324.43 239.83,327.90 249.06,320.18 258.28,309.48 267.50,309.31 276.72,316.33 285.94,312.57 295.17,315.21 304.39,314.00 313.61,310.00 322.83,308.32 332.06,312.54 341.28,318.94 350.50,316.33 359.72,319.44 368.94,315.28 378.17,315.92 387.39,319.35 396.61,319.24 405.83,312.10 415.06,320.92 424.28,322.79 433.50,325.38 442.72,325.02 451.94,325.22 461.17,320.73 470.39,315.14 479.61,316.40 488.83,315.32 498.06,317.84 507.28,322.87 516.50,319.82 525.72,319.15 534.94,318.32 544.17,315.10 553.39,316.01 562.61,318.25 571.83,316.11 581.06,325.39 590.28,328.71 599.50,329.95 608.72,334.23 617.94,337.95 627.17,337.28 636.39,334.27 645.61,338.62 654.83,336.48 664.06,340.14 673.28,338.49 682.50,338.82 691.72,339.25 700.94,346.77 710.17,344.55 719.39,341.31 728.61,340.30 737.83,343.34 747.06,347.94 756.28,351.84 765.50,352.19 774.72,352.53 783.94,356.39 793.17,350.00 802.39,350.91 811.61,350.91 820.83,350.27 830.06,343.95 839.28,343.83 848.50,342.63 857.72,339.58 866.94,335.88 876.17,329.80 885.39,330.11" />
 
-            <text x="60" y="382" class="axis-text">21/03</text>
+            <text x="60" y="382" class="axis-text">20/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
 
         </svg>
 
         <div class="chart-meta">
-            <span>Giá BTC/USD mới nhất: <strong>62,683.05</strong></span>
-            <span>RSI 14 ngày: <strong>46.41</strong></span>
+            <span>Giá BTC/USD mới nhất: <strong>62,750.01</strong></span>
+            <span>RSI 14 ngày: <strong>45.98</strong></span>
         </div>
     </div>
     
@@ -2224,7 +2246,7 @@ body {
 
     <section class="panel chart-section">
         <div class="panel-title">
-            <h2>🟡 Vàng / Nến ngày / 3 tháng</h2>
+            <h2>🟡 Vàng thế giới / Nến ngày / 3 tháng</h2>
             <div class="panel-badge">GC=F</div>
         </div>
 
@@ -3269,7 +3291,7 @@ body {
                 x1="883.62"
                 y1="214.82"
                 x2="883.62"
-                y2="227.07"
+                y2="228.92"
                 class="candle-down"
             />
 
@@ -3277,7 +3299,7 @@ body {
                 x="880.10"
                 y="214.87"
                 width="7.02"
-                height="11.09"
+                height="13.62"
                 class="candle-down"
             />
         
@@ -3292,7 +3314,7 @@ body {
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="232.38,333.06 245.15,330.64 257.92,322.34 270.69,322.34 283.46,317.12 296.23,315.33 309.00,319.47 321.77,311.87 334.54,312.79 347.31,316.44 360.08,325.47 372.85,329.82 385.62,324.62 398.38,324.06 411.15,326.60 423.92,335.33 436.69,339.67 449.46,334.35 462.23,332.76 475.00,341.25 487.77,338.32 500.54,331.48 513.31,333.99 526.08,331.19 538.85,326.49 551.62,330.20 564.38,327.87 577.15,329.69 589.92,332.82 602.69,329.45 615.46,329.44 628.23,331.97 641.00,332.39 653.77,327.40 666.54,331.16 679.31,345.70 692.08,341.90 704.85,338.04 717.62,341.22 730.38,338.65 743.15,342.08 755.92,338.43 768.69,339.00 781.46,338.93 794.23,339.90 807.00,345.31 819.77,346.19 832.54,338.71 845.31,333.22 858.08,331.58 870.85,332.54 883.62,339.44" />
+            <polyline fill="none" class="rsi-line" points="232.38,333.06 245.15,330.64 257.92,322.34 270.69,322.34 283.46,317.12 296.23,315.33 309.00,319.47 321.77,311.87 334.54,312.79 347.31,316.44 360.08,325.47 372.85,329.82 385.62,324.62 398.38,324.06 411.15,326.60 423.92,335.33 436.69,339.67 449.46,334.35 462.23,332.76 475.00,341.25 487.77,338.32 500.54,331.48 513.31,333.99 526.08,331.19 538.85,326.49 551.62,330.20 564.38,327.87 577.15,329.69 589.92,332.82 602.69,329.45 615.46,329.44 628.23,331.97 641.00,332.39 653.77,327.40 666.54,331.16 679.31,345.70 692.08,341.90 704.85,338.04 717.62,341.22 730.38,338.65 743.15,342.08 755.92,338.43 768.69,339.00 781.46,338.93 794.23,339.90 807.00,345.31 819.77,346.19 832.54,338.71 845.31,333.22 858.08,331.58 870.85,332.54 883.62,339.64" />
 
             <text x="60" y="382" class="axis-text">18/03</text>
             <text x="845" y="382" class="axis-text">18/06</text>
@@ -3300,8 +3322,8 @@ body {
         </svg>
 
         <div class="chart-meta">
-            <span>Giá Gold Futures mới nhất: <strong>4,186.90</strong></span>
-            <span>RSI 14 ngày: <strong>31.63</strong></span>
+            <span>Giá Gold Futures mới nhất: <strong>4,176.80</strong></span>
+            <span>RSI 14 ngày: <strong>31.32</strong></span>
         </div>
     </div>
     
@@ -3324,7 +3346,7 @@ body {
             <line x1="60" y1="265" x2="890" y2="265" class="grid-line" />
 
             <text x="10" y="40" class="axis-text">1,843.35</text>
-            <text x="10" y="265" class="axis-text">1,826.02</text>
+            <text x="10" y="265" class="axis-text">1,825.51</text>
 
             
             <line
@@ -3337,9 +3359,9 @@ body {
 
             <rect
                 x="470.00"
-                y="205.94"
+                y="201.05"
                 width="10.00"
-                height="51.23"
+                height="49.76"
                 class="candle-down"
             />
         
@@ -3371,7 +3393,7 @@ body {
 
 
     <div class="footer">
-        Dữ liệu được tổng hợp tự động từ RSS, Yahoo Finance, CoinGecko và OpenAI API.
+        Dữ liệu được tổng hợp tự động từ RSS, Yahoo Finance, CoinGecko, nguồn giá vàng trong nước và OpenAI API.
     </div>
 
 </div>
