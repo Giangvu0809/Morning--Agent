@@ -67,7 +67,7 @@
 
         .hero p {
             color: var(--muted);
-            max-width: 820px;
+            max-width: 850px;
             font-size: 16px;
             line-height: 1.7;
         }
@@ -135,7 +135,9 @@
             margin-bottom: 18px;
         }
 
-        .panel-header {
+        .panel-header,
+        .chart-card-header,
+        .section-title-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -152,7 +154,8 @@
         }
 
         h2,
-        h3 {
+        h3,
+        h4 {
             margin: 0;
             letter-spacing: -0.03em;
         }
@@ -165,26 +168,38 @@
             font-size: 18px;
         }
 
+        h4 {
+            margin-top: 18px;
+            font-size: 15px;
+        }
+
         .executive-grid {
             display: grid;
             grid-template-columns: 1.1fr 1fr 1fr;
             gap: 14px;
         }
 
-        .insight-card {
+        .insight-card,
+        .fulltime-box,
+        .job-card,
+        .client-card {
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
             border-radius: 18px;
             padding: 18px;
         }
 
-        .insight-card p {
+        .insight-card p,
+        .fulltime-box p,
+        .client-card p {
             color: var(--muted);
             line-height: 1.65;
             margin-bottom: 0;
         }
 
-        .insight-card ul {
+        .insight-card ul,
+        .fulltime-box ul,
+        .job-card ul {
             margin: 12px 0 0;
             padding-left: 20px;
             color: var(--muted);
@@ -315,7 +330,8 @@
             border: 1px solid var(--border);
         }
 
-        .coin-line {
+        .coin-line,
+        .job-top {
             display: flex;
             justify-content: space-between;
             gap: 12px;
@@ -328,13 +344,15 @@
             font-weight: 900;
         }
 
-        .coin-name {
+        .coin-name,
+        .job-card p {
             color: var(--muted);
             font-size: 13px;
         }
 
-        .score-badge {
-            min-width: 44px;
+        .score-badge,
+        .match-score {
+            min-width: 48px;
             text-align: center;
             padding: 8px 10px;
             border-radius: 14px;
@@ -391,6 +409,48 @@
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
+        .career-layout {
+            display: grid;
+            gap: 22px;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .client-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .job-meta,
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .job-meta span,
+        .tag-row span {
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.045);
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .apply-link {
+            display: inline-flex;
+            margin-top: 14px;
+            color: var(--accent);
+            font-weight: 800;
+        }
+
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -401,14 +461,6 @@
         .chart-card {
             padding: 20px;
             overflow: hidden;
-        }
-
-        .chart-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 10px;
         }
 
         .chart-note {
@@ -540,7 +592,12 @@
             .market-grid,
             .alpha-grid,
             .news-grid,
-            .executive-grid {
+            .executive-grid,
+            .jobs-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .client-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
@@ -552,7 +609,8 @@
         @media (max-width: 720px) {
             .hero,
             .panel-header,
-            .chart-card-header {
+            .chart-card-header,
+            .section-title-row {
                 flex-direction: column;
             }
 
@@ -560,7 +618,9 @@
             .market-grid,
             .alpha-grid,
             .news-grid,
-            .executive-grid {
+            .executive-grid,
+            .jobs-grid,
+            .client-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -583,12 +643,12 @@
             <div>
                 <h1>Morning Financial Intelligence</h1>
                 <p>
-                    Bản tin phân tích tài chính tự động ngày 19/06/2026: tổng hợp thị trường,
-                    rủi ro, cơ hội crypto, vàng, VNINDEX, tin tức và tín hiệu kỹ thuật.
+                    Bản tin phân tích tài chính và cơ hội thu nhập tự động ngày 19/06/2026: thị trường,
+                    crypto alpha, tin tức, remote job, full-time job theo CV và nhóm khách hàng dễ chốt dịch vụ.
                 </p>
             </div>
 
-            <div class="time-chip">Cập nhật: 19/06/2026 09:07:02</div>
+            <div class="time-chip">Cập nhật: 19/06/2026 09:43:36</div>
         </header>
 
         <section class="kpi-grid">
@@ -600,32 +660,30 @@
 
             <article class="kpi-card">
                 <span>Bitcoin</span>
-                <strong>$62,507.00</strong>
+                <strong>$62,389.00</strong>
                 <em class="negative">
-                    -2.81%
+                    -2.87%
                 </em>
             </article>
 
             <article class="kpi-card">
                 <span>Gold World</span>
-                <strong>$4,186.30/oz</strong>
+                <strong>$4,183.30/oz</strong>
                 <em class="negative">
-                    -0.89%
+                    -0.97%
                 </em>
             </article>
 
             <article class="kpi-card">
-                <span>VNINDEX</span>
-                <strong>1,824.53</strong>
-                <em class="neutral">
-                    N/A
-                </em>
+                <span>Remote Jobs</span>
+                <strong>10</strong>
+                <em class="neutral">Job phù hợp đã lọc</em>
             </article>
 
             <article class="kpi-card">
-                <span>Curated News</span>
-                <strong>13</strong>
-                <em class="neutral">Tin đã lọc theo chủ đề tài chính</em>
+                <span>Client Leads</span>
+                <strong>5</strong>
+                <em class="neutral">Nhóm dễ chốt Google Ads</em>
             </article>
         </section>
 
@@ -633,7 +691,7 @@
             <div class="panel-header">
                 <div>
                     <span class="eyebrow">Executive Summary</span>
-                    <h2>Market Intelligence Brief</h2>
+                    <h2>Market & Opportunity Brief</h2>
                 </div>
                 <span class="tag">Risk-off</span>
             </div>
@@ -652,10 +710,346 @@
 
                 <article class="insight-card">
                     <h3>Việc nên theo dõi</h3>
-                    <ul><li>Theo dõi Bitcoin có giữ được vùng hỗ trợ gần nhất hay không.</li><li>Crypto đang ở vùng sợ hãi, ưu tiên quan sát thay vì FOMO.</li><li>Theo dõi vàng thế giới để xác nhận xu hướng giảm hay chỉ là điều chỉnh ngắn hạn.</li><li>Không dùng dashboard như khuyến nghị mua bán; chỉ dùng để phát hiện tín hiệu cần nghiên cứu thêm.</li></ul>
+                    <ul><li>Theo dõi Bitcoin có giữ được vùng hỗ trợ gần nhất hay không.</li><li>Crypto đang ở vùng sợ hãi, ưu tiên quan sát thay vì FOMO.</li><li>Theo dõi vàng thế giới để xác nhận xu hướng giảm hay chỉ là điều chỉnh ngắn hạn.</li><li>Xem 10 remote job phù hợp trong mục Cơ hội nghề nghiệp.</li><li>Ưu tiên tiếp cận nhóm khách hàng dễ chốt: học lái xe, sửa máy lạnh, trung tâm đào tạo.</li><li>Không dùng dashboard như khuyến nghị mua bán; chỉ dùng để phát hiện tín hiệu cần nghiên cứu thêm.</li></ul>
                 </article>
             </div>
         </section>
+
+        
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <span class="eyebrow">Career Opportunities</span>
+                <h2>Cơ hội nghề nghiệp</h2>
+            </div>
+            <div class="updated-pill">Updated: 2026-06-19 09:43:17</div>
+        </div>
+
+        <div class="career-layout">
+            <section>
+                <div class="section-title-row">
+                    <h3>Remote Jobs phù hợp</h3>
+                    <span class="tag">10 job</span>
+                </div>
+                <div class="jobs-grid">
+                    
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Marketing &amp; Communication Lead Italy</h3>
+                    <p>Base.com · Remote</p>
+                </div>
+                <div class="match-score">96%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến lead generation</li><li>Liên quan đến seo</li><li>Liên quan đến content marketing</li></ul>
+
+            <div class="tag-row"><span>saas</span><span>amazon</span><span>sys admin</span><span>technical</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-marketing-amp-communication-lead-italy-base-com-1133496" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Interested future Corporate positions</h3>
+                    <p>Weedmaps · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>hr</span><span>virtual assistant</span><span>medical</span><span>customer support</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-interested-future-corporate-positions-weedmaps-1133673" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Data Entry</h3>
+                    <p>Smart IT Frame LLC · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>exec</span><span>content writing</span><span>junior</span><span>marketing</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-data-entry-smart-it-frame-llc-1133577" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Virtual Assistant</h3>
+                    <p>OnlineJobs.PH · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>exec</span><span>content writing</span><span>junior</span><span>marketing</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-virtual-assistant-onlinejobs-ph-1133575" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Entry Level Administrative Assistant</h3>
+                    <p>RecruitLytixs Hires · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>exec</span><span>customer support</span><span>dev</span><span>travel</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-entry-level-administrative-assistant-recruitlytixs-hires-1133566" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Junior Customer Success Representative</h3>
+                    <p>Mission Inbox · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến seo</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>writer</span><span>strategy</span><span>customer support</span><span>marketing</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-junior-customer-success-representative-mission-inbox-1133540" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Customer Support Specialist Shopbop</h3>
+                    <p>Shopbop · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>hr</span><span>virtual assistant</span><span>medical</span><span>customer support</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-customer-support-specialist-shopbop-shopbop-1133672" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Front End Developer Fresher</h3>
+                    <p>ZYPHRA TECH · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>exec</span><span>customer support</span><span>dev</span><span>travel</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-front-end-developer-fresher-zyphra-tech-1133568" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Analyst Customer Success Measurement US</h3>
+                    <p>Cint · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến virtual assistant</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>exec</span><span>content writing</span><span>junior</span><span>marketing</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-analyst-customer-success-measurement-us-cint-1133576" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+        <article class="job-card">
+            <div class="job-top">
+                <div>
+                    <h3>Technical Support Specialist</h3>
+                    <p>INNERGY · Remote</p>
+                </div>
+                <div class="match-score">68%</div>
+            </div>
+
+            <div class="job-meta">
+                <span>Không công khai</span>
+                <span>RemoteOK</span>
+            </div>
+
+            <ul><li>Liên quan đến automation</li><li>Có dấu hiệu phù hợp người mới/junior</li><li>Liên quan AI/automation</li></ul>
+
+            <div class="tag-row"><span>customer support</span><span>design</span><span>education</span><span>technical</span></div>
+
+            <a class="apply-link" href="https://remoteOK.com/remote-jobs/remote-technical-support-specialist-innergy-1133586" target="_blank" rel="noopener noreferrer">
+                Xem job / Apply →
+            </a>
+        </article>
+        
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title-row">
+                    <h3>Full-time Jobs theo CV</h3>
+                    <span class="tag">Chờ CV</span>
+                </div>
+
+                <div class="fulltime-box">
+                    <p>Chưa có CV. Sau khi bạn gửi CV, agent sẽ phân tích năng lực và tìm full-time job phù hợp.</p>
+
+                    <h4>Nhóm vị trí có thể phù hợp</h4>
+                    <ul><li>Digital Marketing Executive</li><li>Google Ads Junior Specialist</li><li>Performance Marketing Assistant</li><li>AI Automation Assistant</li><li>Lead Generation Executive</li></ul>
+
+                    <h4>Cách kích hoạt</h4>
+                    <ul><li>Upload CV bản PDF/DOCX.</li><li>Agent sẽ trích xuất kỹ năng, kinh nghiệm, project cá nhân.</li><li>Agent sẽ tìm job phù hợp trên thị trường và chấm điểm match.</li><li>Dashboard sẽ hiển thị job nên apply trước.</li></ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title-row">
+                    <h3>Đối tượng dễ chốt dịch vụ Google Ads</h3>
+                    <span class="tag">5 nhóm</span>
+                </div>
+                <div class="client-grid">
+                    
+        <article class="client-card">
+            <div class="job-top">
+                <div>
+                    <h3>Trung tâm học lái xe</h3>
+                    <p>Nhu cầu tìm học viên rõ ràng, khách thường tìm trực tiếp trên Google.</p>
+                </div>
+                <div class="match-score">90</div>
+            </div>
+            <p><strong>Gợi ý chào bán:</strong> Gói thử nghiệm Google Ads 30 ngày, phí setup/quản lý thấp.</p>
+        </article>
+        
+        <article class="client-card">
+            <div class="job-top">
+                <div>
+                    <h3>Dịch vụ sửa máy lạnh</h3>
+                    <p>Nhu cầu khẩn cấp, từ khóa địa phương dễ ra lead.</p>
+                </div>
+                <div class="match-score">88</div>
+            </div>
+            <p><strong>Gợi ý chào bán:</strong> Chạy Search Ads theo khu vực, đo cuộc gọi/Zalo.</p>
+        </article>
+        
+        <article class="client-card">
+            <div class="job-top">
+                <div>
+                    <h3>Trung tâm tiếng Anh nhỏ</h3>
+                    <p>Cần học viên liên tục, dễ chốt gói ngân sách nhỏ.</p>
+                </div>
+                <div class="match-score">84</div>
+            </div>
+            <p><strong>Gợi ý chào bán:</strong> Chiến dịch tìm học viên mới theo khóa học.</p>
+        </article>
+        
+        <article class="client-card">
+            <div class="job-top">
+                <div>
+                    <h3>Visa / du học nhỏ</h3>
+                    <p>Lead có giá trị cao, người dùng tìm kiếm chủ động.</p>
+                </div>
+                <div class="match-score">82</div>
+            </div>
+            <p><strong>Gợi ý chào bán:</strong> Landing page + Google Search Ads theo quốc gia.</p>
+        </article>
+        
+        <article class="client-card">
+            <div class="job-top">
+                <div>
+                    <h3>Rèm cửa / nội thất nhỏ</h3>
+                    <p>Đơn hàng đủ lớn, chỉ cần vài khách/tháng là thấy hiệu quả.</p>
+                </div>
+                <div class="match-score">78</div>
+            </div>
+            <p><strong>Gợi ý chào bán:</strong> Chạy từ khóa theo khu vực và nhóm sản phẩm.</p>
+        </article>
+        
+                </div>
+            </section>
+        </div>
+    </section>
+    
 
         <section class="panel">
             <div class="panel-header">
@@ -670,9 +1064,9 @@
     <p><strong>AI Market Brief đang dùng chế độ fallback.</strong></p>
     <p>
         Thị trường đang được cập nhật tự động. Bitcoin hiện biến động 
-        <strong>-2.81%</strong>, vàng SJC biến động 
+        <strong>-2.87%</strong>, vàng SJC biến động 
         <strong>N/A</strong>, 
-        vàng thế giới biến động <strong>-0.89%</strong>, 
+        vàng thế giới biến động <strong>-0.97%</strong>, 
         còn VNINDEX ghi nhận <strong>N/A</strong>.
     </p>
     <ul>
@@ -692,7 +1086,7 @@
                 <span class="eyebrow">Opportunity Radar</span>
                 <h2>Crypto Alpha Signals</h2>
             </div>
-            <div class="updated-pill">Updated: 2026-06-19 09:06:44</div>
+            <div class="updated-pill">Updated: 2026-06-19 09:43:17</div>
         </div>
 
         <div class="crypto-overview">
@@ -720,40 +1114,17 @@
             </div>
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+28.00%</strong>
+                <strong class="positive">+34.88%</strong>
             </div>
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$92,591,622</strong>
+                <strong>$95,036,968</strong>
             </div>
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
             <p>Volume 24h rất cao so với market cap; Giá tăng mạnh trong 24h</p>
-        </article>
-        
-        <article class="alpha-card">
-            <div class="coin-line">
-                <div>
-                    <div class="coin-symbol">JTO</div>
-                    <div class="coin-name">Jito</div>
-                </div>
-                <div class="score-badge">70</div>
-            </div>
-            <div class="metric-row">
-                <span>24h</span>
-                <strong class="positive">+6.94%</strong>
-            </div>
-            <div class="metric-row">
-                <span>Volume</span>
-                <strong>$89,603,647</strong>
-            </div>
-            <div class="metric-row">
-                <span>Funding</span>
-                <strong>N/A</strong>
-            </div>
-            <p>Volume 24h rất cao so với market cap; Động lượng giá tích cực trong 24h</p>
         </article>
         
         <article class="alpha-card">
@@ -766,11 +1137,11 @@
             </div>
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="positive">+1.28%</strong>
+                <strong class="negative">-0.30%</strong>
             </div>
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$732,200,383</strong>
+                <strong>$494,883,082</strong>
             </div>
             <div class="metric-row">
                 <span>Funding</span>
@@ -789,11 +1160,11 @@
             </div>
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-0.18%</strong>
+                <strong class="positive">+0.01%</strong>
             </div>
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$409,387,698</strong>
+                <strong>$412,161,539</strong>
             </div>
             <div class="metric-row">
                 <span>Funding</span>
@@ -812,11 +1183,11 @@
             </div>
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-2.44%</strong>
+                <strong class="negative">-2.18%</strong>
             </div>
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$358,393,567</strong>
+                <strong>$361,135,233</strong>
             </div>
             <div class="metric-row">
                 <span>Funding</span>
@@ -835,17 +1206,63 @@
             </div>
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-14.48%</strong>
+                <strong class="negative">-14.24%</strong>
             </div>
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$165,469,980</strong>
+                <strong>$165,470,182</strong>
             </div>
             <div class="metric-row">
                 <span>Funding</span>
                 <strong>N/A</strong>
             </div>
             <p>Volume 24h rất cao so với market cap; Giảm mạnh, có thể xuất hiện cơ hội bắt đáy rủi ro cao</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">JTO</div>
+                    <div class="coin-name">Jito</div>
+                </div>
+                <div class="score-badge">55</div>
+            </div>
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="positive">+3.96%</strong>
+            </div>
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$89,252,403</strong>
+            </div>
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+            <p>Volume 24h rất cao so với market cap; Xu hướng 7 ngày tích cực</p>
+        </article>
+        
+        <article class="alpha-card">
+            <div class="coin-line">
+                <div>
+                    <div class="coin-symbol">XLM</div>
+                    <div class="coin-name">Stellar</div>
+                </div>
+                <div class="score-badge">45</div>
+            </div>
+            <div class="metric-row">
+                <span>24h</span>
+                <strong class="negative">-10.29%</strong>
+            </div>
+            <div class="metric-row">
+                <span>Volume</span>
+                <strong>$713,427,169</strong>
+            </div>
+            <div class="metric-row">
+                <span>Funding</span>
+                <strong>N/A</strong>
+            </div>
+            <p>Volume 24h tăng đáng chú ý; Giảm mạnh, có thể xuất hiện cơ hội bắt đáy rủi ro cao</p>
         </article>
         
         <article class="alpha-card">
@@ -858,34 +1275,11 @@
             </div>
             <div class="metric-row">
                 <span>24h</span>
-                <strong class="negative">-0.01%</strong>
+                <strong class="positive">+0.03%</strong>
             </div>
             <div class="metric-row">
                 <span>Volume</span>
-                <strong>$1,202,939,949</strong>
-            </div>
-            <div class="metric-row">
-                <span>Funding</span>
-                <strong>N/A</strong>
-            </div>
-            <p>Volume 24h rất cao so với market cap; Thị trường đang sợ hãi, có thể có cơ hội tích lũy</p>
-        </article>
-        
-        <article class="alpha-card">
-            <div class="coin-line">
-                <div>
-                    <div class="coin-symbol">NIGHT</div>
-                    <div class="coin-name">Midnight</div>
-                </div>
-                <div class="score-badge">40</div>
-            </div>
-            <div class="metric-row">
-                <span>24h</span>
-                <strong class="positive">+2.19%</strong>
-            </div>
-            <div class="metric-row">
-                <span>Volume</span>
-                <strong>$298,645,889</strong>
+                <strong>$1,192,438,350</strong>
             </div>
             <div class="metric-row">
                 <span>Funding</span>
@@ -902,27 +1296,27 @@
                 <ul>
             <li>
                 <span>SYN</span>
-                <strong class="positive">+28.00%</strong>
+                <strong class="positive">+34.88%</strong>
             </li>
             
             <li>
                 <span>JTO</span>
-                <strong class="positive">+6.94%</strong>
+                <strong class="positive">+3.96%</strong>
             </li>
             
             <li>
                 <span>NIGHT</span>
-                <strong class="positive">+2.19%</strong>
+                <strong class="positive">+0.68%</strong>
             </li>
             
             <li>
-                <span>WLD</span>
-                <strong class="positive">+1.28%</strong>
+                <span>TRX</span>
+                <strong class="positive">+0.18%</strong>
             </li>
             
             <li>
-                <span>MPRA</span>
-                <strong class="positive">+0.19%</strong>
+                <span>RUSD</span>
+                <strong class="positive">+0.07%</strong>
             </li>
             </ul>
             </div>
@@ -930,28 +1324,28 @@
                 <h3>Top Losers 24h</h3>
                 <ul>
             <li>
-                <span>RE</span>
-                <strong class="negative">-18.39%</strong>
-            </li>
-            
-            <li>
                 <span>XPL</span>
-                <strong class="negative">-14.48%</strong>
-            </li>
-            
-            <li>
-                <span>AVAX</span>
-                <strong class="negative">-9.17%</strong>
+                <strong class="negative">-14.24%</strong>
             </li>
             
             <li>
                 <span>XLM</span>
-                <strong class="negative">-8.43%</strong>
+                <strong class="negative">-10.29%</strong>
             </li>
             
             <li>
                 <span>ASTER</span>
-                <strong class="negative">-8.14%</strong>
+                <strong class="negative">-9.10%</strong>
+            </li>
+            
+            <li>
+                <span>AVAX</span>
+                <strong class="negative">-8.59%</strong>
+            </li>
+            
+            <li>
+                <span>BCH</span>
+                <strong class="negative">-7.66%</strong>
             </li>
             </ul>
             </div>
@@ -965,7 +1359,7 @@
             
             <li>
                 <span>BTC</span>
-                <strong>$29,027,560,009</strong>
+                <strong>$29,400,027,359</strong>
             </li>
             
             <li>
@@ -975,12 +1369,12 @@
             
             <li>
                 <span>ETH</span>
-                <strong>$11,841,515,437</strong>
+                <strong>$11,761,633,706</strong>
             </li>
             
             <li>
                 <span>SOL</span>
-                <strong>$2,587,353,193</strong>
+                <strong>$2,625,793,036</strong>
             </li>
             </ul>
             </div>
@@ -1005,9 +1399,9 @@
                 <article class="insight-card">
                     <h3>Gold Signal</h3>
                     <p>
-                        Vàng thế giới: <strong>$4,186.30/oz</strong>,
+                        Vàng thế giới: <strong>$4,183.30/oz</strong>,
                         biến động <strong class="negative">
-                        -0.89%</strong>.
+                        -0.97%</strong>.
                         Vàng SJC: <strong>N/A</strong>.
                     </p>
                 </article>
@@ -1034,17 +1428,17 @@
             <div class="market-grid">
                 <article class="market-item">
                     <span>Bitcoin USD</span>
-                    <strong>$62,507.00</strong>
+                    <strong>$62,389.00</strong>
                     <em class="negative">
-                        -2.81% — Giảm trong 24h
+                        -2.87% — Giảm trong 24h
                     </em>
                 </article>
 
                 <article class="market-item">
                     <span>Bitcoin VND</span>
-                    <strong>1,645,787,431 VND</strong>
+                    <strong>1,642,694,601 VND</strong>
                     <em class="negative">
-                        -2.81%
+                        -2.87%
                     </em>
                 </article>
 
@@ -1059,9 +1453,9 @@
 
                 <article class="market-item">
                     <span>Vàng thế giới</span>
-                    <strong>$4,186.30/oz</strong>
+                    <strong>$4,183.30/oz</strong>
                     <em class="negative">
-                        -0.89%
+                        -0.97%
                     </em>
                 </article>
 
@@ -1083,7 +1477,7 @@
                 <span class="eyebrow">Technical Analysis</span>
                 <h3>Bitcoin Technical Chart</h3>
             </div>
-            <div class="rsi-pill">RSI: 45.75</div>
+            <div class="rsi-pill">RSI: 45.53</div>
         </div>
         <p class="chart-note">RSI trung tính.</p>
         <div class="chart-box">
@@ -2509,17 +2903,17 @@
         
             <line
                 x1="876.17"
-                y1="210.34"
+                y1="194.63"
                 x2="876.17"
-                y2="234.97"
+                y2="218.75"
                 class="candle-down"
             />
 
             <rect
                 x="873.63"
-                y="213.43"
+                y="201.96"
                 width="5.07"
-                height="14.79"
+                height="11.48"
                 class="candle-down"
             />
         
@@ -2527,7 +2921,7 @@
                 x1="885.39"
                 y1="227.00"
                 x2="885.39"
-                y2="233.14"
+                y2="233.82"
                 class="candle-down"
             />
 
@@ -2535,7 +2929,7 @@
                 x="882.85"
                 y="228.35"
                 width="5.07"
-                height="4.12"
+                height="4.87"
                 class="candle-down"
             />
         
@@ -2550,7 +2944,7 @@
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="166.06,331.39 175.28,333.45 184.50,334.81 193.72,330.69 202.94,325.09 212.17,332.89 221.39,324.43 230.61,327.90 239.83,320.18 249.06,309.48 258.28,309.31 267.50,316.33 276.72,312.57 285.94,315.21 295.17,314.00 304.39,310.00 313.61,308.32 322.83,312.54 332.06,318.94 341.28,316.33 350.50,319.44 359.72,315.28 368.94,315.92 378.17,319.35 387.39,319.24 396.61,312.10 405.83,320.92 415.06,322.79 424.28,325.38 433.50,325.02 442.72,325.22 451.94,320.73 461.17,315.14 470.39,316.40 479.61,315.32 488.83,317.84 498.06,322.87 507.28,319.82 516.50,319.15 525.72,318.32 534.94,315.10 544.17,316.01 553.39,318.25 562.61,316.11 571.83,325.39 581.06,328.71 590.28,329.95 599.50,334.23 608.72,337.95 617.94,337.28 627.17,334.27 636.39,338.62 645.61,336.48 654.83,340.14 664.06,338.49 673.28,338.82 682.50,339.25 691.72,346.77 700.94,344.55 710.17,341.31 719.39,340.30 728.61,343.34 737.83,347.94 747.06,351.84 756.28,352.19 765.50,352.53 774.72,356.39 783.94,350.00 793.17,350.91 802.39,350.91 811.61,350.27 820.83,343.95 830.06,343.83 839.28,342.63 848.50,339.58 857.72,335.88 866.94,329.80 876.17,329.83 885.39,330.26" />
+            <polyline fill="none" class="rsi-line" points="166.06,331.39 175.28,333.45 184.50,334.81 193.72,330.69 202.94,325.09 212.17,332.89 221.39,324.43 230.61,327.90 239.83,320.18 249.06,309.48 258.28,309.31 267.50,316.33 276.72,312.57 285.94,315.21 295.17,314.00 304.39,310.00 313.61,308.32 322.83,312.54 332.06,318.94 341.28,316.33 350.50,319.44 359.72,315.28 368.94,315.92 378.17,319.35 387.39,319.24 396.61,312.10 405.83,320.92 415.06,322.79 424.28,325.38 433.50,325.02 442.72,325.22 451.94,320.73 461.17,315.14 470.39,316.40 479.61,315.32 488.83,317.84 498.06,322.87 507.28,319.82 516.50,319.15 525.72,318.32 534.94,315.10 544.17,316.01 553.39,318.25 562.61,316.11 571.83,325.39 581.06,328.71 590.28,329.95 599.50,334.23 608.72,337.95 617.94,337.28 627.17,334.27 636.39,338.62 645.61,336.48 654.83,340.14 664.06,338.49 673.28,338.82 682.50,339.25 691.72,346.77 700.94,344.55 710.17,341.31 719.39,340.30 728.61,343.34 737.83,347.94 747.06,351.84 756.28,352.19 765.50,352.53 774.72,356.39 783.94,350.00 793.17,350.91 802.39,350.91 811.61,350.27 820.83,343.95 830.06,343.83 839.28,342.63 848.50,339.58 857.72,335.88 866.94,329.80 876.17,326.56 885.39,330.41" />
 
             <text x="60" y="382" class="axis-text">21/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -2558,8 +2952,8 @@
         </svg>
 
         <div class="chart-meta">
-            <span>BTC Close: <strong>62,458.90</strong></span>
-            <span>RSI 14: <strong>45.75</strong></span>
+            <span>BTC Close: <strong>62,381.88</strong></span>
+            <span>RSI 14: <strong>45.53</strong></span>
         </div>
     </div>
     </div>
@@ -2572,7 +2966,7 @@
                 <span class="eyebrow">Technical Analysis</span>
                 <h3>Gold Technical Chart</h3>
             </div>
-            <div class="rsi-pill">RSI: 34.5</div>
+            <div class="rsi-pill">RSI: 34.39</div>
         </div>
         <p class="chart-note">RSI trung tính.</p>
         <div class="chart-box">
@@ -3624,7 +4018,7 @@
                 x="880.10"
                 y="210.75"
                 width="7.02"
-                height="12.17"
+                height="12.98"
                 class="candle-down"
             />
         
@@ -3639,7 +4033,7 @@
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,337.57" />
+            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,337.65" />
 
             <text x="60" y="382" class="axis-text">19/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -3647,8 +4041,8 @@
         </svg>
 
         <div class="chart-meta">
-            <span>Gold Close: <strong>4,186.30</strong></span>
-            <span>RSI 14: <strong>34.50</strong></span>
+            <span>Gold Close: <strong>4,183.30</strong></span>
+            <span>RSI 14: <strong>34.39</strong></span>
         </div>
     </div>
     </div>
@@ -3767,28 +4161,28 @@
         <h3>Dân Trí</h3>
         
         <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/giua-loat-lum-xum-phap-ly-chu-tich-hdqt-mot-cong-ty-dien-xin-tu-chuc-20260619124044002.htm" target="_blank" rel="noopener noreferrer">Giữa loạt lùm xùm pháp lý, Chủ tịch HĐQT một công ty điện xin từ chức</a>
+            <p>(Dân trí) - Giữa thời điểm cơ quan điều tra mở rộng vụ án sai phạm tại các doanh nghiệp xây lắp và tư vấn điện, Chủ tịch HĐQT Thủy điện - Điện lực 3 bất ngờ nộp đơn từ nhiệm với lý do nghỉ hưu.</p>
+        </article>
+        
+        <article class="news-card">
+            <a href="https://dantri.com.vn/kinh-doanh/nhom-hung-thinh-nam-long-cung-nhieu-doanh-nghiep-dia-oc-bi-phat-20260619121443095.htm" target="_blank" rel="noopener noreferrer">Nhóm Hưng Thịnh, Nam Long cùng nhiều doanh nghiệp địa ốc bị phạt</a>
+            <p>(Dân trí) - Do vi phạm hàng loạt quy định về thời hạn đăng ký và công bố thông tin trái phiếu riêng lẻ, hai thành viên thuộc Tập đoàn Hưng Thịnh cùng nhiều tên tuổi địa ốc vừa bị xử phạt hành chính.</p>
+        </article>
+        
+        <article class="news-card">
             <a href="https://dantri.com.vn/kinh-doanh/dieu-gi-khien-gia-xang-dau-giam-manh-lien-tuc-20260619100450528.htm" target="_blank" rel="noopener noreferrer">Điều gì khiến giá xăng dầu giảm mạnh liên tục?</a>
             <p>(Dân trí) - Giá xăng dầu tiếp tục giảm mạnh từ 15h ngày 18/6, đánh dấu kỳ giảm thứ 4 liên tiếp nhờ những tín hiệu hạ nhiệt từ thị trường thế giới. Sau điều chỉnh, xăng E10 RON 95-III còn 20.750 đồng/lít.</p>
         </article>
         
         <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-mieng-giam-ve-sat-147-trieu-dongluong-20260619084656384.htm" target="_blank" rel="noopener noreferrer">Giá vàng miếng giảm về sát 147 triệu đồng/lượng</a>
-            <p>(Dân trí) - Giá vàng trong nước sáng 19/6 giảm về sát 147 triệu đồng/lượng trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.</p>
+            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-mieng-ve-duoi-147-trieu-dongluong-20260619084656384.htm" target="_blank" rel="noopener noreferrer">Giá vàng miếng về dưới 147 triệu đồng/lượng</a>
+            <p>(Dân trí) - Giá vàng trong nước sáng 19/6 giảm về dưới 147 triệu đồng/lượng trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.</p>
         </article>
         
         <article class="news-card">
             <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank" rel="noopener noreferrer">Elon Musk giàu đến mức nào so với những người Mỹ giàu nhất lịch sử?</a>
             <p>(Dân trí) - Sở hữu khối tài sản chạm mốc 1.400 tỷ USD vào năm 2026, tỷ phú Elon Musk không chỉ đứng đầu thế giới hiện tại mà còn tạo ra khoảng cách không tưởng với các đại tư bản trong lịch sử nước Mỹ.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank" rel="noopener noreferrer">Giá vàng trong nước, thế giới đồng loạt quay đầu giảm</a>
-            <p>(Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.</p>
-        </article>
-        
-        <article class="news-card">
-            <a href="https://dantri.com.vn/kinh-doanh/nhom-co-phieu-ho-vingroup-dong-loat-tang-tran-keo-thi-truong-but-pha-20260618155317346.htm" target="_blank" rel="noopener noreferrer">Nhóm cổ phiếu &quot;họ&quot; Vingroup đồng loạt tăng trần kéo thị trường bứt phá</a>
-            <p>(Dân trí) - Nhóm cổ phiếu Vingroup đồng loạt tăng trần trong phiên 18/6, với VIC, VHM và VRE dẫn đầu đà tăng của thị trường. Cùng với PC1 tăng hết biên độ, các mã này đã góp công lớn đưa VN-Index bứt phá.</p>
         </article>
         
     </section>
