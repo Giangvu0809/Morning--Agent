@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bảng tổng hợp tin tức ngày 19/06/2026</title>
+<title>Morning Agent Finance - 19/06/2026</title>
 
 <style>
 
@@ -17,12 +17,15 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #020617;
+    background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 30%),
+        #020617;
     color: #e5e7eb;
 }
 
 .page {
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
     padding: 26px 18px 50px;
 }
@@ -31,11 +34,11 @@ body {
     background:
         linear-gradient(135deg, rgba(15, 118, 110, 0.95), rgba(30, 64, 175, 0.95)),
         #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 18px;
-    padding: 26px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 22px;
+    padding: 28px;
     margin-bottom: 18px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42);
 }
 
 .header-row {
@@ -48,22 +51,22 @@ body {
 
 .header-title h1 {
     margin: 0;
-    font-size: 30px;
+    font-size: 32px;
     line-height: 1.25;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.6px;
 }
 
 .subtitle {
     margin-top: 8px;
-    color: #cbd5e1;
+    color: #dbeafe;
     font-size: 14px;
     letter-spacing: 1.8px;
     text-transform: uppercase;
 }
 
 .updated {
-    background: rgba(15, 23, 42, 0.48);
-    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(15, 23, 42, 0.52);
+    border: 1px solid rgba(255,255,255,0.2);
     color: #f8fafc;
     padding: 11px 15px;
     border-radius: 999px;
@@ -73,17 +76,30 @@ body {
 
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 14px;
     margin-bottom: 18px;
 }
 
 .kpi-card {
-    background: #0f172a;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #111827, #0f172a);
     border: 1px solid #1e293b;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 18px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+}
+
+.kpi-card::after {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 110px;
+    height: 110px;
+    background: rgba(56, 189, 248, 0.08);
+    border-radius: 999px;
 }
 
 .kpi-label {
@@ -95,16 +111,29 @@ body {
 }
 
 .kpi-value {
-    font-size: 26px;
+    font-size: 25px;
     font-weight: bold;
     color: #f8fafc;
     margin-bottom: 8px;
+    word-break: break-word;
 }
 
 .kpi-note {
     color: #94a3b8;
     font-size: 14px;
     line-height: 1.5;
+}
+
+.positive {
+    color: #22c55e;
+}
+
+.negative {
+    color: #ef4444;
+}
+
+.neutral {
+    color: #cbd5e1;
 }
 
 .kpi-news {
@@ -119,23 +148,27 @@ body {
     border-top: 4px solid #f59e0b;
 }
 
+.kpi-world-gold {
+    border-top: 4px solid #facc15;
+}
+
 .kpi-vnindex {
     border-top: 4px solid #22c55e;
 }
 
 .terminal-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    grid-template-columns: minmax(0, 1.28fr) minmax(340px, 0.72fr);
     gap: 18px;
     margin-bottom: 18px;
 }
 
 .panel {
-    background: #0f172a;
+    background: rgba(15, 23, 42, 0.96);
     border: 1px solid #1e293b;
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.24);
 }
 
 .panel-title {
@@ -161,6 +194,7 @@ body {
     border: 1px solid rgba(59, 130, 246, 0.35);
     padding: 6px 9px;
     border-radius: 999px;
+    white-space: nowrap;
 }
 
 .ai-summary {
@@ -181,6 +215,69 @@ body {
     margin-bottom: 8px;
 }
 
+.signal-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.signal-card {
+    background: #111827;
+    border: 1px solid #243244;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.signal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+}
+
+.signal-name {
+    font-weight: bold;
+    color: #f8fafc;
+}
+
+.signal-badge {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 9px;
+    border-radius: 999px;
+}
+
+.signal-bullish {
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.14);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.signal-bearish {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.14);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.signal-neutral {
+    color: #cbd5e1;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.signal-rsi {
+    color: #f8fafc;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.signal-note {
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
 .snapshot-list {
     display: grid;
     gap: 12px;
@@ -189,7 +286,7 @@ body {
 .snapshot-item {
     background: #111827;
     border: 1px solid #243244;
-    border-radius: 14px;
+    border-radius: 15px;
     padding: 14px;
 }
 
@@ -199,6 +296,14 @@ body {
 
 .snapshot-item.gold-world {
     border-left: 4px solid #facc15;
+}
+
+.snapshot-item.bitcoin {
+    border-left: 4px solid #f97316;
+}
+
+.snapshot-item.vnindex {
+    border-left: 4px solid #22c55e;
 }
 
 .snapshot-name {
@@ -373,7 +478,7 @@ body {
     margin-top: 24px;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 980px) {
     .terminal-grid {
         grid-template-columns: 1fr;
     }
@@ -409,12 +514,12 @@ body {
     <header class="terminal-header">
         <div class="header-row">
             <div class="header-title">
-                <h1>Bảng tổng hợp tin tức ngày 19/06/2026</h1>
-                <div class="subtitle">Morning Market Terminal</div>
+                <h1>Morning Agent Finance</h1>
+                <div class="subtitle">Bảng tổng hợp tin tức ngày 19/06/2026</div>
             </div>
 
             <div class="updated">
-                Cập nhật lần cuối: 11:11:11
+                Cập nhật lần cuối: 11:35:02
             </div>
         </div>
     </header>
@@ -430,22 +535,48 @@ body {
 
         <div class="kpi-card kpi-bitcoin">
             <div class="kpi-label">Bitcoin</div>
-            <div class="kpi-value">$62,718.00</div>
-            <div class="kpi-note">24h: -1.87% • RSI: 46.08</div>
+            <div class="kpi-value">$62,540.00</div>
+            <div class="kpi-note">
+                24h:
+                <strong class="negative">
+                    -2.07%
+                </strong>
+                • RSI: 45.23
+            </div>
         </div>
 
         <div class="kpi-card kpi-gold">
             <div class="kpi-label">Vàng SJC trong nước</div>
             <div class="kpi-value">N/A</div>
             <div class="kpi-note">
-                Mua vào: N/A • 24h: N/A
+                24h:
+                <strong class="neutral">
+                    N/A
+                </strong>
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-world-gold">
+            <div class="kpi-label">Vàng thế giới</div>
+            <div class="kpi-value">$4,166.50/oz</div>
+            <div class="kpi-note">
+                24h:
+                <strong class="negative">
+                    -1.36%
+                </strong>
+                • RSI: 33.79
             </div>
         </div>
 
         <div class="kpi-card kpi-vnindex">
             <div class="kpi-label">VNINDEX</div>
-            <div class="kpi-value">1,827.80</div>
-            <div class="kpi-note">-2.67 điểm / -0.15% • RSI: N/A</div>
+            <div class="kpi-value">1,828.90</div>
+            <div class="kpi-note">
+                <strong class="neutral">
+                    N/A
+                </strong>
+                • RSI: N/A
+            </div>
         </div>
 
     </section>
@@ -461,64 +592,57 @@ body {
 
             <div class="ai-summary">
                 
-    <p><strong>Bản tin tự động chưa dùng AI.</strong></p>
+    <p><strong>AI Market Brief đang dùng chế độ fallback.</strong></p>
+    <p>
+        Thị trường đang được cập nhật tự động. Bitcoin hiện biến động 
+        <strong>-2.07%</strong>, vàng SJC biến động 
+        <strong>N/A</strong>, 
+        vàng thế giới biến động <strong>-1.36%</strong>, 
+        còn VNINDEX ghi nhận <strong>N/A</strong>.
+    </p>
     <ul>
-        <li>Bitcoin hiện ở mức <strong>$62,718.00</strong>, biến động 24h: <strong>-1.87%</strong>.</li>
-        <li>Vàng SJC bán ra: <strong>N/A</strong>, 24h: <strong>N/A</strong>.</li>
-        <li>Vàng thế giới: <strong>$4,172.00/oz</strong>, 24h: <strong>-1.23%</strong>.</li>
-        <li>VNINDEX: <strong>1,827.80</strong>, biến động: <strong>-2.67 điểm / -0.15%</strong>.</li>
+        <li>Ưu tiên theo dõi xu hướng tài sản rủi ro như Bitcoin.</li>
+        <li>Vàng trong nước cần được so sánh với vàng thế giới để đánh giá độ lệch giá.</li>
+        <li>VNINDEX nên được quan sát thêm cùng thanh khoản và nhóm cổ phiếu dẫn dắt.</li>
     </ul>
-    <p>Đây không phải lời khuyên đầu tư.</p>
+    <p><strong>Lưu ý:</strong> Đây không phải lời khuyên đầu tư.</p>
     
             </div>
         </div>
 
         <div class="panel">
             <div class="panel-title">
-                <h2>📈 Market Snapshot</h2>
-                <div class="panel-badge">LIVE DATA</div>
+                <h2>📡 Technical Signals</h2>
+                <div class="panel-badge">RSI 14D</div>
             </div>
 
-            <div class="snapshot-list">
+            <div class="signal-grid">
 
-                <div class="snapshot-item">
-                    <div class="snapshot-name">₿ Bitcoin</div>
-                    <div class="snapshot-value">$62,718.00</div>
-                    <div class="snapshot-detail">
-                        Quy đổi: 1,651,348,974 VND<br>
-                        24h: -1.87%<br>
-                        RSI: 46.08 — RSI trung tính.
+                <div class="signal-card">
+                    <div class="signal-top">
+                        <div class="signal-name">₿ Bitcoin</div>
+                        <div class="signal-badge signal-neutral">Neutral</div>
                     </div>
+                    <div class="signal-rsi">45.23</div>
+                    <div class="signal-note">RSI trung tính.</div>
                 </div>
 
-                <div class="snapshot-item gold-domestic">
-                    <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
-                    <div class="snapshot-value">N/A</div>
-                    <div class="snapshot-detail">
-                        Mua vào: <strong>N/A</strong><br>
-                        Bán ra: <strong>N/A</strong><br>
-                        24h: <strong>N/A</strong><br>
-                        Chưa lấy được giá vàng trong nước từ vang.today.
+                <div class="signal-card">
+                    <div class="signal-top">
+                        <div class="signal-name">🟡 Vàng thế giới</div>
+                        <div class="signal-badge signal-bearish">Bearish</div>
                     </div>
+                    <div class="signal-rsi">33.79</div>
+                    <div class="signal-note">RSI trung tính.</div>
                 </div>
 
-                <div class="snapshot-item gold-world">
-                    <div class="snapshot-name">🌍 Vàng thế giới</div>
-                    <div class="snapshot-value">$4,172.00/oz</div>
-                    <div class="snapshot-detail">
-                        24h: <strong>-1.23%</strong><br>
-                        RSI kỹ thuật: <strong>33.98</strong> — RSI trung tính.<br>
-                        Dữ liệu vàng thế giới từ Yahoo Finance Gold Futures GC=F.
+                <div class="signal-card">
+                    <div class="signal-top">
+                        <div class="signal-name">📊 VNINDEX</div>
+                        <div class="signal-badge signal-neutral">N/A</div>
                     </div>
-                </div>
-
-                <div class="snapshot-item">
-                    <div class="snapshot-name">📊 VNINDEX</div>
-                    <div class="snapshot-value">1,827.80</div>
-                    <div class="snapshot-detail">
-                        -2.67 điểm / -0.15%<br>
-                        RSI: N/A — Chưa đủ dữ liệu RSI.
-                    </div>
+                    <div class="signal-rsi">N/A</div>
+                    <div class="signal-note">Chưa đủ dữ liệu RSI.</div>
                 </div>
 
             </div>
@@ -528,6 +652,70 @@ body {
 
 
     <section class="panel">
+        <div class="panel-title">
+            <h2>📈 Market Snapshot</h2>
+            <div class="panel-badge">LIVE DATA</div>
+        </div>
+
+        <div class="snapshot-list">
+
+            <div class="snapshot-item bitcoin">
+                <div class="snapshot-name">₿ Bitcoin</div>
+                <div class="snapshot-value">$62,540.00</div>
+                <div class="snapshot-detail">
+                    Quy đổi: 1,646,648,266 VND<br>
+                    24h:
+                    <strong class="negative">
+                        -2.07%
+                    </strong><br>
+                    Giảm trong 24h
+                </div>
+            </div>
+
+            <div class="snapshot-item gold-domestic">
+                <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
+                <div class="snapshot-value">N/A</div>
+                <div class="snapshot-detail">
+                    Mua vào: <strong>N/A</strong><br>
+                    Bán ra: <strong>N/A</strong><br>
+                    24h:
+                    <strong class="neutral">
+                        N/A
+                    </strong><br>
+                    Chưa lấy được giá vàng trong nước từ vang.today.
+                </div>
+            </div>
+
+            <div class="snapshot-item gold-world">
+                <div class="snapshot-name">🌍 Vàng thế giới</div>
+                <div class="snapshot-value">$4,166.50/oz</div>
+                <div class="snapshot-detail">
+                    24h:
+                    <strong class="negative">
+                        -1.36%
+                    </strong><br>
+                    RSI kỹ thuật: <strong>33.79</strong> — RSI trung tính.<br>
+                    Dữ liệu vàng thế giới từ Yahoo Finance Gold Futures GC=F.
+                </div>
+            </div>
+
+            <div class="snapshot-item vnindex">
+                <div class="snapshot-name">📊 VNINDEX</div>
+                <div class="snapshot-value">1,828.90</div>
+                <div class="snapshot-detail">
+                    <strong class="neutral">
+                        N/A
+                    </strong><br>
+                    RSI: N/A — Chưa đủ dữ liệu RSI.<br>
+                    Dữ liệu VNINDEX lấy từ Yahoo Finance ticker ^VNINDEX.VN.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <section class="panel chart-section">
         <div class="panel-title">
             <h2>🔥 Tin nóng hôm nay</h2>
             <div class="panel-badge">RSS FEEDS</div>
@@ -617,32 +805,18 @@ body {
             <div class="terminal-news-index">01</div>
 
             <div>
-                <a href="https://dantri.com.vn/kinh-doanh/dieu-gi-khien-gia-xang-dau-giam-manh-lien-tuc-20260619100450528.htm" target="_blank">
-                    Điều gì khiến giá xăng dầu giảm mạnh liên tục?
+                <a href="https://dantri.com.vn/kinh-doanh/gia-vang-roi-thang-dung-thung-moc-150-trieu-dongluong-20260619084656384.htm" target="_blank">
+                    Giá vàng rơi thẳng đứng, “thủng” mốc 150 triệu đồng/lượng
                 </a>
 
                 <p>
-                    (Dân trí) - Giá xăng dầu tiếp tục giảm mạnh từ 15h ngày 18/6, đánh dấu kỳ giảm thứ 4 liên tiếp nhờ những tín hiệu hạ nhiệt từ thị trường thế giới. Sau điều chỉnh, xăng E10 RON 95-III còn 20.750 đồng/lít.
+                    (Dân trí) - Giá vàng trong nước sáng 19/6 giảm mạnh tới 3 triệu đồng/lượng ở chiều thu mua, trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.
                 </p>
             </div>
         </div>
         
         <div class="terminal-news-item">
             <div class="terminal-news-index">02</div>
-
-            <div>
-                <a href="https://dantri.com.vn/kinh-doanh/gia-vang-mieng-giam-ve-sat-147-trieu-dongluong-20260619084656384.htm" target="_blank">
-                    Giá vàng miếng giảm về sát 147 triệu đồng/lượng
-                </a>
-
-                <p>
-                    (Dân trí) - Giá vàng trong nước sáng 19/6 giảm về sát 147 triệu đồng/lượng trong bối cảnh giá vàng thế giới lao dốc, rơi xuống dưới mốc 4.200 USD/ounce.
-                </p>
-            </div>
-        </div>
-        
-        <div class="terminal-news-item">
-            <div class="terminal-news-index">03</div>
 
             <div>
                 <a href="https://dantri.com.vn/kinh-doanh/elon-musk-giau-den-muc-nao-so-voi-nhung-nguoi-my-giau-nhat-lich-su-20260619081411952.htm" target="_blank">
@@ -656,7 +830,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">04</div>
+            <div class="terminal-news-index">03</div>
 
             <div>
                 <a href="https://dantri.com.vn/kinh-doanh/chan-gan-1-tan-thuc-pham-lau-nhieu-lo-hang-da-boc-mui-hoi-thoi-20260618224956994.htm" target="_blank">
@@ -670,7 +844,7 @@ body {
         </div>
         
         <div class="terminal-news-item">
-            <div class="terminal-news-index">05</div>
+            <div class="terminal-news-index">04</div>
 
             <div>
                 <a href="https://dantri.com.vn/kinh-doanh/gia-vang-trong-nuoc-the-gioi-dong-loat-quay-dau-giam-20260619001806747.htm" target="_blank">
@@ -679,6 +853,20 @@ body {
 
                 <p>
                     (Dân trí) - Giá vàng giảm trong bối cảnh thị trường vẫn đối mặt với rủi ro biến động lớn khi nhà đầu tư chờ đợi những tín hiệu chính sách tiếp theo từ Fed dưới thời tân Chủ tịch Kevin Warsh.
+                </p>
+            </div>
+        </div>
+        
+        <div class="terminal-news-item">
+            <div class="terminal-news-index">05</div>
+
+            <div>
+                <a href="https://dantri.com.vn/kinh-doanh/nhom-co-phieu-ho-vingroup-dong-loat-tang-tran-keo-thi-truong-but-pha-20260618155317346.htm" target="_blank">
+                    Nhóm cổ phiếu &quot;họ&quot; Vingroup đồng loạt tăng trần kéo thị trường bứt phá
+                </a>
+
+                <p>
+                    (Dân trí) - Nhóm cổ phiếu Vingroup đồng loạt tăng trần trong phiên 18/6, với VIC, VHM và VRE dẫn đầu đà tăng của thị trường. Cùng với PC1 tăng hết biên độ, các mã này đã góp công lớn đưa VN-Index bứt phá.
                 </p>
             </div>
         </div>
@@ -2219,7 +2407,7 @@ body {
                 x="882.85"
                 y="228.35"
                 width="5.07"
-                height="2.00"
+                height="3.82"
                 class="candle-down"
             />
         
@@ -2234,7 +2422,7 @@ body {
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="175.28,331.39 184.50,333.45 193.72,334.81 202.94,330.69 212.17,325.09 221.39,332.89 230.61,324.43 239.83,327.90 249.06,320.18 258.28,309.48 267.50,309.31 276.72,316.33 285.94,312.57 295.17,315.21 304.39,314.00 313.61,310.00 322.83,308.32 332.06,312.54 341.28,318.94 350.50,316.33 359.72,319.44 368.94,315.28 378.17,315.92 387.39,319.35 396.61,319.24 405.83,312.10 415.06,320.92 424.28,322.79 433.50,325.38 442.72,325.02 451.94,325.22 461.17,320.73 470.39,315.14 479.61,316.40 488.83,315.32 498.06,317.84 507.28,322.87 516.50,319.82 525.72,319.15 534.94,318.32 544.17,315.10 553.39,316.01 562.61,318.25 571.83,316.11 581.06,325.39 590.28,328.71 599.50,329.95 608.72,334.23 617.94,337.95 627.17,337.28 636.39,334.27 645.61,338.62 654.83,336.48 664.06,340.14 673.28,338.49 682.50,338.82 691.72,339.25 700.94,346.77 710.17,344.55 719.39,341.31 728.61,340.30 737.83,343.34 747.06,347.94 756.28,351.84 765.50,352.19 774.72,352.53 783.94,356.39 793.17,350.00 802.39,350.91 811.61,350.91 820.83,350.27 830.06,343.95 839.28,343.83 848.50,342.63 857.72,339.58 866.94,335.88 876.17,329.80 885.39,330.05" />
+            <polyline fill="none" class="rsi-line" points="175.28,331.39 184.50,333.45 193.72,334.81 202.94,330.69 212.17,325.09 221.39,332.89 230.61,324.43 239.83,327.90 249.06,320.18 258.28,309.48 267.50,309.31 276.72,316.33 285.94,312.57 295.17,315.21 304.39,314.00 313.61,310.00 322.83,308.32 332.06,312.54 341.28,318.94 350.50,316.33 359.72,319.44 368.94,315.28 378.17,315.92 387.39,319.35 396.61,319.24 405.83,312.10 415.06,320.92 424.28,322.79 433.50,325.38 442.72,325.02 451.94,325.22 461.17,320.73 470.39,315.14 479.61,316.40 488.83,315.32 498.06,317.84 507.28,322.87 516.50,319.82 525.72,319.15 534.94,318.32 544.17,315.10 553.39,316.01 562.61,318.25 571.83,316.11 581.06,325.39 590.28,328.71 599.50,329.95 608.72,334.23 617.94,337.95 627.17,337.28 636.39,334.27 645.61,338.62 654.83,336.48 664.06,340.14 673.28,338.49 682.50,338.82 691.72,339.25 700.94,346.77 710.17,344.55 719.39,341.31 728.61,340.30 737.83,343.34 747.06,347.94 756.28,351.84 765.50,352.19 774.72,352.53 783.94,356.39 793.17,350.00 802.39,350.91 811.61,350.91 820.83,350.27 830.06,343.95 839.28,343.83 848.50,342.63 857.72,339.58 866.94,335.88 876.17,329.80 885.39,330.60" />
 
             <text x="60" y="382" class="axis-text">20/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -2242,8 +2430,8 @@ body {
         </svg>
 
         <div class="chart-meta">
-            <span>Giá BTC/USD mới nhất: <strong>62,784.35</strong></span>
-            <span>RSI 14 ngày: <strong>46.08</strong></span>
+            <span>Giá BTC/USD mới nhất: <strong>62,490.00</strong></span>
+            <span>RSI 14 ngày: <strong>45.23</strong></span>
         </div>
     </div>
     
@@ -3297,7 +3485,7 @@ body {
                 x1="883.62"
                 y1="210.69"
                 x2="883.62"
-                y2="229.31"
+                y2="230.37"
                 class="candle-down"
             />
 
@@ -3305,7 +3493,7 @@ body {
                 x="880.10"
                 y="210.75"
                 width="7.02"
-                height="16.04"
+                height="17.53"
                 class="candle-down"
             />
         
@@ -3320,7 +3508,7 @@ body {
             <text x="10" y="345.5" class="axis-text">30</text>
             <text x="10" y="360" class="axis-text">0</text>
 
-            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,337.91" />
+            <polyline fill="none" class="rsi-line" points="232.38,323.35 245.15,322.34 257.92,322.34 270.69,317.12 283.46,315.33 296.23,319.47 309.00,311.87 321.77,312.79 334.54,316.44 347.31,325.47 360.08,329.82 372.85,324.62 385.62,324.06 398.38,326.60 411.15,335.33 423.92,339.67 436.69,334.35 449.46,332.76 462.23,341.25 475.00,338.32 487.77,331.48 500.54,333.99 513.31,331.19 526.08,326.49 538.85,330.20 551.62,327.87 564.38,329.69 577.15,332.82 589.92,329.45 602.69,329.44 615.46,331.97 628.23,332.39 641.00,327.40 653.77,331.16 666.54,345.70 679.31,341.90 692.08,338.04 704.85,341.22 717.62,338.65 730.38,342.08 743.15,338.43 755.92,339.00 768.69,338.93 781.46,339.90 794.23,345.31 807.00,346.19 819.77,338.71 832.54,333.22 845.31,331.58 858.08,332.54 870.85,338.66 883.62,338.04" />
 
             <text x="60" y="382" class="axis-text">19/03</text>
             <text x="845" y="382" class="axis-text">19/06</text>
@@ -3328,8 +3516,8 @@ body {
         </svg>
 
         <div class="chart-meta">
-            <span>Giá Gold Futures mới nhất: <strong>4,172.00</strong></span>
-            <span>RSI 14 ngày: <strong>33.98</strong></span>
+            <span>Giá Gold Futures mới nhất: <strong>4,166.50</strong></span>
+            <span>RSI 14 ngày: <strong>33.79</strong></span>
         </div>
     </div>
     
@@ -3367,7 +3555,7 @@ body {
                 x="470.00"
                 y="201.05"
                 width="10.00"
-                height="34.42"
+                height="20.24"
                 class="candle-down"
             />
         
@@ -3390,7 +3578,7 @@ body {
         </svg>
 
         <div class="chart-meta">
-            <span>Điểm VNINDEX mới nhất: <strong>1,827.80</strong></span>
+            <span>Điểm VNINDEX mới nhất: <strong>1,828.90</strong></span>
             <span>RSI 14 ngày: <strong>N/A</strong></span>
         </div>
     </div>
