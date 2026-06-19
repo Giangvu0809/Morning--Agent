@@ -20,14 +20,20 @@ def build_news_text(news_items, max_items=8):
 
 def fallback_summary(bitcoin, gold, vnindex):
     return f"""
-    <p><strong>Bản tin tự động chưa dùng AI.</strong></p>
+    <p><strong>AI Market Brief đang dùng chế độ fallback.</strong></p>
+    <p>
+        Thị trường đang được cập nhật tự động. Bitcoin hiện biến động 
+        <strong>{bitcoin.get("change_24h", "N/A")}</strong>, vàng SJC biến động 
+        <strong>{gold.get("domestic", {}).get("change_24h", "N/A")}</strong>, 
+        vàng thế giới biến động <strong>{gold.get("world", {}).get("change_24h", "N/A")}</strong>, 
+        còn VNINDEX ghi nhận <strong>{vnindex.get("change", "N/A")}</strong>.
+    </p>
     <ul>
-        <li>Bitcoin hiện ở mức <strong>${bitcoin.get("price_usd", "N/A")}</strong>, biến động 24h: <strong>{bitcoin.get("change_24h", "N/A")}</strong>.</li>
-        <li>Vàng SJC bán ra: <strong>{gold.get("domestic", {}).get("sell", "N/A")}</strong>, 24h: <strong>{gold.get("domestic", {}).get("change_24h", "N/A")}</strong>.</li>
-        <li>Vàng thế giới: <strong>{gold.get("world", {}).get("price", "N/A")}</strong>, 24h: <strong>{gold.get("world", {}).get("change_24h", "N/A")}</strong>.</li>
-        <li>VNINDEX: <strong>{vnindex.get("value", "N/A")}</strong>, biến động: <strong>{vnindex.get("change", "N/A")}</strong>.</li>
+        <li>Ưu tiên theo dõi xu hướng tài sản rủi ro như Bitcoin.</li>
+        <li>Vàng trong nước cần được so sánh với vàng thế giới để đánh giá độ lệch giá.</li>
+        <li>VNINDEX nên được quan sát thêm cùng thanh khoản và nhóm cổ phiếu dẫn dắt.</li>
     </ul>
-    <p>Đây không phải lời khuyên đầu tư.</p>
+    <p><strong>Lưu ý:</strong> Đây không phải lời khuyên đầu tư.</p>
     """
 
 
@@ -72,46 +78,43 @@ def get_ai_summary(news_items=None, bitcoin=None, gold=None, vnindex=None):
 
     market_text = f"""
 Bitcoin:
-- Giá USD: {bitcoin.get("price_usd", "N/A")}
-- Giá VND: {bitcoin.get("price_vnd", "N/A")}
 - Biến động 24h: {bitcoin.get("change_24h", "N/A")}
 
 Vàng trong nước:
-- Mua vào: {gold.get("domestic", {}).get("buy", "N/A")}
-- Bán ra: {gold.get("domestic", {}).get("sell", "N/A")}
 - Biến động 24h: {gold.get("domestic", {}).get("change_24h", "N/A")}
 
 Vàng thế giới:
-- Giá hiện tại: {gold.get("world", {}).get("price", "N/A")}
 - Biến động 24h: {gold.get("world", {}).get("change_24h", "N/A")}
 
 VNINDEX:
-- Điểm số: {vnindex.get("value", "N/A")}
 - Biến động: {vnindex.get("change", "N/A")}
 """
 
     prompt = f"""
-Bạn là trợ lý tài chính cá nhân cho dashboard Morning Market Terminal.
+Bạn là trợ lý tài chính cá nhân cho dashboard Morning Agent Finance.
 
 Dữ liệu tin tức:
 {news_text}
 
-Dữ liệu thị trường:
+Dữ liệu xu hướng thị trường:
 {market_text}
 
-Hãy viết bản tóm tắt tiếng Việt ngắn gọn, rõ ràng, không khuyến nghị mua bán.
+Hãy viết bản tóm tắt tiếng Việt ngắn gọn, rõ ràng, chuyên nghiệp.
+
+QUAN TRỌNG:
+- Không lặp lại bảng số liệu chi tiết.
+- Không đưa khuyến nghị mua bán.
+- Không phóng đại.
+- Tập trung vào bối cảnh, rủi ro và tín hiệu cần theo dõi.
 
 Chỉ dùng HTML đơn giản:
 <p>, <ul>, <li>, <strong>, <br>
 
-Yêu cầu:
-1. Một đoạn tổng quan thị trường.
+Yêu cầu nội dung:
+1. Một đoạn tổng quan ngắn về tâm lý thị trường.
 2. 3-5 ý chính từ tin tức.
-3. Nhận định ngắn cho Bitcoin.
-4. Nhận định ngắn cho vàng trong nước.
-5. Nhận định ngắn cho vàng thế giới.
-6. Nhận định ngắn cho VNINDEX.
-7. Một câu cảnh báo: đây không phải lời khuyên đầu tư.
+3. Một đoạn nhận định về tài sản rủi ro, vàng và chứng khoán Việt Nam.
+4. Một câu cảnh báo: đây không phải lời khuyên đầu tư.
 """
 
     try:
@@ -120,7 +123,6 @@ Yêu cầu:
         response = client.responses.create(
             model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
             input=prompt,
-            temperature=0.4,
             max_output_tokens=700
         )
 
