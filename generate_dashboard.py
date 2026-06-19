@@ -1,16 +1,35 @@
-
 from datetime import datetime, timezone, timedelta
 import feedparser
 import html
+import re
 
 # =========================
 # RSS SOURCES
 # =========================
+
 RSS_FEEDS = {
     "VnExpress": "https://vnexpress.net/rss/kinh-doanh.rss",
     "Dân Trí": "https://dantri.com.vn/rss/kinh-doanh.rss",
     "BBC": "https://feeds.bbci.co.uk/vietnamese/rss.xml",
 }
+
+
+# =========================
+# CLEAN TEXT
+# =========================
+
+def clean_summary(text):
+    if not text:
+        return "Chưa có mô tả ngắn cho bài viết này."
+
+    text = re.sub("<.*?>", "", text)
+    text = html.unescape(text)
+    text = text.strip()
+
+    if not text:
+        return "Chưa có mô tả ngắn cho bài viết này."
+
+    return html.escape(text)
 
 
 # =========================
@@ -25,10 +44,12 @@ def get_news_from_feed(source_name, rss_url, limit=5):
     for entry in feed.entries[:limit]:
         title = html.escape(entry.get("title", "Không có tiêu đề"))
         link = entry.get("link", "#")
+        summary = clean_summary(entry.get("summary", ""))
 
         news.append({
             "source": source_name,
             "title": title,
+            "summary": summary,
             "link": link
         })
 
@@ -49,15 +70,8 @@ for source_name, rss_url in RSS_FEEDS.items():
 # TIME
 # =========================
 
-vn_time = datetime.now(
-    timezone(
-        timedelta(hours=7)
-    )
-)
-
-updated_at = vn_time.strftime(
-    "%H:%M:%S ngày %d/%m/%Y"
-)
+vn_time = datetime.now(timezone(timedelta(hours=7)))
+updated_at = vn_time.strftime("%H:%M:%S ngày %d/%m/%Y")
 
 
 # =========================
@@ -67,19 +81,21 @@ updated_at = vn_time.strftime(
 news_html = ""
 
 if all_news:
-
     for index, item in enumerate(all_news, start=1):
-
         news_html += f"""
-        <li>
+        <li class="news-item">
             <a href="{item['link']}" target="_blank">
-                {index}. [{item['source']}] {item['title']}
+                <strong>
+                    {index}. [{item['source']}] {item['title']}
+                </strong>
             </a>
+
+            <div class="news-summary">
+                {item['summary']}
+            </div>
         </li>
         """
-
 else:
-
     news_html = """
     <li>Không lấy được dữ liệu RSS.</li>
     """
@@ -106,6 +122,7 @@ body {{
     margin: 40px auto;
     padding: 20px;
     background: #f5f7fb;
+    color: #222;
 }}
 
 .card {{
@@ -135,18 +152,26 @@ ul {{
     padding-left: 0;
 }}
 
-li {{
-    margin: 12px 0;
+.news-item {{
+    margin-bottom: 28px;
     line-height: 1.6;
 }}
 
-a {{
+.news-item a {{
     color: #111827;
     text-decoration: none;
+    font-size: 17px;
 }}
 
-a:hover {{
+.news-item a:hover {{
     text-decoration: underline;
+}}
+
+.news-summary {{
+    margin-top: 8px;
+    color: #555;
+    line-height: 1.7;
+    font-size: 15px;
 }}
 
 .placeholder {{
@@ -245,20 +270,9 @@ a:hover {{
 # WRITE FILE
 # =========================
 
-with open(
-    "index.html",
-    "w",
-    encoding="utf-8"
-) as f:
-
+with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
 
-print(
-    f"Generated dashboard at {updated_at}"
-)
-
-print(
-    f"Loaded {len(all_news)} news items from RSS feeds"
-)
-
+print(f"Generated dashboard at {updated_at}")
+print(f"Loaded {len(all_news)} news items from RSS feeds")
