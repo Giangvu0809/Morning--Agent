@@ -2,7 +2,7 @@ from datetime import datetime, timezone, timedelta
 
 from modules.news import get_all_news
 from modules.market import get_bitcoin_price, get_gold_price, get_vnindex
-from modules.charts import get_history_with_rsi, build_chart_svg
+from modules.charts import get_history_with_rsi, build_candlestick_svg
 from modules.ai_summary import get_ai_summary
 
 
@@ -18,6 +18,7 @@ vnindex = get_vnindex()
 
 bitcoin_chart_data, bitcoin_rsi, bitcoin_rsi_note = get_history_with_rsi("BTC-USD")
 gold_chart_data, gold_rsi, gold_rsi_note = get_history_with_rsi("GC=F")
+vnindex_chart_data, vnindex_rsi, vnindex_rsi_note = get_history_with_rsi("^VNINDEX.VN")
 
 ai_summary = get_ai_summary()
 
@@ -55,17 +56,24 @@ else:
     news_html = "<li>Không lấy được dữ liệu RSS.</li>"
 
 
-bitcoin_chart_html = build_chart_svg(
+bitcoin_chart_html = build_candlestick_svg(
     bitcoin_chart_data,
-    "Bitcoin 3 tháng gần nhất",
+    "Bitcoin 3 tháng gần nhất - Nến ngày",
     "Giá BTC/USD mới nhất",
     "RSI 14 ngày"
 )
 
-gold_chart_html = build_chart_svg(
+gold_chart_html = build_candlestick_svg(
     gold_chart_data,
-    "Vàng quốc tế 3 tháng gần nhất",
+    "Vàng quốc tế 3 tháng gần nhất - Nến ngày",
     "Giá Gold Futures mới nhất",
+    "RSI 14 ngày"
+)
+
+vnindex_chart_html = build_candlestick_svg(
+    vnindex_chart_data,
+    "VNINDEX 3 tháng gần nhất - Nến ngày",
+    "Điểm VNINDEX mới nhất",
     "RSI 14 ngày"
 )
 
@@ -194,13 +202,18 @@ ul {{
     stroke-width: 1;
 }}
 
-.price-line {{
-    stroke: #2563eb;
-    stroke-width: 2.5;
+.candle-up {{
+    stroke: #16a34a;
+    fill: #16a34a;
+}}
+
+.candle-down {{
+    stroke: #dc2626;
+    fill: #dc2626;
 }}
 
 .rsi-line {{
-    stroke: #dc2626;
+    stroke: #2563eb;
     stroke-width: 2;
 }}
 
@@ -310,6 +323,8 @@ ul {{
             <h3>📊 VNINDEX</h3>
             <p class="market-value">{vnindex['value']}</p>
             <p>Biến động: <strong>{vnindex['change']}</strong></p>
+            <p>RSI: <strong>{vnindex_rsi}</strong></p>
+            <p class="market-note">{vnindex_rsi_note}</p>
             <p class="market-note">{vnindex['note']}</p>
         </div>
 
@@ -332,6 +347,15 @@ ul {{
     <h2>📊 Chart vàng</h2>
 
     {gold_chart_html}
+
+</div>
+
+
+<div class="card">
+
+    <h2>📊 Chart VNINDEX</h2>
+
+    {vnindex_chart_html}
 
 </div>
 
@@ -364,5 +388,5 @@ print(f"Loaded {len(all_news)} news items from RSS feeds")
 print(f"Bitcoin USD: {bitcoin['price_usd']}")
 print(f"Bitcoin RSI: {bitcoin_rsi}")
 print(f"Gold RSI: {gold_rsi}")
-print(f"Gold status: {gold['note']}")
-print(f"VNINDEX status: {vnindex['note']}")
+print(f"VNINDEX: {vnindex['value']}")
+print(f"VNINDEX RSI: {vnindex_rsi}")
