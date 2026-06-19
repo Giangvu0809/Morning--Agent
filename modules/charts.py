@@ -17,6 +17,29 @@ def calculate_rsi(close_series, period=14):
     return rsi
 
 
+def normalize_rsi_value(value):
+    if value is None:
+        return "N/A"
+
+    if pd.isna(value):
+        return "N/A"
+
+    return round(float(value), 2)
+
+
+def get_rsi_note(rsi_value):
+    if rsi_value == "N/A":
+        return "Chưa đủ dữ liệu RSI."
+
+    if rsi_value >= 70:
+        return "RSI cao: vùng mua mạnh/quá mua."
+
+    if rsi_value <= 30:
+        return "RSI thấp: vùng bán mạnh/quá bán."
+
+    return "RSI trung tính."
+
+
 def get_history_with_rsi(ticker, period="3mo", interval="1d"):
     try:
         data = yf.download(
@@ -62,19 +85,11 @@ def get_history_with_rsi(ticker, period="3mo", interval="1d"):
                 "high": round(float(high_value), 2),
                 "low": round(float(low_value), 2),
                 "close": round(float(close_value), 2),
-                "rsi": None if pd.isna(rsi_value) else round(float(rsi_value), 2)
+                "rsi": normalize_rsi_value(rsi_value)
             })
 
         latest_rsi = chart_rows[-1]["rsi"] if chart_rows else "N/A"
-
-        if latest_rsi == "N/A" or latest_rsi is None:
-            rsi_note = "Chưa đủ dữ liệu RSI."
-        elif latest_rsi >= 70:
-            rsi_note = "RSI cao: vùng mua mạnh/quá mua."
-        elif latest_rsi <= 30:
-            rsi_note = "RSI thấp: vùng bán mạnh/quá bán."
-        else:
-            rsi_note = "RSI trung tính."
+        rsi_note = get_rsi_note(latest_rsi)
 
         return chart_rows, latest_rsi, rsi_note
 
@@ -156,7 +171,7 @@ def build_candlestick_svg(chart_data, title, price_label, rsi_label):
             />
         """
 
-        if item["rsi"] is not None:
+        if item["rsi"] != "N/A":
             y_rsi = rsi_top + ((100 - item["rsi"]) / 100) * rsi_height
             rsi_points.append(f"{x:.2f},{y_rsi:.2f}")
 
@@ -167,7 +182,7 @@ def build_candlestick_svg(chart_data, title, price_label, rsi_label):
     latest_close = latest["close"]
     latest_rsi = latest["rsi"]
 
-    latest_rsi_text = "N/A" if latest_rsi is None else f"{latest_rsi:.2f}"
+    latest_rsi_text = "N/A" if latest_rsi == "N/A" else f"{latest_rsi:.2f}"
 
     return f"""
     <div class="chart-wrapper">
