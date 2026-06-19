@@ -302,6 +302,14 @@ body {{
     padding: 14px;
 }}
 
+.snapshot-item.gold-domestic {{
+    border-left: 4px solid #f59e0b;
+}}
+
+.snapshot-item.gold-world {{
+    border-left: 4px solid #facc15;
+}}
+
 .snapshot-name {{
     color: #94a3b8;
     font-size: 13px;
@@ -536,9 +544,11 @@ body {{
         </div>
 
         <div class="kpi-card kpi-gold">
-            <div class="kpi-label">Vàng quốc tế</div>
-            <div class="kpi-value">GC=F</div>
-            <div class="kpi-note">RSI: {gold_rsi} • {gold_rsi_note}</div>
+            <div class="kpi-label">Vàng SJC trong nước</div>
+            <div class="kpi-value">{gold['domestic']['sell']}</div>
+            <div class="kpi-note">
+                Mua vào: {gold['domestic']['buy']} • 24h: {gold['domestic']['change_24h']}
+            </div>
         </div>
 
         <div class="kpi-card kpi-vnindex">
@@ -581,12 +591,24 @@ body {{
                     </div>
                 </div>
 
-                <div class="snapshot-item">
-                    <div class="snapshot-name">🟡 Gold Futures</div>
-                    <div class="snapshot-value">RSI {gold_rsi}</div>
+                <div class="snapshot-item gold-domestic">
+                    <div class="snapshot-name">🟡 Vàng trong nước SJC</div>
+                    <div class="snapshot-value">{gold['domestic']['sell']}</div>
                     <div class="snapshot-detail">
-                        {gold_rsi_note}<br>
-                        {gold['note']}
+                        Mua vào: <strong>{gold['domestic']['buy']}</strong><br>
+                        Bán ra: <strong>{gold['domestic']['sell']}</strong><br>
+                        24h: <strong>{gold['domestic']['change_24h']}</strong><br>
+                        {gold['domestic']['note']}
+                    </div>
+                </div>
+
+                <div class="snapshot-item gold-world">
+                    <div class="snapshot-name">🌍 Vàng thế giới</div>
+                    <div class="snapshot-value">{gold['world']['price']}</div>
+                    <div class="snapshot-detail">
+                        24h: <strong>{gold['world']['change_24h']}</strong><br>
+                        RSI kỹ thuật: <strong>{gold_rsi}</strong> — {gold_rsi_note}<br>
+                        {gold['world']['note']}
                     </div>
                 </div>
 
@@ -644,7 +666,7 @@ body {{
 
     <section class="panel chart-section">
         <div class="panel-title">
-            <h2>🟡 Vàng / Nến ngày / 3 tháng</h2>
+            <h2>🟡 Vàng thế giới / Nến ngày / 3 tháng</h2>
             <div class="panel-badge">GC=F</div>
         </div>
 
@@ -663,7 +685,7 @@ body {{
 
 
     <div class="footer">
-        Dữ liệu được tổng hợp tự động từ RSS, Yahoo Finance, CoinGecko và OpenAI API.
+        Dữ liệu được tổng hợp tự động từ RSS, Yahoo Finance, CoinGecko, nguồn giá vàng trong nước và OpenAI API.
     </div>
 
 </div>
@@ -685,6 +707,11 @@ print(f"Generated dashboard at {updated_at} - {report_date}")
 print(f"Loaded {len(all_news)} news items from RSS feeds")
 print(f"Bitcoin USD: {bitcoin['price_usd']}")
 print(f"Bitcoin RSI: {bitcoin_rsi}")
+print(f"Domestic gold buy: {gold['domestic']['buy']}")
+print(f"Domestic gold sell: {gold['domestic']['sell']}")
+print(f"Domestic gold 24h: {gold['domestic']['change_24h']}")
+print(f"World gold price: {gold['world']['price']}")
+print(f"World gold 24h: {gold['world']['change_24h']}")
 print(f"Gold RSI: {gold_rsi}")
 print(f"VNINDEX: {vnindex['value']}")
 print(f"VNINDEX RSI: {vnindex_rsi}")
