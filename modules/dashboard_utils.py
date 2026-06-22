@@ -9,7 +9,7 @@ except Exception:
     ZoneInfo = None
 
 
-FAST_MODE = os.getenv("FAST_MODE", "true").lower() == "true"
+FAST_MODE = os.getenv("FAST_MODE", "true").lower() == "false"
 
 
 STABLECOINS = {
